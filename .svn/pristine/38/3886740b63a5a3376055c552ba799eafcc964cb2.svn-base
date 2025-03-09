@@ -1,0 +1,466 @@
+package com.template.Service.Table.Product;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.ClassesForm.*;
+import com.template.Enum.ActionEnum;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.AllIndexes.IndCustomerNature;
+import com.template.Model.Table.AllIndexes.IndFileType;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Model.Table.Products.AccountType;
+import com.template.Model.Table.Products.AccountTypeNature;
+import com.template.Repository.Table.AllIndexes.IndCustomerNatureRepository;
+import com.template.Repository.Table.Product.AccountTypeNatureRepository;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.IndCustomerNatureServices;
+import com.template.Service.Table.AllIndexes.IndFileTypeServices;
+import com.template.Service.Basic.SystemLog.SystemLogService;
+
+@Service
+public class AccountTypeNatureService {
+	
+	@Autowired
+	AccountTypeNatureRepository accountTypeNatureRepository;
+	
+	@Autowired
+	IndCustomerNatureServices indCustomerNatureServices;
+	
+	@Autowired
+	IndFileTypeServices indFileTypeServices;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	CActionHandler actionHandler;
+	
+	@Autowired
+	SystemLogService systemLogService;
+	
+	@Autowired
+	ActionService actionService;
+	
+	public AccountTypeNature save(AccountTypeNature accountTypeNature) throws Exception {
+		if(accountTypeNature.getId() == null)
+		{
+			accountTypeNature.setInsertBy(userService.getAuthenticatedUser().getID());
+		}else if(accountTypeNature.getId() != null){
+			AccountTypeNature temCompany=accountTypeNatureRepository.findById(accountTypeNature.getId()).get();
+			accountTypeNature.setInsertDate(temCompany.getInsertDate());
+		}
+		accountTypeNatureRepository.save(accountTypeNature);
+		return accountTypeNature;
+	}
+	
+	public void update(AccountTypeNature accountTypeNature) {
+		accountTypeNatureRepository.save(accountTypeNature);
+	}
+	
+	
+	public List<AccountTypeNature> getAll(){
+		List<AccountTypeNature> all = accountTypeNatureRepository.getAll();
+		return all;
+	}
+	
+	public List<AccountTypeNature> getAllDeleted(){
+		List<AccountTypeNature> allDeleted = accountTypeNatureRepository.getAllDeleted();
+		return allDeleted;
+	}
+	
+	public CResponse getAllAccountTypeNature(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(accountTypeNatureRepository.getAllAccountTypeNature(id));
+		return response;
+	}
+	
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(accountTypeNatureRepository.findById(id).get());
+		return response;
+	}
+
+	public AccountTypeNature delete(Long id) {
+		AccountTypeNature accountTypeNature = accountTypeNatureRepository.findById(id).get();
+		if (accountTypeNature == null) {
+			throw new NoDataFoundException("accountTypeNature With ID : " + id + " Not Found");
+		}
+		accountTypeNature.setIsDeleted(1);
+		return accountTypeNatureRepository.save(accountTypeNature);
+	}
+	
+	private CResponse validateAccountTypeNatureUpdate(AccountType accountType, AccountTypeNature accountTypeNature, IndCustomerNature indCustomerNature,
+			IndFileType indFileType) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				
+				parameters = new CActionValidationParameters();
+				if (accountType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_IS_NOT_FOUND.toString());
+					response.setErrorMessage("المنتج غير موجود");
+					break;
+				}
+				
+				if (accountTypeNature == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_IS_NOT_FOUND.toString());
+					response.setErrorMessage("طبيعة  عميل المنتج غير موجود");
+					break;
+				}
+				
+				if (indCustomerNature == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CUSTOMER_NATURE_NOT_FOUND.toString());
+					response.setErrorMessage("طبيعة العميل غير موجود");
+					break;
+				}
+				
+				if (indFileType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.FILE_TYPE_IS_NOT_FOUND.toString());
+					response.setErrorMessage("نوع طبيعة العميل غير موجود ");
+					break;
+				}
+				
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE.toString(), accountType);
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE_NATURE.toString(), accountTypeNature);
+				parameters.addParameter(EKeyCode.CUSTOMER_NATURE.toString(), indCustomerNature);
+				parameters.addParameter(EKeyCode.FILE_TYPE.toString(), indFileType);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_ACCOUNT_TYPE_NATURE, parameters);
+				
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		
+		return response;
+	}
+	
+	private CResponse validateAccountTypeNatureCreate(AccountType accountType, IndCustomerNature natureId, IndFileType indFileType) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				
+				parameters = new CActionValidationParameters();
+				if (accountType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_IS_NOT_FOUND.toString());
+					response.setErrorMessage("المنتج غير موجود");
+					break;
+				}
+				
+				if (natureId == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CUSTOMER_NATURE_NOT_FOUND.toString());
+					response.setErrorMessage("طبيعة العميل غير موجود");
+					break;
+				}
+				
+				if (indFileType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.FILE_TYPE_IS_NOT_FOUND.toString());
+					response.setErrorMessage("نوع طبيعة العميل غير موجود ");
+					break;
+				}
+				
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE.toString(), accountType);
+				parameters.addParameter(EKeyCode.CUSTOMER_NATURE.toString(), natureId);
+				parameters.addParameter(EKeyCode.FILE_TYPE.toString(), indFileType);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_ACCOUNT_TYPE_NATURE, parameters);
+				
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		
+		return response;
+	}
+	
+	public CResponse saveAllToAccountType( AccountTypeForm accountTypeForm, AccountType accountType) throws Exception {
+		
+		CResponse response = new CResponse();
+		CResponse subResponse = new CResponse();
+		CResponse respObject = new CResponse();
+		
+		
+		respObject = getAllAccountTypeNature(accountType.getId());
+		List<AccountTypeNature> accTypNatAlreadyExist = (List<AccountTypeNature>) respObject.getReturnedObject();
+		
+		List<AccountTypeNature> listToSaveAccountTypeNat = new ArrayList<>();
+		
+
+		
+			for (int i = 0; i < accountTypeForm.getAccountTypeNatures().size(); i++) {
+				
+				if(accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() == null)
+					accountTypeForm.getAccountTypeNatures().get(i).setFileTypeID((long) 0);
+				
+				//add some nature
+				if(accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() != null) {
+					if(accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() != -1 && 
+						accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() != -3 && 
+						accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() != -2) {
+						
+						//If it is  =  null , it must be added(Save for the first time)
+						if (accountTypeForm.getAccountTypeNatures().get(i).getCustomerNatureId() != null) {
+							//System.err.println("create nature");
+							if(accountTypeForm.getAccountTypeNatures().get(i).getId() == null) {
+								
+								IndCustomerNature indCustomerNature = indCustomerNatureServices.findById(accountTypeForm.getAccountTypeNatures().get(i).getCustomerNatureId().getId());
+								IndFileType indFileType = indFileTypeServices.findById(accountTypeForm.getAccountTypeNatures().get(i).getCustomerNatureId().getFileTypeId().getId());
+								subResponse = validateAccountTypeNatureCreate(accountTypeForm.getAccountType(), indCustomerNature, indFileType);
+								
+								
+								accountTypeForm.getAccountTypeNatures().get(i).setInsertBy(userService.getAuthenticatedUser().getID());
+								accountTypeForm.getAccountTypeNatures().get(i).setIsDeleted(0);
+								accountTypeForm.getAccountTypeNatures().get(i).setInsertDate(new Date());
+								accountTypeForm.getAccountTypeNatures().get(i).setAccountTypeId(accountType);
+								//System.err.println("create: "+accountTypeForm.getAccountTypeNatures().get(i).getDescription());
+								if (!subResponse.isSuccess()) {
+									subResponse.setSuccess(false);
+									subResponse.setErrorMessage(subResponse.getErrorMessage()+" ");
+								} 
+								else {
+									listToSaveAccountTypeNat.add(accountTypeForm.getAccountTypeNatures().get(i));
+//									CResponse response1 = actionService.findActionByNameB(ActionEnum.create_account_type_nature.toString());
+//									Action action =  (Action) response1.getReturnedObject();
+//									User user =  userService.getAuthenticatedUser();
+//									systemLogService.save(action, user);
+									
+								}
+							}
+							
+							else if(accountTypeForm.getAccountTypeNatures().get(i).getId() != null) {
+								
+								IndCustomerNature indCustomerNature = indCustomerNatureServices.findById(accountTypeForm.getAccountTypeNatures().get(i).getCustomerNatureId().getId());
+								IndFileType indFileType = indFileTypeServices.findById(accountTypeForm.getAccountTypeNatures().get(i).getCustomerNatureId().getFileTypeId().getId());
+								subResponse = validateAccountTypeNatureUpdate(accountTypeForm.getAccountType(),accountTypeForm.getAccountTypeNatures().get(i) ,indCustomerNature, indFileType);
+								accountTypeForm.getAccountTypeNatures().get(i).setLastUpdateBy(userService.getAuthenticatedUser().getID());
+								AccountTypeNature temCompany = accountTypeNatureRepository.findById(accountTypeForm.getAccountTypeNatures().get(i).getId()).get();
+								accountTypeForm.getAccountTypeNatures().get(i).setInsertBy(temCompany.getInsertBy());
+								accountTypeForm.getAccountTypeNatures().get(i).setInsertDate(temCompany.getInsertDate());
+								accountTypeForm.getAccountTypeNatures().get(i).setIsDeleted(temCompany.getIsDeleted());
+								accountTypeForm.getAccountTypeNatures().get(i).setAccountTypeId(accountType);
+								//System.err.println("edit nat: " + accountTypeForm.getAccountTypeNatures().get(i).getDescription());
+								if (!subResponse.isSuccess()) {
+									subResponse.setSuccess(false);
+									subResponse.setErrorMessage(subResponse.getErrorMessage()+" ");
+								}
+								else{
+									listToSaveAccountTypeNat.add(accountTypeForm.getAccountTypeNatures().get(i));
+//									CResponse response1 = actionService.findActionByNameB(ActionEnum.create_account_type_nature.toString());
+//									Action action =  (Action) response1.getReturnedObject();
+//									User user =  userService.getAuthenticatedUser();
+//									systemLogService.save(action, user);
+								}
+							}
+						}
+					}
+					//will add all non customer individual nature
+					else if(accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() != -1 && accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() == -2){
+						//System.err.println("will add all non customer individual nature");
+						boolean isExist = false;
+						respObject = indCustomerNatureServices.getAllByType("INDIVIDUAL");
+						List<IndCustomerNature> lisIndCustomerNatures = (List<IndCustomerNature>) respObject.getReturnedObject();
+						
+						for(int k = 0; k < lisIndCustomerNatures.size(); k++) {
+							for(int j = 0; j < accTypNatAlreadyExist.size(); j++) {
+								if(accTypNatAlreadyExist.get(j).getCustomerNatureId().getId() == lisIndCustomerNatures.get(k).getId()) {
+									isExist = true;	
+									break;
+								}
+							}
+							if(!isExist) {
+								AccountTypeNature accountTypeNature = new AccountTypeNature();
+								accountTypeNature.setInsertBy(userService.getAuthenticatedUser().getID());
+								accountTypeNature.setInsertDate(new Date());
+								accountTypeNature.setAccountTypeId(accountType);
+								accountTypeNature.setCustomerNatureId(lisIndCustomerNatures.get(k));
+								accountTypeNature.setDescription(accountTypeForm.getAccountTypeNatures().get(i).getDescription());
+								accountTypeNature.setIsEnabledTaxFlag(accountTypeForm.getAccountTypeNatures().get(i).getIsEnabledTaxFlag());
+								//System.err.println("createNonInd---: "+accountTypeNature.getCustomerNatureId().getNameA());
+								
+								subResponse = validateAccountTypeNatureCreate(accountTypeForm.getAccountType(), lisIndCustomerNatures.get(k), lisIndCustomerNatures.get(k).getFileTypeId());
+								if (!subResponse.isSuccess()) {
+									subResponse.setSuccess(false);
+									subResponse.setErrorMessage(subResponse.getErrorMessage()+" ");
+								}
+								else{
+									listToSaveAccountTypeNat.add(accountTypeNature);
+//									CResponse response1 = actionService.findActionByNameB(ActionEnum.create_account_type_nature.toString());
+//									Action action =  (Action) response1.getReturnedObject();
+//									User user =  userService.getAuthenticatedUser();
+//									systemLogService.save(action, user);
+								}
+							}
+							isExist = false;
+						}
+					}
+					//will add all non customer company nature
+					else if(accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() != -1 && accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() == -3){
+						//System.err.println("will add all non customer company nature");
+						boolean isExist = false;
+						respObject = indCustomerNatureServices.getAllByType("COMPANY");
+						List<IndCustomerNature> lisIndCustomerNatures = (List<IndCustomerNature>) respObject.getReturnedObject();
+						
+						for(int k = 0; k < lisIndCustomerNatures.size(); k++) {
+							for(int j = 0; j < accTypNatAlreadyExist.size(); j++) {
+								if(accTypNatAlreadyExist.get(j).getCustomerNatureId().getId() == lisIndCustomerNatures.get(k).getId()) {
+									isExist = true;	
+									break;
+								}
+							}
+							if(!isExist) {
+								AccountTypeNature accountTypeNature = new AccountTypeNature();
+								accountTypeNature.setInsertBy(userService.getAuthenticatedUser().getID());
+								accountTypeNature.setInsertDate(new Date());
+								accountTypeNature.setAccountTypeId(accountType);
+								accountTypeNature.setCustomerNatureId(lisIndCustomerNatures.get(k));
+								accountTypeNature.setDescription(accountTypeForm.getAccountTypeNatures().get(i).getDescription());
+								accountTypeNature.setIsEnabledTaxFlag(accountTypeForm.getAccountTypeNatures().get(i).getIsEnabledTaxFlag());
+								//System.err.println("create---: "+accountTypeNature.getCustomerNatureId().getNameA());
+								subResponse = validateAccountTypeNatureCreate(accountTypeForm.getAccountType(), lisIndCustomerNatures.get(k), lisIndCustomerNatures.get(k).getFileTypeId());
+								if (!subResponse.isSuccess()) {
+									subResponse.setSuccess(false);
+									subResponse.setErrorMessage(subResponse.getErrorMessage()+" ");
+								}else{
+									listToSaveAccountTypeNat.add(accountTypeNature);
+//									CResponse response1 = actionService.findActionByNameB(ActionEnum.create_account_type_nature.toString());
+//									Action action =  (Action) response1.getReturnedObject();
+//									User user =  userService.getAuthenticatedUser();
+//									systemLogService.save(action, user);
+								}
+							}
+							isExist = false;
+						}
+					}
+					//will add all non customer individual and company nature
+					else if(accountTypeForm.getAccountTypeNatures().get(i).getFileTypeID() == -1){
+						boolean isExist = false;
+						respObject = indCustomerNatureServices.getAll();
+						List<IndCustomerNature> lisIndCustomerNatures = (List<IndCustomerNature>) respObject.getReturnedObject();
+						
+						for(int k = 0; k < lisIndCustomerNatures.size(); k++) {
+							for(int j = 0; j < accTypNatAlreadyExist.size(); j++) {
+								if(accTypNatAlreadyExist.get(j).getCustomerNatureId().getId() == lisIndCustomerNatures.get(k).getId()) {
+									isExist = true;	
+									break;
+								}
+							}
+							if(!isExist) {
+								AccountTypeNature accountTypeNature = new AccountTypeNature();
+								accountTypeNature.setInsertBy(userService.getAuthenticatedUser().getID());
+								accountTypeNature.setInsertDate(new Date());
+								accountTypeNature.setAccountTypeId(accountType);
+								accountTypeNature.setCustomerNatureId(lisIndCustomerNatures.get(k));
+								accountTypeNature.setDescription(accountTypeForm.getAccountTypeNatures().get(i).getDescription());
+								accountTypeNature.setIsEnabledTaxFlag(accountTypeForm.getAccountTypeNatures().get(i).getIsEnabledTaxFlag());
+								//System.err.println("create---: "+accountTypeNature.getCustomerNatureId().getNameA());
+								subResponse = validateAccountTypeNatureCreate(accountTypeForm.getAccountType(), lisIndCustomerNatures.get(k), lisIndCustomerNatures.get(k).getFileTypeId());
+								if (!subResponse.isSuccess()) {
+									subResponse.setSuccess(false);
+									subResponse.setErrorMessage(subResponse.getErrorMessage()+" ");
+								}else {
+									listToSaveAccountTypeNat.add(accountTypeNature);
+//									CResponse response1 = actionService.findActionByNameB(ActionEnum.create_account_type_nature.toString());
+//									Action action =  (Action) response1.getReturnedObject();
+//									User user =  userService.getAuthenticatedUser();
+//									systemLogService.save(action, user);
+								}
+									
+							}
+							isExist = false;
+						}
+					}
+				}
+				
+				if (!subResponse.isSuccess()) {
+					//response = subResponse;e
+					response.setSuccess(false);
+					response.setErrorMessage(subResponse.getErrorMessage()+" ");
+				}
+			}
+		
+		
+		
+
+		boolean check = true;
+		for (int i = 0; i < accTypNatAlreadyExist.size(); i++) {
+			Long id1 = accTypNatAlreadyExist.get(i).getId();
+			check = true;
+			// if check =true ,must be deleted
+			for (int j = 0; j < accountTypeForm.getAccountTypeNatures().size(); j++) {
+				Long id2 = accountTypeForm.getAccountTypeNatures().get(j).getId();
+				if (id1.equals(id2)) {
+					check = false;
+					break;
+				}
+				
+
+			}
+			if (check == true) {
+				respObject = findById(accTypNatAlreadyExist.get(i).getId());
+				AccountTypeNature accountTypeNat = (AccountTypeNature) respObject.getReturnedObject();
+				accountTypeNat.setIsDeleted(1);
+				accountTypeNat.setDeletedDate(new Date());
+				listToSaveAccountTypeNat.add(accountTypeNat);
+//				CResponse response1 = actionService.findActionByNameB(ActionEnum.delete_account_type_nature.toString());
+//				Action action =  (Action) response1.getReturnedObject();
+//				User user =  userService.getAuthenticatedUser();
+//				systemLogService.save(action, user);
+
+			}
+
+		}
+		
+		accountTypeNatureRepository.saveAll(listToSaveAccountTypeNat);
+		
+		return response;
+	}
+
+	
+	
+	public boolean checkAccountTypeNatureIsDeleted(Long id) {
+		AccountTypeNature accountTypeNature = accountTypeNatureRepository.findById(id).get();
+		if(accountTypeNature.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+
+	
+	
+	
+
+	
+}

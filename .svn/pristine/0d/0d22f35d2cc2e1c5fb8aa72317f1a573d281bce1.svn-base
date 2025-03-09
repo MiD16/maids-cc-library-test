@@ -1,0 +1,5 @@
+package com.template.Model.Table.Commission;
+
+public class CommissionEffictiveHistory {
+
+}

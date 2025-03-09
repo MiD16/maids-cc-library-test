@@ -1,0 +1,220 @@
+.btn-primary-red {
+  color: #ffffff;
+  
+  background-image: linear-gradient(to bottom, #c60606, #320505);
+  border-color: rgb(198, 6, 6);
+   }
+  .btn-primary-red:hover {
+    color: #ffffff;
+    background-color: rgb(249, 38, 38);
+    border-color: rgb(198, 6, 6); 
+    }
+  .btn-primary-red:focus, .btn-primary-red.focus {
+    color: #ffffff;
+    background-color: rgb(198, 6, 6);
+    border-color: rgb(194, 6, 6);
+    box-shadow: 0 0 0 0.2rem rgb(190, 6, 6,0.5); 
+    
+    }
+
+.btn-primary-green {
+  color: #ffffff;
+  background-color: rgb(33, 107, 35);
+  border-color: rgb(33, 107, 35);
+   }
+  .btn-primary-green:hover {
+    color: #ffffff;
+    background-color: rgb(46, 150, 48);
+    border-color: rgb(33, 107, 35); 
+    }
+  .btn-primary-green:focus, .btn-primary-green.focus {
+    color: #ffffff;
+    background-color: rgb(33, 107, 35);
+    border-color: rgb(33, 107, 35);
+    box-shadow: 0 0 0 0.2rem rgb(33, 104, 35,0.5); 
+    
+    }
+.fontstyle{
+
+font-family: "Calibri", sans-serif !important;
+ }
+.dropdown-item-table {
+  display: block;
+  width: 80%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #00008b;
+  text-align: left;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0; }
+  .dropdown-item-table:hover, .dropdown-item-table:focus {
+    color: #16181b;
+    text-decoration: none;
+    width: 80%;
+    background-color: #f8f9fa; }
+  .dropdown-item-table.active, .dropdown-item-table:active {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #1b68ff; }
+  .dropdown-item-table.disabled, .dropdown-item-table:disabled {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: transparent; }
+    
+    span.date{
+		color:#c50202;
+		font-weight: 600;
+		margin:5px;
+		font-size: 17px;
+	}
+	
+	.animate-element-before {
+
+
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5;
+    -o-transition: all 0.5;
+    transition: all 0.5s;
+  }
+  
+  .animate-element-after {
+   visibility: visible;
+    opacity: 1; 
+  }
+.container-div {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+ 
+}
+
+.container-div.show {
+  display:flex;
+}
+ 
+.container-div.active {
+  opacity: 1;
+}
+
+
+a.inactive{
+	color:#979797
+}
+
+a.active{
+	color:#d1a923
+}
+
+.no-border{
+	border: 1px solid #dee2e600;
+}
+
+.icon-delete{
+	color: #dc3545;
+    font-size: 16px;
+    cursor: pointer
+}
+
+.icon-edit{
+	color: #00838d;
+    font-size: 16px;
+    cursor: pointer
+}
+
+.icon-add{
+	color: #28a745;
+    font-size: 16px;
+    cursor: pointer
+}
+
+
+.icon-info{
+		color: #1b68ff;
+    font-size: 16px;
+    cursor: pointer
+}
+.icon-lock{
+	color: #cd0909;
+    font-size: 16px;
+    cursor: pointer
+}
+
+.icon-unlock{
+	color: #28a745;
+    font-size: 16px;
+    cursor: pointer
+}
+.icon-key{
+	color: #007bff;
+    font-size: 16px;
+    cursor: pointer
+}
+.form-control-in-table{
+	width:80%;
+	height:calc(1em + 0.75rem + 2px)
+}
+
+.error-label{
+	color: #dc3545;
+    display: inline-block;
+    margin-left: 1.5em;
+}
+
+
+.dataTables_filter > label {
+    display: inline-flex !important;
+}
+
+.confirm-swal {
+	width: 68px;
+	color: white;
+	margin-left: 10px;
+}
+input[type="time"]::-webkit-calendar-picker-indicator {
+    background: none;
+    display: none;
+}
+.cancel-swal {
+	width: 68px;
+	color: white;
+	border-color: #c0c0c0;
+	background-image: linear-gradient(to bottom, #c0c0c0, #686666)
+}
+.detail-label {
+	color: #002e32;
+    font-size: 14.4px;
+    font-weight: 500;
+}
+.alert-url {
+	font-size: 15.5px;
+    text-decoration-line: underline;
+    font-weight: 500;
+    color: #1b68ff
+}
+
+div:where(.swal2-icon).swal2-success {
+    border-color: #ede9e9 !important;
+   
+}
+.clear {
+	color:#eb0a0a !important;
+    background-color: white;
+ 	border-radius: 0rem !important
+}
+.card-text{
+	font-size: 15px;
+    color: #35858d
+}
+.cannot-add-text{
+	    padding-top: 20px;
+    color: #c50202;
+    font-size: 14.5px;
+}
+.overflow-text-td {
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 10vw;
+}

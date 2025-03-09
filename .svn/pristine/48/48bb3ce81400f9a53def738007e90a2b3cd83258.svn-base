@@ -1,0 +1,50 @@
+package com.template.BusinessRule.CurrencySegments;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Interests.CurrencySegments;
+import com.template.Service.Table.Interest.CurrencySegmentsService;
+@Component(CBusinessRuleConstant.CURRENCY_SEGMENT_IS_NOT_EXIST)
+@Lazy
+public class CBRCurrencySegmentsIsExist implements IBusinessRule {
+	@Autowired
+	CurrencySegmentsService currencySegmentsService;
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		CurrencySegments currencySegments = null;
+		String messageString = null;
+		String path = null;
+		Long id = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				currencySegments = (CurrencySegments) parameters.getParameter(EKeyCode.CURRENCY_SEGMENTS.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				id = currencySegmentsService.checkCurrencySegmentIsExist(currencySegments);
+				if (id != null) {
+					messageString = "<div style='margin-bottom: 12px'>" +"الشريحة من "+ currencySegments.getFromSeg() +
+							" إلى " +currencySegments.getToSeg()
+							+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+							+ "</div> <a class='alert-url' href='" + path + "/currencySegments/update?id=" + id
+							+ "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage(messageString);
+					actionValidationResult.setErrorCode(EErrorCode.IND_HOLIDAY_IS_EXISTS.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

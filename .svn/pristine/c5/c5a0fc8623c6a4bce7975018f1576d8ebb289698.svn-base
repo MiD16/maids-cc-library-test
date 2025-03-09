@@ -1,0 +1,287 @@
+package com.template.Service.Table.Interest;
+
+import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.UserInformation;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.AllIndexes.IndSubpoenaRequest;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.Interests.AccInterest;
+import com.template.Model.Table.Interests.AccInterestRate;
+import com.template.Model.Table.Interests.AccInterestRateSegments;
+import com.template.Model.Table.Interests.CurrencySegments;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Model.Table.Products.AccPeriod;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Repository.Table.Interest.CurrencySegmentsRepository;
+import com.template.Repository.Table.Interest.InterestRateRepository;
+import com.template.Repository.Table.Interest.InterestRateSegmentsRepository;
+import com.template.Repository.Table.SubpoenaRequest.SubpoenaRequestDetailsRep;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+import com.template.Service.Table.AllIndexes.IndSubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.Product.AccCurrencyService;
+import com.template.Service.Table.Product.AccPeriodService;
+
+@Service
+public class InterestRateSegmentsService {
+
+	@Autowired
+	InterestRateService interestRateService;
+	
+	@Autowired
+	CurrencySegmentsService currencySegmentsService;
+	
+	@Autowired
+	InterestRateSegmentsRepository interestRateSegmentsRepository;
+	
+
+	@Autowired
+	UserService userService;
+
+	
+	@Autowired
+	CActionHandler actionHandler;
+
+	//find all not deleted
+	public CResponse findAllInterestRateSegments(PageRequest pageRequest) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(interestRateSegmentsRepository.getAll(pageRequest));
+		return response;
+	}
+
+	//find object by id
+	public CResponse findById(Long id) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(interestRateSegmentsRepository.findById(id).get());
+		return response;
+	}
+
+	public CResponse saveCreate(AccInterestRateSegments interestRateSegments, String path) throws Exception {
+		CResponse response = null;
+		CResponse responseInterestRate = null;
+		CResponse responseCurrencySegment = null;
+		CurrencySegments currencySegments=null;
+		AccInterestRate interestRate=null;
+		//get interest rate from database
+		responseInterestRate= interestRateService.findById(interestRateSegments.getInterestRate().getId());
+		interestRate=(AccInterestRate)responseInterestRate.getReturnedObject();
+		//get currency segment from database
+		responseCurrencySegment= currencySegmentsService.findById(interestRateSegments.getCurrencySegments().getId());
+		currencySegments=(CurrencySegments)responseCurrencySegment.getReturnedObject();
+		
+		// call validate for create object
+		response = validateInterestRateSegmentsCreate(interestRateSegments,interestRate,currencySegments , path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//set user that created 
+		interestRateSegments.setInsertBy(userService.getAuthenticatedUser().getID());
+		interestRateSegmentsRepository.save(interestRateSegments);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+	
+	public CResponse saveUpdate(AccInterestRateSegments interestRateSegments, String path) throws Exception {
+		CResponse response = null;
+		CResponse responseInterestRate = null;
+		CResponse responseCurrencySegment = null;
+		CurrencySegments currencySegments=null;
+		AccInterestRate interestRate=null;
+		//get interest rate from database
+		responseInterestRate= interestRateService.findById(interestRateSegments.getInterestRate().getId());
+		interestRate=(AccInterestRate)responseInterestRate.getReturnedObject();
+		//get currency segment from database
+		responseCurrencySegment= currencySegmentsService.findById(interestRateSegments.getCurrencySegments().getId());
+		currencySegments=(CurrencySegments)responseCurrencySegment.getReturnedObject();
+		
+		// call validate for create object
+		response = validateInterestRateSegmentsUpdate(interestRateSegments,interestRate,currencySegments , path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//to get insert date from object in database
+		AccInterestRateSegments tem = interestRateSegmentsRepository.findById(interestRateSegments.getId()).get();
+		interestRateSegments.setInsertDate(tem.getInsertDate());
+		interestRateSegments.setInsertBy(tem.getInsertBy());
+		//set user that updated 
+		interestRateSegments.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		interestRateSegmentsRepository.save(interestRateSegments);
+		response.setSuccessMessage("تم التعديل بنجاح");
+		return response;
+	}
+	
+	public CResponse delete(Long id) throws Exception {
+		//get object from database
+		AccInterestRateSegments interestRateSegments= interestRateSegmentsRepository.findById(id).get();
+		CResponse response=null;
+		// call validate for delete object
+		response = validateInterestRateSegmentsDelete(interestRateSegments);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//soft delete
+		interestRateSegments.setIsDeleted(1);
+		//set deleted date
+		interestRateSegments.setDeletedDate(new Date());
+		//set user that deleted 
+		interestRateSegments.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(interestRateSegmentsRepository.save(interestRateSegments));
+		return response;
+	}
+	
+	
+	// validate if can create Interest Rate
+	public CResponse validateInterestRateSegmentsCreate(AccInterestRateSegments interestRateSegments,AccInterestRate interestRate ,CurrencySegments currencySegments,String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The Interest Rate Segment exists
+				if (interestRateSegments == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_RATE_SEGMENT_NOT_FOUND.toString());
+					response.setErrorMessage("نسبة الفائدة  للشريحة غير موجودة");
+					break;
+				}
+				// check if The interest rate exists
+				if (interestRate == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_RATE_NOT_FOUND.toString());
+					response.setErrorMessage("نسبة الفائدة غير موجودة");
+					break;
+				}
+				
+				// check if The currency segment  exists
+				if (currencySegments == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_SEGMENT_NOT_FOUND.toString());
+					response.setErrorMessage("شريحة العملة غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.INTEREST_RATE.toString(), interestRate);
+				parameters.addParameter(EKeyCode.CURRENCY_SEGMENTS.toString(), currencySegments);
+				parameters.addParameter(EKeyCode.INTEREST_RATE_SEGMENT.toString(), interestRateSegments);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_INTEREST_RATE_SEGMENT, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	// validate if can update Interest Rate
+		public CResponse validateInterestRateSegmentsUpdate(AccInterestRateSegments interestRateSegments,AccInterestRate interestRate ,CurrencySegments currencySegments,String path)
+				throws Exception {
+			CActionValidationParameters parameters = null;
+			CActionValidationResult actionValidationResult = null;
+			CResponse response = null;
+			try {
+				do {
+					response = new CResponse();
+					// check if The Interest Rate Segment exists
+					if (interestRateSegments == null) {
+						response.setSuccess(false);
+						response.setErrorCode(EErrorCode.INTEREST_RATE_SEGMENT_NOT_FOUND.toString());
+						response.setErrorMessage("نسبة الفائدة  للشريحة غير موجودة");
+						break;
+					}
+					// check if The interest rate exists
+					if (interestRate == null) {
+						response.setSuccess(false);
+						response.setErrorCode(EErrorCode.INTEREST_RATE_NOT_FOUND.toString());
+						response.setErrorMessage("نسبة الفائدة غير موجودة");
+						break;
+					}
+					
+					// check if The currency segment  exists
+					if (currencySegments == null) {
+						response.setSuccess(false);
+						response.setErrorCode(EErrorCode.CURRENCY_SEGMENT_NOT_FOUND.toString());
+						response.setErrorMessage("العملة غير موجودة");
+						break;
+					}
+					//set parameters
+					parameters = new CActionValidationParameters();
+					parameters.addParameter(EKeyCode.INTEREST_RATE.toString(), interestRate);
+					parameters.addParameter(EKeyCode.CURRENCY_SEGMENTS.toString(), currencySegments);
+					parameters.addParameter(EKeyCode.INTEREST_RATE_SEGMENT.toString(), interestRateSegments);
+					parameters.addParameter(EKeyCode.PATH.toString(), path);
+					actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_INTEREST_RATE_SEGMENT, parameters);
+					response.setSuccess(actionValidationResult.isValid());
+					response.setErrorCode(actionValidationResult.getErrorCode());
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+				} while (false);
+			} catch (Exception e) {
+				throw new Exception(e.getMessage());
+			}
+			return response;
+		}
+		
+	
+		// validate if can delete Interest Rate
+		public CResponse validateInterestRateSegmentsDelete(AccInterestRateSegments interestRateSegments)
+				throws Exception {
+			CActionValidationParameters parameters = null;
+			CActionValidationResult actionValidationResult = null;
+			CResponse response = null;
+			try {
+				do {
+					response = new CResponse();
+					// check if The Interest Rate Segment exists
+					if (interestRateSegments == null) {
+						response.setSuccess(false);
+						response.setErrorCode(EErrorCode.INTEREST_RATE_SEGMENT_NOT_FOUND.toString());
+						response.setErrorMessage("نسبة الفائدة  للشريحة غير موجودة");
+						break;
+					}
+					//set parameters
+					parameters = new CActionValidationParameters();
+					parameters.addParameter(EKeyCode.INTEREST_RATE_SEGMENT.toString(), interestRateSegments);
+					actionValidationResult = actionHandler.validate(CActionConstant.DELETE_INTEREST_RATE_SEGMENT, parameters);
+					response.setSuccess(actionValidationResult.isValid());
+					response.setErrorCode(actionValidationResult.getErrorCode());
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+				} while (false);
+			} catch (Exception e) {
+				throw new Exception(e.getMessage());
+			}
+			return response;
+		}
+		
+	
+	//check if Interest Rate Segment is deleted
+	//return true if deleted
+	//return false if not deleted
+	public boolean checkInterestRateSegmentIsDeleted(long id) {
+		AccInterestRateSegments interestRateSegments= interestRateSegmentsRepository.findById(id).get();
+		if (interestRateSegments.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+}

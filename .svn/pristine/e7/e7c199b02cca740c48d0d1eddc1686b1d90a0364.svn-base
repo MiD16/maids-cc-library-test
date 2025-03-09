@@ -1,0 +1,27 @@
+package com.template.Action.BranchHoliday;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.DELETE_BRANCH_HOLIDAY)
+@Lazy
+public class CABranchHolidayDelete extends CAction {
+	public CABranchHolidayDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.BRANCH_HOLIDAY_IS_EXIST);
+		addBusinessnRule(CBusinessRuleConstant.HOLIDAY_IS_NOT_PASSED);
+
+		
+	}
+}

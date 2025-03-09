@@ -1,0 +1,91 @@
+package com.template.DataBase.Seeders;
+
+
+
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import com.template.DataBase.Seeder;
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.User;
+import com.template.Repository.Basic.RoleActionRep;
+import com.template.Repository.Basic.RoleRep;
+import com.template.Repository.Basic.UsersRep;
+
+@Component
+public class UserSeeder {
+
+	private final Log logger = LogFactory.getLog(Seeder.class);
+	
+	public UserSeeder() {
+		logger.info("	==>Seeder ==> "+ getClass().getSimpleName());
+	}
+	
+	public void run(RoleRep roleRep,UsersRep userRep,RoleActionRep roleActionRep) {
+		
+		  Role role=roleRep.findById(1).get(); User user=new User();
+		  System.err.println("hiiiiiiiiiiii");
+		  
+		 user.setUsername("adminn"); user.setPassword(new
+		  BCryptPasswordEncoder().encode("admin")); user.setFirst_name_b("Mohamud");
+		  user.setLast_name_b("Osman"); user.setFull_name(user.getfullname());
+		 // user.setMobile("0000000000"); user.setStatus(0);
+		  user.setEmail("test@test.com"); ///////// user.setIs_enabled(0);
+		  user.setAccount_access_flag(0); user.setAccount_debit_limit(0);
+		  user.setFirst_name_a("ll");
+		  
+		  user.setLast_name_a("ooo");
+		  
+		  
+		  user.setFather_name_b("0000"); user.setFather_name_a("0000");
+		 user.setFather_name_b("0000"); //user.setLock(0);
+		 
+		  userRep.save(user);
+		  
+		//  user=userRep.findById(1).get(); user.setUser_role(role); userRep.save(user);
+		
+		
+//	    role=roleRep.findById(2).get();
+//	    user=new User();
+//		user.setUsername("hr");
+//		user.setPassword(new BCryptPasswordEncoder().encode("hr"));
+//		user.setFirst_name("Mohamud");
+//		user.setLast_name("Osman");
+//		user.setFull_name(user.getfullname());
+//		user.setMobile("0000000000");
+//		user.setStatus(0);
+//		user.setEmail("test@test.com");
+//		
+//		userRep.save(user);
+//		
+//		user=userRep.findById(2).get();
+//		user.setUser_role(role);
+//		userRep.save(user);
+//		
+//		
+//		role=roleRep.findById(3).get();
+//	    user=new User();
+//		
+//
+//		user.setUsername("manager");
+//		user.setPassword(new BCryptPasswordEncoder().encode("manager"));
+//		user.setFirst_name("Mohamud");
+//		user.setLast_name("Osman");
+//		user.setFull_name(user.getfullname());
+//		user.setMobile("0000000000");
+//		user.setStatus(0);
+//		user.setEmail("test@test.com");
+//		
+//		userRep.save(user);
+//		
+//		user=userRep.findById(3).get();
+//		user.setUser_role(role);
+//		userRep.save(user);
+
+
+	}
+	
+}

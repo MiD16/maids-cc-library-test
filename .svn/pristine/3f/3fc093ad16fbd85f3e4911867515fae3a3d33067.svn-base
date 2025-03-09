@@ -1,0 +1,70 @@
+package com.Base.API.Response.DTO;
+
+import com.Base.Class.CError;
+import com.Base.Constant.CDefaultConstant;
+import com.Base.Enum.ELanguage;
+import com.Shared.Enum.EError;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class CErrorDTO
+{
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	private int errorCode;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	private String errorDescription;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	private String errorMessage;
+	
+	public CErrorDTO setError(EError error)
+	{
+		this.errorCode = error.getErrorCode();
+		this.errorDescription = error.toString();
+		this.errorMessage = CDefaultConstant.LANGUAGE.equals(ELanguage.AR.toString()) ? error.getArError() : error.getEnError();
+
+		return this;
+	}
+	
+	public CErrorDTO setError(EError error, ELanguage language)
+	{
+		this.errorCode = error.getErrorCode();
+		this.errorDescription = error.toString();
+		this.errorMessage = ! language.equals(ELanguage.AR) ? error.getArError() : error.getEnError();
+
+		return this;
+	}
+	
+	public CErrorDTO setErrorMessage(String errorMessage)
+	{
+		this.errorMessage = errorMessage;
+		
+		return this;
+	}
+	
+	public static CErrorDTO parse(CError error)
+	{
+		CErrorDTO errorDTO = null;
+		
+		do 
+		{
+			if(error == null) break;
+			
+			errorDTO = new CErrorDTO();	
+			
+			errorDTO.errorCode = error.getErrorCode();
+			errorDTO.errorDescription = error.getErrorDescription();
+			errorDTO.errorMessage = error.getErrorMessage();
+		} 
+		while (false);
+		
+		return errorDTO;	
+	}
+}

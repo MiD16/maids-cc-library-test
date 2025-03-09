@@ -1,0 +1,23 @@
+package com.template.Action.IndRelationshipType;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.DELETE_IND_RELATIONSHIP_TYPE)
+@Lazy
+public class CAIndRelationShipTypeDelete extends CAction {
+	public CAIndRelationShipTypeDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.IND_RELATIONSHIP_TYPE_IS_NOT_DELETED);
+	}
+}

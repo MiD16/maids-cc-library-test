@@ -1,0 +1,99 @@
+package com.template.Model.Table.Holiday;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.template.Model.Table.AllIndexes.*;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Date;
+
+
+/**
+ * The persistent class for the CUSTOMER_ACCOUNT database table.
+ * 
+ */
+@Entity
+@Table(name="BRANCH_HOLIDAY")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@ToString
+@NoArgsConstructor
+
+public class BranchHoliday  {
+
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+
+
+	@ManyToOne
+	@JoinColumn(name="HOLIDAY_ID")
+	private Holidays holiday;
+
+	
+	@ManyToOne
+	@JoinColumn(name="BRANCH_ID")
+	private Branch branch;
+	
+	@Column(name="INSERT_BY")
+	private long insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+	
+	
+
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	
+	@Column(name="IS_DELETED")
+	private int isDeleted;
+	
+	
+	@Column(name="DELETED_BY")
+	private long deletedBy;
+
+
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+	
+	@Column(name="IS_ENABLED_FLAG")
+	private int isEnableFlag;
+	
+	
+	@Column(name="NOTE")
+	private String note;
+	
+	
+	  @PrePersist
+	  void createdAt() {
+	    this.insertDate = this.lastUpdateDate = new Date();
+	    this.isDeleted = 0;
+	    this.isEnableFlag=1;
+	  }
+	  
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	  }
+
+
+
+
+}

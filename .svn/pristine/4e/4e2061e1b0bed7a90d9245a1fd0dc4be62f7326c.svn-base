@@ -1,0 +1,54 @@
+//package com.template.Class.Index;
+//
+//
+//
+//import lombok.Getter;
+//import lombok.NoArgsConstructor;
+//import lombok.Setter;
+//import lombok.ToString;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//import com.template.Model.Table.Address;
+//import com.template.Model.Table.CompanyMember;
+//import com.template.Model.Table.NonCustCompany;
+//
+//import lombok.AccessLevel;
+//
+//@Getter(AccessLevel.PUBLIC)
+//@Setter(AccessLevel.PUBLIC)
+//@NoArgsConstructor
+//@ToString
+//public class NonCustomerCompanyForm {
+//
+//	private List<CompanyMember> companyMembers ;
+//
+//	private List<Long> addressTypeId =new ArrayList<Long>();
+//	private List<String> buldingNumberA =new ArrayList<String>();
+//	private List<Long> cityId =new ArrayList<Long>();
+//	private List<Long> countryId =new ArrayList<Long>();
+//	private List<String> email1 =new ArrayList<String>();
+//	private List<String> email2 =new ArrayList<String>();
+//	private List<String> fax =new ArrayList<String>();
+//	private List<String> mailBox =new ArrayList<String>();
+//	private List<String> mobile1 =new ArrayList<String>();
+//	private List<String> mobile2 =new ArrayList<String>();
+//	private List<String> region =new ArrayList<String>();
+//	private List<String> streetA =new ArrayList<String>();
+//	private List<String> streetB =new ArrayList<String>();
+//	private List<String> telephone1 =new ArrayList<String>();
+//	private List<String> telephone2 =new ArrayList<String>();
+//	private List<Long> idAdd =new ArrayList<Long>();
+//	private List<Address> addresses=new ArrayList<Address>();
+//	private List<Long> idNunCustIndiv =new ArrayList<Long>();
+//	private List<String> partnershipRate =new ArrayList<String>();
+//	private List<Integer> memberRoleId =new ArrayList<Integer>();
+//	private List<Integer> authorizedSignatoryFlag =new ArrayList<Integer>();
+//	
+//	private NonCustCompany nonCustCompany=new NonCustCompany();
+//
+//
+//	
+//
+//}

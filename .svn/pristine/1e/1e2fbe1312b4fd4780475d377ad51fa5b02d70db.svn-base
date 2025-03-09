@@ -1,0 +1,62 @@
+package com.template.Model.View;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.NamedNativeQuery;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NamedNativeQuery(name = "LOG_ACTION_SEARCH", callable = true, query = "{? = call LOG_ACTION_SEARCH(?,?,?,?,?,?,?)}", resultClass = Log_Actions_view.class)
+@Immutable
+@Entity
+@Table(name = "LOG_ACTIONS_VIEW")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class Log_Actions_view {
+
+	@Id
+	@Column(name = "log_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public int log_id;
+
+	@Column(name = "USER_ID")
+	public Integer user;
+	@Column(name = "USER_NAME")
+	public String user_name;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Column(name = "action_date")
+	public Date action_date;
+
+	@Column(name = "action_id")
+	public Integer action_id;
+
+	@Column(name = "action_name_ar")
+	public String action_name_ar;
+
+	@Column(name = "action_name_en")
+	public String action_name_en;
+	@Column(name = "ROLE_ID")
+	public Integer role_id;
+
+	@Column(name = "DESCRIPTION")
+	public String description;
+	@Column(name = "total_count")
+	public Integer total_count;
+
+}

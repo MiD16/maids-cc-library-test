@@ -1,0 +1,47 @@
+package com.template.Service.Table.Product;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.template.Model.Table.GlTest;
+import com.template.Repository.Table.Product.GlTestRepository;
+
+@Service
+public class GlTestService {
+	
+	@Autowired
+	GlTestRepository glTestRepository;
+	
+	public GlTest save(GlTest glTest) {
+		if(glTest.getId() == null)
+		{
+			glTest.setInsertBy(0);
+		}else if(glTest.getId() != null){
+			GlTest temCompany=glTestRepository.findById(glTest.getId()).get();
+			glTest.setInsertDate(temCompany.getInsertDate());
+		}
+		glTestRepository.save(glTest);
+		return glTest;
+	}
+	
+	public void update(GlTest glTest) {
+		glTestRepository.save(glTest);
+	}
+	
+	public GlTest findById(Long id) {
+		return glTestRepository.getById(id);
+	}
+	
+	public List<GlTest> getAll(){
+		List<GlTest> all = glTestRepository.getAll();
+		return all;
+	}
+	
+	public List<GlTest> getAllDeleted(){
+		List<GlTest> allDeleted = glTestRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+
+}

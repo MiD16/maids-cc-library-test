@@ -1,0 +1,206 @@
+package com.Base.Configuration;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.DefaultSavedRequest;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+
+import com.Base.Class.CResponse;
+import com.template.Class.OneInSession.CustomLogoutSuccessHandler;
+import com.template.Model.Basic.User;
+import com.template.Repository.Basic.RoleControllerRep;
+import com.template.Service.Basic.UserService;
+
+@Configuration
+@EnableWebSecurity
+public class SessionBasedSecurityConfig
+{
+	//@Autowired LogService logActionService;
+	
+	@Autowired RoleControllerRep roleControllerRep;
+	
+	@Value("${login.max.fault.count}")
+	int maxFault;
+	
+	@Value("${login.fault.time.interval}")
+	int timeInterval;
+	
+	@Value("${login.session.max}")
+	int maxSessionCount;
+	
+	String[] staticResources = { "/css/**", "/img/**", "/vendors/**", "/js/**", "/js/**"};
+	
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception 
+	{
+		auth.userDetailsService(userService);
+	}
+	
+	@Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() 
+    {
+        return new SessionRegistryImpl();
+    }
+
+	@Autowired UserService userService;
+    
+	@Bean
+	@Order(3)
+	SecurityFilterChain apiSecurityFilterChain3(HttpSecurity http) throws Exception 
+	{
+	    http
+	    	.csrf().disable()
+			.headers(
+		        header ->
+		          header
+		            .xssProtection()
+		      )
+			.exceptionHandling()
+			.accessDeniedPage("/accessDenied.jsp");
+			
+		http	
+			.sessionManagement().maximumSessions(maxSessionCount)
+			.expiredUrl("/login?message=repeat");
+		
+		http
+			.antMatcher("/**")
+			.formLogin()
+			.loginPage("/login")
+			.usernameParameter("username")
+			.passwordParameter("password")
+			.failureHandler(
+								new AuthenticationFailureHandler()
+								{
+									@Override
+									public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException 
+									{
+										CResponse cResponse = null;
+										
+										cResponse = new CResponse();
+										
+										cResponse = userService.getUserByUserName(request.getParameter("username"));
+										
+										User user=(User)cResponse.getReturnedObject();
+										
+										if(user != null) 
+										{
+											if(user.getFualtCount() >= maxFault) 
+											{
+											
+											}
+											else 
+											{
+												if(user.getFualtCount() == 0) 
+												{
+													user.setFualtDate(new Timestamp(System.currentTimeMillis()));
+												}
+												
+												if(new Date().compareTo(addMinutesToDate(timeInterval, user.getFualtDate())) < 0) 
+												{
+													user.setFualtCount(user.getFualtCount() + 1);
+												}
+												else 
+												{
+													user.setFualtCount(1);
+													user.setFualtDate(new Timestamp(System.currentTimeMillis()));
+												}
+												if (user.getFualtCount() >= maxFault)
+												{
+													user.setLockUser(1);
+												}
+												
+												userService.save(user);
+											}
+											
+											if(user.getLockUser()== 1)
+												response.sendRedirect(request.getContextPath()+"/login?param=lock");
+										}
+										else
+										{
+											response.sendRedirect(request.getContextPath()+"/login?param=error");
+										}
+									}
+								}
+							)
+			.successHandler(
+								new AuthenticationSuccessHandler() 
+								{
+									@Override
+									public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth) throws IOException, ServletException 
+									{
+										
+										
+										//logActionService.addLogAction("login", "");
+										DefaultSavedRequest defaultSavedRequest = (DefaultSavedRequest) request.getSession()
+												.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+										
+										/*******************************************/
+										CResponse response2=null;
+										response2 = new CResponse();
+										response2= userService.getUserByUserName(auth.getName());
+										User successLoginUser=(User) response2.getReturnedObject();
+										
+										if(successLoginUser != null) {
+										successLoginUser.setFualtCount(0);
+										successLoginUser.setFualtDate(null);
+										userService.save(successLoginUser);
+										}
+										/*******************************************/
+								
+										  HttpSession session = request.getSession(false);
+			
+										 response.sendRedirect(request.getContextPath());
+										
+									}
+								}
+						   )
+			.and()
+			.logout()
+			.logoutSuccessHandler(new CustomLogoutSuccessHandler()).permitAll()
+			.and().authorizeRequests()
+			.antMatchers(staticResources).permitAll()
+			.antMatchers("/login", "/notifi/*").permitAll()
+			.anyRequest()
+			.authenticated();
+		
+		return http.build();
+			
+	}
+	 
+	 private Date addMinutesToDate(int minutes, Date beforeTime) {
+			
+			final long ONE_MINUTE_IN_MILLIS = 60000;
+
+	        long curTimeInMs = beforeTime.getTime();
+	        Date afterAddingMins = new Date(curTimeInMs
+	                + (minutes * ONE_MINUTE_IN_MILLIS));
+	        return afterAddingMins;
+	    }
+}
+

@@ -1,0 +1,29 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.IndCreditDebitCatigory;
+import com.template.Model.Table.AllIndexes.IndLegalStatus;
+
+
+@Repository
+public interface IndCreditDebitCatigoryRepository extends JpaRepository <IndCreditDebitCatigory, Long> {	
+	
+	@Query("Select a From IndCreditDebitCatigory a WHERE a.isDeleted = 0 order by a.id desc")
+	public List<IndCreditDebitCatigory> getAll();
+	
+	@Query("Select a From IndCreditDebitCatigory a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<IndCreditDebitCatigory> getAllDeleted();
+	
+	@Query("Select a from  IndCreditDebitCatigory a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public IndCreditDebitCatigory findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+	
+}

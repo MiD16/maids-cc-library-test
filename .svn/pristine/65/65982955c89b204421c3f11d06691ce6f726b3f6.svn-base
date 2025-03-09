@@ -1,0 +1,8 @@
+package com.template.API.Request.User;
+
+import com.Base.API.Request.CAPIRequest;
+
+public class CGenerateAuthTokenRequest extends CAPIRequest
+{
+
+}

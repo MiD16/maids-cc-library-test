@@ -1,0 +1,52 @@
+package com.template.Class.Xml;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.util.JacksonFeature;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.template.Class.OneInSession.Item;
+
+public class XMLHelper {
+	static String path = "/config/config.xml";
+	static public String getValue(String name) {
+		InputStream is = JacksonFeature.class.getResourceAsStream("/config/config.xml");
+		if(is != null) {
+
+        XmlMapper xmlMapper = new XmlMapper();
+
+        try {
+			List<Item> countries = xmlMapper.readValue(is, new TypeReference<List<Item>>() {
+			});
+			 Map<String, Item> nameToItem = countries.stream()
+                     .collect(Collectors.toMap(Item::getName, Function.identity()));
+			 return nameToItem.get(name).getValue();
+                     
+
+		} catch (StreamReadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DatabindException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       
+	}
+		else {
+			return " cant load file" ;
+		}
+        return "" ;
+	}
+
+
+}

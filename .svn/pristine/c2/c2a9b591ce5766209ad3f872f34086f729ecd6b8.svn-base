@@ -1,0 +1,33 @@
+
+
+
+
+
+
+
+package com.template.Repository.Table.AllIndexes;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.*;
+
+
+
+
+@Repository
+public interface IndCustomerMemberTypeRepository extends JpaRepository <IndCustomerMemberType, Long>{
+
+	@Query("Select a from IndCustomerMemberType a where a.isDeleted != 1")
+	public List<IndCustomerMemberType> getAll();
+	
+	@Query("Select a From IndCustomerMemberType a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<IndCustomerMemberType> getAllDeleted();
+	
+	@Query("Select a from  IndCustomerMemberType a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public IndCustomerMemberType findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+}

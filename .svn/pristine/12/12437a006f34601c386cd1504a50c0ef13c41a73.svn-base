@@ -1,0 +1,54 @@
+package com.template.RestController.SearchRestController;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.Base.Class.CResponse;
+import com.template.Class.SearchCustomer;
+import com.template.Class.Pageing.PageInfo;
+import com.template.Class.Pageing.PageResponse;
+import com.template.Model.Basic.SystemLog.SystemLog;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Basic.SystemLog.SystemLogService;
+
+@RestController
+@RequestMapping("restSystemLog")
+public class RestControlerSearch {
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	SystemLogService systemLogService;
+
+	@GetMapping("/addToSystemLog/{actionNameB}/{userId}")
+	public CResponse addToSystemLog(@PathVariable  String actionNameB, @PathVariable int userId) throws Exception {
+		System.err.println("actionNameB: " + actionNameB + " userId: " + userId);
+		SystemLog systemLog =   systemLogService.saveSystemLog(actionNameB, userId);
+		CResponse response = new CResponse();
+		if(systemLog != null) {
+			response.setSuccess(true);
+			response.setSuccessMessage("تم اضافة السجل بنجاح");
+		}
+		else {
+			response.setSuccess(false);
+			response.setErrorMessage("حدذث خطأ أثناء إضافة السجل");	
+			}
+		return response;
+	}
+	
+	@GetMapping("/addToSystemLogEx")
+	public CResponse addToSystemLogEx() throws Exception {
+		System.err.println("EEEEEEEEEEEEEEEEEE: ");
+		CResponse response = new CResponse();
+		response.setSuccess(true);
+		response.setSuccessMessage("تم اضافة السجل بنجاح");
+		return response;
+	}
+
+}

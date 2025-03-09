@@ -1,0 +1,400 @@
+package com.template.Service.Table.AllIndexes;
+
+
+import java.sql.Types;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CError;
+import com.Base.Class.CResponse;
+import com.template.Class.Index.IndCurrency;
+import com.template.Class.Index.IndCustomerNature;
+import com.template.Class.Index.IndexClass;
+import com.template.Class.Index.SearchCustomer;
+import com.template.Model.Basic.Action;
+
+@Service
+public class IndexService {
+	@PersistenceContext
+	public EntityManager em;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+
+	@Value("${page.size}")
+	int itemCountInPage;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public List<IndCurrency> get_Ind_Currency() {
+		RowMapper<IndCurrency> rowMapper = BeanPropertyRowMapper.newInstance(IndCurrency.class);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("ADMIN_GET_CURRENCY")
+				.returningResultSet("return", rowMapper);
+		;
+		Map<String, Object> result = call.execute(new HashMap<>());
+		List<IndCurrency> list = (List<IndCurrency>) result.get("return");
+		return list;
+	}
+
+	public CResponse get_Ind_Currency_Cresponse() {
+		RowMapper<IndCurrency> rowMapper = BeanPropertyRowMapper.newInstance(IndCurrency.class);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("ADMIN_GET_CURRENCY")
+				.returningResultSet("return", rowMapper);
+		;
+		Map<String, Object> result1 = call.execute(new HashMap<>());
+
+		CResponse result = new CResponse();
+		result.setReturnedObject(result1.get("return"));
+		result.setSuccess(true);
+		result.setSuccessMessage("تم بنجاح");
+		return result;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public IndexClass get_Ind_Class_By_Id(long id, String tableName) {
+		SqlParameterSource parameters = new MapSqlParameterSource().addValue("I_ID", id).addValue("TABLE_NAME",
+				tableName);
+		jdbcTemplate.setResultsMapCaseInsensitive(true);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("GET_OBJECT_BY_ID")
+				.declareParameters(new SqlParameter("I_ID", Types.INTEGER),
+						new SqlParameter("TABLE_NAME", Types.VARCHAR))
+				.returningResultSet("return", BeanPropertyRowMapper.newInstance(IndexClass.class));
+		Map<String, Object> result = call.execute(parameters);
+		List<IndexClass> list = (List<IndexClass>) result.get("return");
+		if (list.isEmpty())
+			return null;
+		return list.get(0);
+	}
+
+	public CResponse get_Ind_Class_By_Id_Cresponse(long id, String tableName) {
+		SqlParameterSource parameters = new MapSqlParameterSource().addValue("I_ID", id).addValue("TABLE_NAME",
+				tableName);
+		jdbcTemplate.setResultsMapCaseInsensitive(true);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("GET_OBJECT_BY_ID")
+				.declareParameters(new SqlParameter("I_ID", Types.INTEGER),
+						new SqlParameter("TABLE_NAME", Types.VARCHAR))
+				.returningResultSet("return", BeanPropertyRowMapper.newInstance(IndexClass.class));
+		Map<String, Object> result1 = call.execute(parameters);
+
+		CResponse result = new CResponse();
+		List<IndexClass> list = (List<IndexClass>) result1.get("return");
+		if (list.isEmpty())
+		{
+			result.setSuccess(false);
+			result.setSuccessMessage("غير موجود");
+			return null;
+		}
+		result.setReturnedObject(list.get(0));		
+		result.setSuccess(true);
+		result.setSuccessMessage("تم بنجاح");
+		return result;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public IndexClass get_Ind_Class_By_Name(String name, String tableName) {
+		SqlParameterSource parameters = new MapSqlParameterSource().addValue("I_NAME", name).addValue("TABLE_NAME",
+				tableName);
+		jdbcTemplate.setResultsMapCaseInsensitive(true);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("GET_OBJECT_BY_NAME")
+				.declareParameters(new SqlParameter("I_NAME", Types.VARCHAR),
+						new SqlParameter("TABLE_NAME", Types.VARCHAR))
+				.returningResultSet("return", BeanPropertyRowMapper.newInstance(IndexClass.class));
+		Map<String, Object> result = call.execute(parameters);
+		List<IndexClass> list = (List<IndexClass>) result.get("return");
+
+		if (list.isEmpty())
+			return null;
+		return list.get(0);
+	}
+
+	public CResponse get_Ind_Class_By_Name_Cresponse(String name, String tableName) {
+		SqlParameterSource parameters = new MapSqlParameterSource().addValue("I_NAME", name).addValue("TABLE_NAME",
+				tableName);
+		jdbcTemplate.setResultsMapCaseInsensitive(true);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("GET_OBJECT_BY_NAME")
+				.declareParameters(new SqlParameter("I_NAME", Types.VARCHAR),
+						new SqlParameter("TABLE_NAME", Types.VARCHAR))
+				.returningResultSet("return", BeanPropertyRowMapper.newInstance(IndexClass.class));
+		Map<String, Object> result1 = call.execute(parameters);
+
+		CResponse result = new CResponse();
+		List<IndexClass> list = (List<IndexClass>) result1.get("return");
+		if (list.isEmpty())
+		{
+			result.setSuccess(false);
+			result.setSuccessMessage("غير موجود");
+			return null;
+		}
+		result.setReturnedObject(list.get(0));		
+		result.setSuccess(true);
+		result.setSuccessMessage("تم بنجاح");
+		return result;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public List<IndexClass> getIndexes(String tableName) {
+		SqlParameterSource parameters = new MapSqlParameterSource().addValue("TABLE_NAME", tableName);
+		jdbcTemplate.setResultsMapCaseInsensitive(true);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("GET_INDEX")
+				.declareParameters(new SqlParameter("TABLE_NAME", Types.VARCHAR))
+				.returningResultSet("return", BeanPropertyRowMapper.newInstance(IndexClass.class));
+		Map<String, Object> result = call.execute(parameters);
+		List<IndexClass> list = (List<IndexClass>) result.get("return");
+		return list;
+	}
+
+	public CResponse getIndexesCresponse(String tableName) {
+		SqlParameterSource parameters = new MapSqlParameterSource().addValue("TABLE_NAME", tableName);
+		jdbcTemplate.setResultsMapCaseInsensitive(true);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("GET_INDEX")
+				.declareParameters(new SqlParameter("TABLE_NAME", Types.VARCHAR))
+				.returningResultSet("return", BeanPropertyRowMapper.newInstance(IndexClass.class));
+		//		Map<String, Object> result = call.execute(parameters);
+		//		List<IndexClass> list = (List<IndexClass>) result.get("return");
+		//		return list;
+
+		Map<String, Object> result1 = call.execute(parameters);
+
+		CResponse result = new CResponse();
+		result.setReturnedObject(result1.get("return"));
+		result.setSuccess(true);
+		result.setSuccessMessage("تم بنجاح");
+		//List<IndCurrency> list = (List<IndCurrency>) result.get("return");
+		return result;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// check if index is deleted
+	// return true if deleted
+	// return false if not deleted
+	public boolean checkIndexIsDeleted(long id, String tableName) {
+		IndexClass indexClass = get_Ind_Class_By_Id(id, tableName);
+		if (indexClass.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+
+	public CResponse checkIndexIsDeletedCresponse(long id, String tableName) {
+		CResponse result = new CResponse();
+		IndexClass indexClass = get_Ind_Class_By_Id(id, tableName);
+		if (indexClass != null) {
+
+			if (indexClass.getIsDeleted() == 1) {
+				result.setReturnedObject(true);
+				result.setSuccess(true);
+				result.setSuccessMessage("محذوف");
+				return result;
+			}
+			result.setReturnedObject(false);
+			result.setSuccess(true);
+			result.setSuccessMessage("غير محذوف");
+			return result;
+		}
+		result.setSuccess(false);
+		CError error = new CError();
+		error.setErrorCode(1);
+		error.setErrorMessage("Index with id " + id + " is Not Found");
+		result.addError(error);
+		return result;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public List<IndCustomerNature> get_IND_CUST_NAT() {
+		RowMapper<IndCustomerNature> rowMapper = BeanPropertyRowMapper.newInstance(IndCustomerNature.class);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("ADMIN_GET_IND_CUST_NAT")
+				.returningResultSet("return", rowMapper);
+		;
+		Map<String, Object> result = call.execute(new HashMap<>());
+		List<IndCustomerNature> list = (List<IndCustomerNature>) result.get("return");
+		return list;
+	}
+
+	public CResponse get_IND_CUST_NAT_Cresponse() {
+		RowMapper<IndCustomerNature> rowMapper = BeanPropertyRowMapper.newInstance(IndCustomerNature.class);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("ADMIN_GET_IND_CUST_NAT")
+				.returningResultSet("return", rowMapper);
+
+		Map<String, Object> result1 = call.execute(new HashMap<>());
+
+		CResponse result = new CResponse();
+		result.setReturnedObject(result1.get("return"));
+		result.setSuccess(true);
+		result.setSuccessMessage("تم بنجاح");
+		return result;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public List<Action> get_Action() {
+		RowMapper<Action> rowMapper = BeanPropertyRowMapper.newInstance(Action.class);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("ADMIN_GET_ACTION")
+				.returningResultSet("return", rowMapper);
+		;
+		Map<String, Object> result = call.execute(new HashMap<>());
+		List<Action> list = (List<Action>) result.get("return");
+		return list;
+	}
+
+	public CResponse get_Action_Cresponse() {
+		RowMapper<Action> rowMapper = BeanPropertyRowMapper.newInstance(Action.class);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("ADMIN_GET_ACTION")
+				.returningResultSet("return", rowMapper);
+
+		Map<String, Object> result1 = call.execute(new HashMap<>());
+
+		CResponse result = new CResponse();
+		result.setReturnedObject(result1.get("return"));
+		result.setSuccess(true);
+		result.setSuccessMessage("تم بنجاح");
+		return result;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public Page<SearchCustomer> getSearchCustomerByCif(SearchCustomer searchCustomer, Pageable pageRequest) {
+
+		RowMapper<SearchCustomer> rowMapper = BeanPropertyRowMapper.newInstance(SearchCustomer.class);
+
+		SqlParameterSource parameters = new MapSqlParameterSource().addValue("I_CIF", searchCustomer.getCif())
+				.addValue("I_TYPE", searchCustomer.getCustomerTypeId());
+
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("SEARCH_CIF_MEM")
+				.declareParameters(new SqlParameter("I_CIF", Types.VARCHAR), new SqlParameter("I_TYPE", Types.NUMERIC))
+				.returningResultSet("return", rowMapper);
+
+		Map<String, Object> result = call.execute(parameters);
+		List<SearchCustomer> lastResult = (List<SearchCustomer>) result.get("return");
+		System.err.println("lastResult: " + lastResult);
+		// pagination
+		final int start = (int) pageRequest.getOffset();
+		final int end = Math.min((start + pageRequest.getPageSize()), lastResult.size());
+		final Page<SearchCustomer> page = new PageImpl<>(lastResult.subList(start, end), pageRequest,
+				lastResult.size());
+		System.err.println("Result Cif: " + page);
+		return page;
+	}
+
+	public Page<SearchCustomer> getSearchNonCustIndiv(SearchCustomer searchCustomer, Pageable pageRequest) {
+
+		RowMapper<SearchCustomer> rowMapper = BeanPropertyRowMapper.newInstance(SearchCustomer.class);
+
+		SqlParameterSource parameters = new MapSqlParameterSource()
+				.addValue("I_NATIONALITY", searchCustomer.getNationalNumber())
+				.addValue("I_FIRST_NAME_A", searchCustomer.getFirstNameA())
+				.addValue("I_FATHER_NAME_A", searchCustomer.getFatherNameA())
+				.addValue("I_LAST_NAME_A", searchCustomer.getLastNameA())
+				.addValue("I_MOTHER_NAME_A", searchCustomer.getMotherNameA())
+				.addValue("I_FIRST_NAME_B", searchCustomer.getFirstNameB())
+				.addValue("I_FATHER_NAME_B", searchCustomer.getFatherNameB())
+				.addValue("I_LAST_NAME_B", searchCustomer.getLastNameB())
+				.addValue("I_MOTHER_NAME_B", searchCustomer.getMotherNameB())
+				.addValue("I_CIF", searchCustomer.getCif());
+
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("SEARCH_NON_CUSTOMER_MEM")
+				.declareParameters(new SqlParameter("I_NATIONALITY", Types.VARCHAR),
+						new SqlParameter("I_FIRST_NAME_A", Types.VARCHAR),
+						new SqlParameter("I_FATHER_NAME_A", Types.VARCHAR),
+						new SqlParameter("I_LAST_NAME_A", Types.VARCHAR),
+						new SqlParameter("I_MOTHER_NAME_A", Types.VARCHAR),
+						new SqlParameter("I_FIRST_NAME_B", Types.VARCHAR),
+						new SqlParameter("I_FATHER_NAME_B", Types.VARCHAR),
+						new SqlParameter("I_LAST_NAME_B", Types.VARCHAR),
+						new SqlParameter("I_MOTHER_NAME_B", Types.VARCHAR), new SqlParameter("I_CIF", Types.VARCHAR))
+				.returningResultSet("return", rowMapper);
+
+		Map<String, Object> result = call.execute(parameters);
+		List<SearchCustomer> lastResult = (List<SearchCustomer>) result.get("return");
+
+		System.err.println("lastRR: " + lastResult);
+
+		// pagination
+		final int start = (int) pageRequest.getOffset();
+		final int end = Math.min((start + pageRequest.getPageSize()), lastResult.size());
+		final Page<SearchCustomer> page = new PageImpl<>(lastResult.subList(start, end), pageRequest,
+				lastResult.size());
+
+		return page;
+	}
+
+	public Page<SearchCustomer> getSearchNonCustComp(SearchCustomer searchCustomer, Pageable pageRequest) {
+		if (searchCustomer.getCompType() == null)
+			searchCustomer.setCompType(-1);
+		if (searchCustomer.getComprRsidCountry() == null)
+			searchCustomer.setComprRsidCountry(-1);
+		if (searchCustomer.getEcoActiv() == null)
+			searchCustomer.setEcoActiv(-1);
+
+		RowMapper<SearchCustomer> rowMapper = BeanPropertyRowMapper.newInstance(SearchCustomer.class);
+
+		SqlParameterSource parameters = new MapSqlParameterSource()
+				.addValue("I_COMPANY_TYPE_ID", searchCustomer.getCompType())
+				.addValue("I_ECONOMIC_ACTIVITY_ID", searchCustomer.getEcoActiv())
+				.addValue("I_RESIDENCE_COUNTRY_ID", searchCustomer.getComprRsidCountry())
+				.addValue("I_NAME_A", searchCustomer.getNameCompanyA())
+				.addValue("I_NAME_B", searchCustomer.getNameCompanyB()).addValue("I_CIF", searchCustomer.getCif());
+
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("SEARCH_NON_COM_IND")
+				.declareParameters(new SqlParameter("I_COMPANY_TYPE_ID", Types.NUMERIC),
+						new SqlParameter("I_ECONOMIC_ACTIVITY_ID", Types.NUMERIC),
+						new SqlParameter("I_RESIDENCE_COUNTRY_ID", Types.NUMERIC),
+						new SqlParameter("I_NAME_A", Types.VARCHAR), new SqlParameter("I_NAME_B", Types.VARCHAR),
+						new SqlParameter("I_CIF", Types.VARCHAR))
+				.returningResultSet("return", rowMapper);
+
+		Map<String, Object> result = call.execute(parameters);
+		List<SearchCustomer> lastResult = (List<SearchCustomer>) result.get("return");
+		System.err.println("lastResultC: " + lastResult);
+		// pagination
+		final int start = (int) pageRequest.getOffset();
+		final int end = Math.min((start + pageRequest.getPageSize()), lastResult.size());
+		final Page<SearchCustomer> page = new PageImpl<>(lastResult.subList(start, end), pageRequest,
+				lastResult.size());
+
+		return page;
+	}
+
+	public Page<SearchCustomer> getSearchCustomerByCriteria(SearchCustomer n, Integer type, Integer page,
+			Pageable pageRequest) {
+		System.err.println("{{{{{wefwecfefcwer{{ss: " + type);
+		if (type == 2 && (n.getComprRsidCountry() != null || n.getEcoActiv() != null || n.getCompType() != null
+				|| n.getNameCompanyA() != null || n.getNameCompanyB() != null)) {
+			System.err.println("{{{{{{{{{{{{ss");
+			return getSearchNonCustComp(n, (Pageable) PageRequest.of(page, itemCountInPage));
+
+		}
+		// call individual customer stored function
+		else if (type == 1 && (n.getFirstNameA() != null || n.getNationalNumber() != null || n.getLastNameA() != null
+				|| n.getFatherNameA() != null || n.getMotherNameA() != null || n.getFirstNameB() != null
+				|| n.getLastNameB() != null || n.getFatherNameB() != null || n.getMotherNameB() != null)) {
+			System.err.println("{{{{{{{{{dwedfer{{ss");
+			return getSearchNonCustIndiv(n, (Pageable) PageRequest.of(page, itemCountInPage));
+
+		}
+		return null;
+
+	}
+}

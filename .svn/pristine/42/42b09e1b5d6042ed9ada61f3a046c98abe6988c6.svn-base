@@ -1,0 +1,73 @@
+
+package com.template.Service.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndSubpoenaRequest;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Repository.Table.AllIndexes.IndSubpoenaRequestRepository;
+@Service
+public class IndSubpoenaRequestServices {
+
+	@Autowired
+	IndSubpoenaRequestRepository indSubpoenaRequestRepository;
+	public IndSubpoenaRequest save(IndSubpoenaRequest indSubpoenaRequest) {
+		if(indSubpoenaRequest.getId() == null)
+		{
+			indSubpoenaRequest.setInsertBy(0);
+			indSubpoenaRequest.setInsertDate(getCurrentDate());
+			indSubpoenaRequest.setIsDeleted(0);
+		}else if(indSubpoenaRequest.getId() != null){
+			System.err.println(2121);
+			indSubpoenaRequest.setInsertDate(getCurrentDate());
+			indSubpoenaRequest.setLastUpdateDate(getCurrentDate());
+			indSubpoenaRequest.setLastUpdateBy(1);
+		}
+		indSubpoenaRequestRepository.save(indSubpoenaRequest);
+		return indSubpoenaRequest;
+	}
+	
+	public void update(IndSubpoenaRequest indSubpoenaRequest) {
+		indSubpoenaRequestRepository.save(indSubpoenaRequest);
+	}
+	
+	public IndSubpoenaRequest findById(Long id) {
+		return indSubpoenaRequestRepository.getById(id);
+	}
+	
+	public List<IndSubpoenaRequest> getAll(){
+		List<IndSubpoenaRequest> all = indSubpoenaRequestRepository.getAll();
+		return all;
+	}
+	
+	public List<IndSubpoenaRequest> getAllDeleted(){
+		List<IndSubpoenaRequest> allDeleted = indSubpoenaRequestRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	
+	public IndSubpoenaRequest delete(Long id) {
+		IndSubpoenaRequest indSubpoenaRequest = indSubpoenaRequestRepository.findById(id).get();
+		if (indSubpoenaRequest == null) {
+			throw new NoDataFoundException("indAddressType With ID : " + id + " Not Found");
+		}
+		indSubpoenaRequest.setIsDeleted(1);
+		return indSubpoenaRequestRepository.save(indSubpoenaRequest);
+	}
+	
+	public boolean checkIndSubpoenaRequestIsDeleted(long id) {
+		IndSubpoenaRequest indSubpoenaRequest=indSubpoenaRequestRepository.findById(id).get();
+		if(indSubpoenaRequest.getIsDeleted()==1)
+			return true;
+		return false;
+	}
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}}
+	

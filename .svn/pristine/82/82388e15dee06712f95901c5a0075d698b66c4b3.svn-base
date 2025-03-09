@@ -1,0 +1,110 @@
+/*
+ * package com.template.Service.Table.Products;
+ * 
+ * import java.util.ArrayList; import java.util.Date; import java.util.List;
+ * 
+ * import org.springframework.beans.factory.annotation.Autowired; import
+ * org.springframework.stereotype.Service;
+ * 
+ * import com.template.Class.AccountTypeForm; import
+ * com.template.Exception.NoDataFoundException; import
+ * com.template.Model.Table.Products.AccountType; import
+ * com.template.Model.Table.Products.AccountTypeTax; import
+ * com.template.Repository.Table.Products.AccountTypeTaxRepository;
+ * 
+ * @Service public class AccountTypeTaxService {
+ * 
+ * @Autowired AccountTypeTaxRepository accountTypeTaxRepository;
+ * 
+ * public AccountTypeTax save(AccountTypeTax accountTypeTax) { if
+ * (accountTypeTax.getId() == null) { accountTypeTax.setInsertBy(0); } else if
+ * (accountTypeTax.getId() != null) { AccountTypeTax temCompany =
+ * accountTypeTaxRepository.findById(accountTypeTax.getId()).get();
+ * accountTypeTax.setInsertDate(temCompany.getInsertDate()); }
+ * accountTypeTaxRepository.save(accountTypeTax); return accountTypeTax; }
+ * 
+ * public void update(AccountTypeTax accountTypeTax) {
+ * accountTypeTaxRepository.save(accountTypeTax); }
+ * 
+ * public AccountTypeTax findById(Long id) { return
+ * accountTypeTaxRepository.getById(id); }
+ * 
+ * public List<AccountTypeTax> getAll() { List<AccountTypeTax> all =
+ * accountTypeTaxRepository.getAll(); return all; }
+ * 
+ * public List<AccountTypeTax> getAllDeleted() { List<AccountTypeTax> allDeleted
+ * = accountTypeTaxRepository.getAllDeleted(); return allDeleted; }
+ * 
+ * public List<AccountTypeTax> getAllAccountTypeTax(Long id) {
+ * 
+ * List<AccountTypeTax> all = accountTypeTaxRepository.getAllAccountTypeTax(id);
+ * 
+ * return all; }
+ * 
+ * public AccountTypeTax delete(Long id) { AccountTypeTax accountTypeTax =
+ * accountTypeTaxRepository.findById(id).get(); if (accountTypeTax == null) {
+ * throw new NoDataFoundException("accountTypeTax With ID : " + id +
+ * " Not Found"); } accountTypeTax.setIsDeleted(1); return
+ * accountTypeTaxRepository.save(accountTypeTax); }
+ * 
+ * public void saveAllToAccountType(List<AccountTypeTax> accountTypeTaxs,
+ * AccountTypeForm accountTypeForm, AccountType accountType) {
+ * 
+ * List<AccountTypeTax> listToSaveAccountTypeTax = new ArrayList<>();
+ * 
+ * for (int i = 0; i < accountTypeForm.getAccountTypeTaxs().size(); i++) {
+ * 
+ * System.err.println(accountTypeForm.getAccountTypeTaxs().get(i));
+ * 
+ * //If it is = null , it must be added(Save for the first time) if
+ * (accountTypeForm.getAccountTypeTaxs().get(i).getTaxId() != null ) {//&&
+ * accountTypeForm.getAccountTypeTaxs().get(i).getId() == null) {
+ * if(accountTypeForm.getAccountTypeTaxs().get(i).getId() == null) {
+ * accountTypeForm.getAccountTypeTaxs().get(i).setInsertBy(0);
+ * accountTypeForm.getAccountTypeTaxs().get(i).setIsDeleted(0);
+ * accountTypeForm.getAccountTypeTaxs().get(i).setInsertDate(new Date());
+ * accountTypeForm.getAccountTypeTaxs().get(i).setAccountTypeId(accountType);
+ * System.err.println("create: "+accountTypeForm.getAccountTypeTaxs().get(i));
+ * listToSaveAccountTypeTax.add(accountTypeForm.getAccountTypeTaxs().get(i)); }
+ * 
+ * else if(accountTypeForm.getAccountTypeTaxs().get(i).getId() != null) {
+ * accountTypeForm.getAccountTypeTaxs().get(i).setLastUpdateBy(0);
+ * 
+ * AccountTypeTax temCompany =
+ * accountTypeTaxRepository.findById(accountTypeForm.getAccountTypeTaxs().get(i)
+ * .getId()).get();
+ * accountTypeForm.getAccountTypeTaxs().get(i).setInsertBy(temCompany.
+ * getInsertBy());
+ * accountTypeForm.getAccountTypeTaxs().get(i).setInsertDate(temCompany.
+ * getInsertDate());
+ * accountTypeForm.getAccountTypeTaxs().get(i).setIsDeleted(temCompany.
+ * getIsDeleted()); System.err.println("edit: " +
+ * accountTypeForm.getAccountTypeTaxs().get(i));
+ * listToSaveAccountTypeTax.add(accountTypeForm.getAccountTypeTaxs().get(i)); }
+ * }
+ * 
+ * //If it is ! = null , edit account type currency)
+ * 
+ * 
+ * }
+ * 
+ * boolean check = true; for (int i = 0; i < accountTypeTaxs.size(); i++) {
+ * check = true; // if check =true ,must be deleted for (int j = 0; j <
+ * accountTypeForm.getAccountTypeTaxs().size(); j++) { if
+ * (accountTypeTaxs.get(i).getId() ==
+ * accountTypeForm.getAccountTypeTaxs().get(j).getId()) { check = false; break;
+ * }
+ * 
+ * }
+ * 
+ * if (check == true) { AccountTypeTax accountTypeTaxV =
+ * findById(accountTypeTaxs.get(i).getId()); accountTypeTaxV.setIsDeleted(1);
+ * accountTypeTaxV.setDeletedDate(new Date()); System.err.println("deleted: " +
+ * accountTypeTaxV); listToSaveAccountTypeTax.add(accountTypeTaxV);
+ * 
+ * }
+ * 
+ * } accountTypeTaxRepository.saveAll(listToSaveAccountTypeTax);
+ * 
+ * } }
+ */

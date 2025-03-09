@@ -1,0 +1,94 @@
+package com.template.RestController;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.Base.Class.CResponse;
+import com.Base.Helper.APIResponseHelper;
+import com.template.API.Request.ActionRequest.TestEntity.CCreateTestEntityRequest;
+import com.template.API.Response.ActionResponse.TestEntity.CCreateTestEntityResponse;
+import com.template.API.Response.DTO.CTestEntityDTO;
+import com.template.API.Response.DTO.Mapper.CTestEntityMapper;
+import com.template.Model.Table.TestEntity;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.TestEntityService;
+
+@RestController
+@RequestMapping("/api/camunda")
+public class CamundaRestController {
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	TestEntityService testEntityService;
+
+	@GetMapping("/checkUserCanWithdraw/{userId}/{amount}")
+	public CResponse checkUserCanWithdraw(@PathVariable int userId, @PathVariable int amount) {
+
+		CResponse response = new CResponse();
+
+		try {
+			System.err.println("user valid: " + userId);
+			boolean search = userService.checkUserCanWithdraw(userId, amount);
+
+			response.setSuccess(search);
+
+			if (search)
+				response.setSuccessMessage("صلاحية اليوزر محققة");
+			else {
+				response.setErrorMessage("صلاحية اليوزر غير محققة");
+			}
+		} catch (Exception e) {
+			response.setReturnedObject(e.getStackTrace());
+			response.setSuccess(false);
+			return response;
+		}
+		return response;
+	}
+
+	@PostMapping("/create-test-entity")
+	public CCreateTestEntityResponse createTestEntity(@RequestBody CCreateTestEntityRequest requestBody) {
+
+		CCreateTestEntityResponse apiResponse = null;
+		CResponse response = null;
+		TestEntity testEntity = null;
+		
+		try 
+		{
+			do 
+			{
+				testEntity = new TestEntity();
+				testEntity.setName(requestBody.getName());
+				testEntity.setDescription(requestBody.getDescription());
+				
+				response = testEntityService.createTestEntity(testEntity);
+
+				if(response.isSuccess())
+				{
+					apiResponse = new CCreateTestEntityResponse();
+					apiResponse.setStatus(HttpStatus.OK);
+					apiResponse.setTestEntity(CTestEntityMapper.parse((TestEntity)response.getReturnedObject()));
+					break;
+				}
+				
+				apiResponse = new CCreateTestEntityResponse();
+				apiResponse.setStatus(HttpStatus.BAD_REQUEST);
+				apiResponse.setErrors(APIResponseHelper.parseErrors(response.getErrors()));
+			} 
+			while (false);
+		} 
+		catch (Exception e) 
+		{
+			apiResponse = new CCreateTestEntityResponse();
+			apiResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return apiResponse;
+
+	}
+}

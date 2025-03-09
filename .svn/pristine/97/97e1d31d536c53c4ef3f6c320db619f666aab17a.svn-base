@@ -1,0 +1,70 @@
+package com.template.API.Response.DTO;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.template.Model.Basic.User;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+
+public class CUserDTO
+{
+	int ID;
+	
+	String userName;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	String firstNameA;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	String firstNameB;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	String fatherNameA;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	String fatherNameB;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	String lastNameA;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	String lastNameB;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	String mobile;
+	
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	String token;
+	
+	public static CUserDTO parse(User user)
+	{
+		CUserDTO userDTO = null;
+		
+		do 
+		{
+			if(user == null) break;
+			
+			userDTO = new CUserDTO();	
+			
+			userDTO.ID = user.getID();
+			userDTO.userName = user.getUsername();
+			userDTO.firstNameA = user.getFirst_name_a();
+			userDTO.firstNameB = user.getFirst_name_b();
+			userDTO.lastNameA = user.getLast_name_a();
+			userDTO.lastNameB = user.getLast_name_b();
+			userDTO.fatherNameA = user.getFather_name_a();
+			userDTO.fatherNameB = user.getFather_name_b();
+			userDTO.mobile = user.getMobile();
+		} 
+		while (false);
+		
+		return userDTO;	
+	}
+
+}

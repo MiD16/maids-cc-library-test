@@ -1,0 +1,24 @@
+package com.template.Action.InterestRate;
+import javax.annotation.PostConstruct;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.UPDATE_INTEREST_RATE)
+@Lazy
+public class CAInterestRateUpdate extends CAction {
+	public CAInterestRateUpdate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.INTEREST_RATE_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.INTEREST_RATE_IS_NOT_EXIST);
+		addBusinessnRule(CBusinessRuleConstant.INTEREST_RATE_IS_NOT_CONFLICTED);
+		addBusinessnRule(CBusinessRuleConstant.INTEREST_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.PERIOD_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.CURRENCY_IS_NOT_DELETED);
+	}
+}

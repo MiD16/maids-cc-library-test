@@ -1,0 +1,24 @@
+package com.template.Repository.Table.Product;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.Products.AccountTypeCurrency;
+import com.template.Model.Table.Products.AccountTypeNature;
+
+@Repository
+public interface AccountTypeCurrencyRepository extends JpaRepository <AccountTypeCurrency, Long> {
+	
+	@Query("Select a from AccountTypeCurrency a where a.isDeleted = 0")
+	public List<AccountTypeCurrency> getAll();
+	
+	@Query("Select a From AccountTypeCurrency a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<AccountTypeCurrency> getAllDeleted();
+	
+	@Query("Select a From AccountTypeCurrency a WHERE a.isDeleted = 0 and a.accountTypeId.id=:accountTypeId order by a.id desc")
+	public List<AccountTypeCurrency> getAllAccountTypeCurrency(@Param("accountTypeId") long accountTypeId);
+}

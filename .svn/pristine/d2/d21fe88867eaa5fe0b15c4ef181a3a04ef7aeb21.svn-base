@@ -1,0 +1,86 @@
+
+package com.template.Model.Table.Tax;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.Products.AccCurrency;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "TAX")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@ToString
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
+public class Tax {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long ID;
+
+	@Column(name = "NAME_A")
+	private String nameA;
+
+	@Column(name = "NAME_B")
+	private String nameB;
+
+	@Column(name = "Note")
+	private String note;
+
+	@Column(name = "AMOUNT")
+	private Integer amount;
+
+	@ManyToOne
+	@JoinColumn(name = "CURRENCY_ID")
+	private AccCurrency currency_id;
+
+	@ManyToOne
+	@JoinColumn(name = "INSERT_BY")
+	private User insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "INSERT_DATE")
+	private Date insertDate;
+
+	@ManyToOne
+	@JoinColumn(name = "LAST_UPDATE_BY")
+	private User lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+
+	@Column(name = "IS_DELETED")
+	private Integer isDeleted;
+
+	@ManyToOne
+	@JoinColumn(name = "DELETED_BY")
+	private User deletedBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DELETED_DATE")
+	private Date deletedDate;
+	
+
+	@PrePersist
+	void createdAt() {
+		this.insertDate = this.lastUpdateDate = new Date();
+		this.isDeleted = 0;
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.lastUpdateDate = new Date();
+	}
+}

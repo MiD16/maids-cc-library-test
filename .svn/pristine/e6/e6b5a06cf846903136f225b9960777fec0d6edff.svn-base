@@ -1,0 +1,93 @@
+package com.template.Model.Table.AllIndexes;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import java.util.Date;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ * The persistent class for the IND_REGION database table.
+ * 
+ */
+@Entity
+@Table(name="IND_REGION")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class IndRegion  {
+	
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name="CB_CODE")
+	private String cbCode;
+
+	private String code;
+
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+
+	@Column(name="IS_DELETED")
+	private Integer isDeleted;
+
+	@Column(name="IS_ENABLED_FLAG")
+	private Integer isEnabledFlag;
+
+	@Column(name="NAME_A")
+	private String nameA;
+
+	@Column(name="NAME_B")
+	private String nameB;
+
+	private String note;
+
+	@Column(name="PLACE_ORDER")
+	private Integer placeOrder;
+
+	@Column(name="UPDATE_BY")
+	private Integer updateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="UPDATE_DATE")
+	private Date updateDate;
+
+	//bi-directional many-to-one association to IndCity
+	@ManyToOne
+	@JoinColumn(name="CITY_ID")
+	private IndCity indCity;
+
+	@PrePersist
+	  void createdAt() {
+	    this.insertDate = this.updateDate = new Date();
+	    this.isDeleted = 0;
+	  }
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.updateDate = new Date();
+	  }
+}

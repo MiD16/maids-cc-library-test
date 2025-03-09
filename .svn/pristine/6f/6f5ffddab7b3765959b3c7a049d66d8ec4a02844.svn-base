@@ -1,0 +1,75 @@
+package com.template.Service.Table;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.Base.Class.CResponse;
+import com.template.Model.Table.TestEntity;
+import com.template.Repository.Table.TestEntityRepository;
+import com.template.RestClient.CustomerManagement.CRCCustomerManagementService;
+import com.template.RestClient.CustomerManagement.API.Request.ActionRequest.TestTable.CRCCreateTestLogRequest;
+import com.template.RestClient.CustomerManagement.API.Response.ActionResponse.TestTable.CRCCreateTestLogResponse;
+
+@Service
+@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+public class TestEntityService {
+
+	@Autowired
+	TestEntityRepository testEntityRepository;
+	
+	@Autowired CRCCustomerManagementService customerManagementService;
+	
+	public CResponse createTestEntity(TestEntity testEntity) throws Exception 
+	{
+		TestEntity entity = null;
+		CResponse response = null;
+		CRCCreateTestLogRequest createTestLogRequest = null;
+		CRCCreateTestLogResponse createTestLogResponse = null;
+		
+		boolean isCreateLogSuccessfull = false;
+		try 
+		{
+			testEntityRepository.save(testEntity);
+			
+			createTestLogRequest = new CRCCreateTestLogRequest();
+			createTestLogRequest.setName("LogName");
+			createTestLogRequest.setDescription("LogDesc");
+			
+			createTestLogResponse = customerManagementService.createTestLog(createTestLogRequest);
+
+			if(!createTestLogResponse.getStatusDescription().equals(HttpStatus.OK.name()))
+			{
+				throw new IllegalStateException();
+			}
+			else
+			{
+				isCreateLogSuccessfull = true;
+			}
+			
+			
+			entity = testEntityRepository.findById(testEntity.getId()).get();
+			
+			response = new CResponse();
+			
+			response.setReturnedObject(entity);
+			response.setSuccess(true);
+			response.setSuccessMessage("تم الحفظ بنجاح");
+		} 
+		catch (Exception e) 
+		{
+			if(isCreateLogSuccessfull)
+			{
+				//rollback log;
+			}
+			throw e;
+		}
+		
+		
+		return response;
+		
+	}
+}

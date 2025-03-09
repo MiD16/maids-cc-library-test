@@ -1,0 +1,63 @@
+package com.template.Controller.Basic;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.Base.Class.CResponse;
+import com.template.Class.UserInformation;
+import com.template.Model.Basic.User;
+
+import com.template.Service.Basic.UserService;
+
+@Controller
+@ControllerAdvice(assignableTypes = { HomeController.class })
+
+public class HomeController {
+	@Autowired
+	UserService userService;
+
+
+	@RequestMapping(value = { "", "/", "home" }, method = RequestMethod.GET)
+	public String home(Authentication auth, @RequestParam(value = "param", required = false) String param,
+			Model model,final RedirectAttributes redirectAttributes) {
+		if(model.containsAttribute("same"))
+			{
+			redirectAttributes.addFlashAttribute("same", "sam");
+			}
+		//String result = "redirect:/user/index";
+		String result="/layout/home";
+		
+	    UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	
+		CResponse response=new CResponse();
+		response= userService.getUserByID(userInformation.getUser_id());
+		User user=(User) response.getReturnedObject();	
+//		if( logService.getLogActionByActionNameAndUser(user, "user_change_password").size()==0 || user.getRequiredResetPassword()==1) {
+//			result = "redirect:/user/first-change-password?id="+user.getID();
+//		}
+//		else {
+//			
+//		
+//			 if(user.getUser_role().getRole_name().equalsIgnoreCase("super_admin"))
+//				result = "redirect:/gov/index/ministry"; // admin home page
+//			
+//			
+//			
+//			
+//		}		
+		return result;
+	}
+	@ModelAttribute("title")
+	public String pageTitle() {
+		return "";
+	}
+
+}

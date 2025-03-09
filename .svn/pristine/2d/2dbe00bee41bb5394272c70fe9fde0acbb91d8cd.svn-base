@@ -1,0 +1,46 @@
+package com.template.Controller.Basic;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import com.template.Model.Basic.Notification;
+import com.template.RestController.RestControler;
+//import com.template.Service.Basic.LogService;
+import com.template.Service.Basic.NotificationsService;
+
+
+@Controller
+@ControllerAdvice(assignableTypes = { NotificationController.class })
+public class NotificationController {
+
+	@Autowired
+	private RestControler restControler;
+//	@Autowired
+//	public LogService logActionService;
+	@Autowired
+	NotificationsService notificationsService;
+	
+	@PreAuthorize("hasPermission('notifi', 'index')")
+	@GetMapping("/notifi/index")
+	public String index(Authentication auth, Model model) {
+		String result;
+
+		List<Notification> notifiList = notificationsService.getAllNotification(auth);
+		
+		model.addAttribute("notifiList", notifiList);
+		restControler.changeStatusAll(auth);
+		//logActionService.addLogAction("notifi_index", "");
+		result = "/notifi/index";
+		return result;
+	}
+
+	@ModelAttribute("title")
+	public String pageTitle() {
+		return "الإشعارات";
+	}
+}

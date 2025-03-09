@@ -1,0 +1,278 @@
+package com.template.Service.Basic;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.RoleAction;
+import com.template.Model.Basic.User;
+import com.template.Model.Basic.UserAction;
+import com.template.Model.Basic.UserRole;
+import com.template.Repository.Basic.RoleActionRep;
+import com.template.Repository.Basic.RoleRep;
+import com.template.Repository.Basic.UserActionRep;
+import com.template.Repository.Basic.UserRoleRep;
+import com.template.Repository.Basic.UsersRep;
+import com.template.Repository.View.UserRoleOppositeRep;
+@Service
+public class UserRoleService {
+
+	@Autowired
+	private UserRoleRep UserRoleRep;
+	@Autowired
+	private UserRoleOppositeRep UserRoleOppositeRep;
+	@Autowired
+	private RoleRep roleRep;
+	@Autowired
+	private UsersRep userRep;
+	@Autowired
+	private RoleActionRep roleActionRep;
+	@Autowired
+	private UserActionRep userActionRep;
+	@Lazy
+	@Autowired
+	public UserService userService;
+	@Autowired
+	CActionHandler actionHandler;
+	@Autowired
+	UserActionService userActionService;
+	public CResponse getUserRoleByUserId(int id, PageRequest pageRequest) {
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(UserRoleRep.getUserRoleByUserId(id, pageRequest));
+		return response;
+	}
+	public CResponse getUserRoleByID(int id) {
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject( UserRoleRep.findById(id).get());
+		return response;
+	}
+	public CResponse getUserRoleByUserId(int id) {
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(UserRoleRep.getUserRoleByUserId(id));
+		return response;
+		
+	}
+	public CResponse getUserRoleByRoleId(int id) {
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(UserRoleRep.getListUserRoleByRoleId(id));
+		return response;
+	
+	}
+	public CResponse getUserRoleById(int id) {
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(UserRoleRep.getListUserRoleById(id));
+		return response;
+	
+	}
+	public CResponse getUserRoleByUserIdandRoleId(int id,int roleid) {
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(UserRoleRep.getUserRoleByUserIdandRoleId(id,roleid));
+		return response;
+		
+	}
+	public CResponse findUserRoleOppositeByRoleId(int id) {
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(UserRoleOppositeRep.getRoleByUserID(id));
+		return response;
+	
+	}
+
+	public CResponse create(int userId, int roleId) throws Exception {
+		CResponse response = null;	
+		CActionValidationParameters actionValidationParameters  = null;
+		CActionValidationResult actionValidationResult = null;
+		List<UserAction> userActions =null;
+		List<RoleAction> roleActions=null;
+		Role role = null;
+		User user = null;
+	
+		try
+		{
+			do
+			{
+				response= new CResponse();
+				
+				role = roleRep.findById(roleId).get();
+				
+				user = userRep.findById(userId).get();
+				
+				if(role == null || user == null)
+				{
+					response.setSuccess(false);
+					response.setErrorMessage("NULL OBJECT");
+					break;
+				}
+				
+				UserRole userRole =new UserRole();
+			
+				userRole.setUser(user);
+				userRole.setRole(role);
+				userRole.setIs_deleted(0);
+				userRole.setInsertBy(userService.getAuthenticatedUser().getID());
+				userRole.setInsertDate(new Date());
+				
+				//validation
+				
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.ROLE.toString(),role);
+				actionValidationParameters.addParameter(EKeyCode.USER.toString(),user);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_USER_ROLE, actionValidationParameters);
+				if(!actionValidationResult.isValid())
+				{
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+				
+				userRole=UserRoleRep.save(userRole);
+				 roleActions = roleActionRep.getRoleActionByRoleId(roleId);
+				 userActions = new ArrayList<UserAction>();
+				
+				for (int i = 0; i < roleActions.size(); i++) 
+				{
+					UserAction userAction = userActionService.createUserAction(user, role, roleActions.get(i).getAction(), userRole) ;
+							
+					userActions.add(userAction);
+				}
+
+				userActionService.savelistUserAction(userActions);
+				
+				response.setSuccessMessage("تم إضافة  الدور للمستخدم بنجاح ");
+			}
+			while(false);
+		} 
+		catch (Exception e) 
+		{
+			throw e;
+		}
+		
+		return response;
+		
+	}
+		
+		
+
+	public CResponse delete(int id)throws Exception {
+		CResponse response = null;	
+		CActionValidationParameters actionValidationParameters  = null;
+		CActionValidationResult actionValidationResult = null;
+		UserRole userrole =null;
+		List<UserAction> userAction=null;
+	
+		try
+		{
+			do
+			{
+				response= new CResponse();
+				 userrole = UserRoleRep.findById(id).get();
+				
+			
+				if(userrole == null )
+				{
+					response.setSuccess(false);
+					response.setErrorMessage("NULL OBJECT");
+					break;
+				}
+				
+	
+				//validation
+				
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.USERROLE.toString(),userrole);
+				
+			
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_USER_ROLE, actionValidationParameters);
+				
+				if(!actionValidationResult.isValid())
+				{
+				
+					response.setReturnedObject(userrole);	
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+				userrole.setIs_deleted(1);
+				userrole.setDeletedBy(userService.getAuthenticatedUser().getID());
+				userrole.setDeletedDate(new Date());
+				userrole=UserRoleRep.save(userrole);
+				response =  userActionService.getUserActionByUserId(userrole.getUser().getID());
+				userAction= (List<UserAction>) response.getReturnedObject();
+				userActionService.delete_with_userrole(id,userAction);
+				response.setReturnedObject(userrole);
+				response.setSuccessMessage("تم حذف الدور من المستخدم  مع صلاحيات المرتبطة به بنجاح");
+			}
+			while(false);
+		} 
+		catch (Exception e) 
+		{
+			throw e;
+		}
+		
+		return response;
+		
+	}
+	public boolean check_role_is_linked_with_user_role (Role role) {
+		List<UserRole> userRoles ;
+		CResponse response=null;
+		response = new CResponse();
+		response= getUserRoleByRoleId(role.getID());
+		userRoles=(List<UserRole>) response.getReturnedObject();
+		
+	
+		if(!userRoles.isEmpty())
+		{
+		return true;
+		}
+	
+		return false;
+
+	}
+	public boolean check_user_is_linked_with_user_role (User user) {
+		List<UserRole> userRoles ;
+		CResponse response=null;
+		response = new CResponse();
+		response= getUserRoleByUserId(user.getID());
+		userRoles=(List<UserRole>) response.getReturnedObject();
+		
+	
+		if(!userRoles.isEmpty())
+		{
+		return true;
+		}
+	
+		return false;
+
+	}
+	public boolean check_user_role_is_deleted (UserRole userrole) {
+		CResponse response=null;
+		UserRole latestUserrole = null;
+		response = new CResponse();
+		response= getUserRoleByID(userrole.getID());
+		latestUserrole=(UserRole) response.getReturnedObject();
+		if(latestUserrole.getIs_deleted() == 1)
+		{
+		return true;
+		}
+
+		return false;
+
+	}
+	
+
+}

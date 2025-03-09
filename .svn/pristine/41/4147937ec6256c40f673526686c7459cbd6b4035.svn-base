@@ -1,0 +1,43 @@
+/*
+ * package com.template.BusinessRule.IndJournalType;
+ * 
+ * import org.springframework.beans.factory.annotation.Autowired; import
+ * org.springframework.context.annotation.Lazy; import
+ * org.springframework.stereotype.Component;
+ * 
+ * import com.Base.Class.CActionValidationParameters; import
+ * com.Base.Class.CActionValidationResult; import
+ * com.Base.Interface.IBusinessRule; import
+ * com.template.BusinessRule.CBusinessRuleConstant; import
+ * com.template.Enum.EErrorCode; import com.template.Enum.EKeyCode; import
+ * com.template.Model.Table.AllIndexes.IndJournalType; import
+ * com.template.Service.Table.AllIndexes.IndJournalTypeServices;
+ * 
+ * @Component(CBusinessRuleConstant.IND_JOURNAL_TYPE_IS_NOT_EXIST)
+ * 
+ * @Lazy
+ * 
+ * 
+ * 
+ * public class CBRIndJournalTypeIsNotEXIST implements IBusinessRule {
+ * 
+ * @Autowired IndJournalTypeServices indJournalTypeServices;
+ * 
+ * public CActionValidationResult validate(CActionValidationParameters
+ * parameters) { CActionValidationResult actionValidationResult = null;
+ * IndJournalType indJournalType= null;
+ * 
+ * try { do { actionValidationResult = new CActionValidationResult();
+ * indJournalType = (IndJournalType)
+ * parameters.getParameter(EKeyCode.IND_JOURNAL_TYPE.toString()); if
+ * (indJournalTypeServices.checkIndJournalTypeIsDeleted(indJournalType.getId()))
+ * { actionValidationResult.setValid(false);
+ * actionValidationResult.setErrorMessage("نوع الفائدة محذوف");
+ * actionValidationResult.setErrorCode(EErrorCode.IND_JOURNAL_TYPE_IS_EXISTS.
+ * toString()); break; } } while (false); } catch (Exception e) { throw new
+ * RuntimeException(e.getMessage()); }
+ * 
+ * return actionValidationResult; }
+ * 
+ * }
+ */

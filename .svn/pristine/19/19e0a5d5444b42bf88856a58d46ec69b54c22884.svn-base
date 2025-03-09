@@ -1,0 +1,35 @@
+package com.Base.Class;
+
+import java.util.Hashtable;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+public class CActionValidationParameters {
+
+	//Region Private Variables
+	
+	Hashtable<Object, Object> parameters;
+	
+	//End Region Private Variables
+	
+	public Object getParameter(String key)
+	{
+		Object value = null;
+		value = parameters.get(key);
+		
+		return value;
+	}
+	
+	public void addParameter(Object key, Object value)
+	{
+		if(parameters == null) parameters = new Hashtable<Object, Object>(); 
+		parameters.put(key, value);
+	}
+	
+}

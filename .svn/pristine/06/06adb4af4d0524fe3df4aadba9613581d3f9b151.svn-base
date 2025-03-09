@@ -1,0 +1,21 @@
+package com.template.Repository.View;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.View.Log_Actions_view;
+
+@Repository
+public interface Log_Actions_viewRep extends JpaRepository<Log_Actions_view, Integer> {
+
+
+	@Query(name = "LOG_ACTION_SEARCH", nativeQuery = true)
+	public List<Log_Actions_view> searchlogs(@Param("I_USER_ID") Integer user_id, @Param("I_TYPE") Integer action_id,
+			@Param("I_DATE_FROM") String from, @Param("I_DATE_TO") String to, @Param("I_VALUE") String des,
+			@Param("I_PAGE_NUMBER") int page,@Param("I_PAGE_SIZE") int size);
+
+}

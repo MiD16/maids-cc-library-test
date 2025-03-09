@@ -1,0 +1,18 @@
+package com.example.drools.rules;
+
+import com.example.drools.Outcomes.Outcome;
+import com.example.drools.Facts.CustomerAccount;
+
+rule "Check High Risk Account"
+when
+    $account: CustomerAccount(riskyAmount > 500000) // riskyAmount exceeds 500,000
+then
+    $outcome.setResult("IsHighRisk", true); // Adds "IsHighRisk" to the Outcome object
+end
+
+rule "Check Low Risk Account"
+when
+    $account: CustomerAccount(riskyAmount <= 500000) // riskyAmount exceeds 500,000
+then
+    $outcome.setResult("IsHighRisk", false); // Adds "IsHighRisk" to the Outcome object
+end

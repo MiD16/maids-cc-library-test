@@ -1,0 +1,60 @@
+package com.template.BusinessRule.IndGender;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndGender;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Service.Table.AllIndexes.IndGenderServices;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+import com.template.Service.Table.SubpoenaRequest.SubpoenaRequestDetailsService;
+
+
+@Component(CBusinessRuleConstant.IND_GENDER_IS_NOT_EXIST)
+@Lazy
+public class CBRIndGenderIsNotExist implements IBusinessRule {
+	@Autowired
+	IndGenderServices indGenderServices;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		IndGender indGender = null;
+		IndGender indGenderName = null;
+		long indGenderDetails;
+		long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				
+				indGender = (IndGender) parameters.getParameter(EKeyCode.Ind_Gender.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				indGenderName = indGenderServices.findByNames(indGender.getNameA(), indGender.getNameB());
+				
+				if (indGenderName != null) {
+			
+					if (indGender.getId() == null || (indGender.getId() != null && indGender.getId()!=indGender.getId())) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indGenderName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ indGenderName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage(messageString);
+						actionValidationResult.setErrorCode(EErrorCode.IND_GENDER_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+}

@@ -1,0 +1,28 @@
+package com.template.Action.AccIndDateUnit;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+
+@Component(CActionConstant.CREATE_Acc_Ind_Date_Unit)
+@Lazy
+public class AccIndDateUnitCreate extends CAction 
+{
+	public AccIndDateUnitCreate(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		//addBusinessnRule(CBusinessRuleConstant.IND_SOCIAL_STATUS_IS_VALID);
+		addBusinessnRule(CBusinessRuleConstant.Acc_Ind_Date_Unit_IS_NOT_EXIST);
+	}}

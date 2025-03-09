@@ -1,0 +1,44 @@
+package com.template.Repository.Basic;
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.User;
+
+
+@Repository	 
+public interface RoleRep extends JpaRepository<Role,Integer>{
+
+	
+
+
+	
+	
+	@Query("Select role from Role role where role.isdeleted !=1 ")
+	public Page<Role> findAllpage(PageRequest pageRequest);
+	
+	@Query("Select role from Role role where role.isdeleted !=1 and role.ID=:id")
+	public Role findRoleById(@Param("id") int id);
+	
+	@Query("Select role from Role role where role.isdeleted !=1 and role.role_name_b=:name")
+	public Role findRoleByRoleNameEnglish(@Param("name") String name);
+	
+	@Query("Select role from Role role where role.isdeleted !=1 and role.role_name_a=:name")
+	public Role findRoleByRoleNameArabic(@Param("name") String name);
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+}

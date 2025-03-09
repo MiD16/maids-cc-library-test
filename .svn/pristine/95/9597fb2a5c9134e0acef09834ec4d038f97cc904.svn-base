@@ -1,0 +1,145 @@
+package com.template.Controller.Table.Configuration;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.template.Model.Table.AllIndexes.*;
+import com.template.Model.Table.*;
+import com.template.Repository.Table.Configuration.HomeConfigurationRepository;
+import com.template.Service.Table.Configuration.*;
+import com.template.Model.Table.Configuration.AllConfiguration;
+
+@RequestMapping("HomeConfiguration")
+@Controller
+public class HomeConfigurationController {
+	
+	@Autowired
+	HomeConfigurationServices homeConfigurationServices;
+	@Autowired
+	HomeConfigurationRepository  homeConfigurationRepository;
+	
+	
+	@GetMapping("/index")
+	public String index(Model model) {
+		List<AllConfiguration> allConfigurations = homeConfigurationServices.getAll();
+		System.out.print("List" +allConfigurations);
+		model.addAttribute("allConfigurations", allConfigurations);
+
+		String result = "/Configuration_Management/index";
+		return result;
+	}
+	
+	
+	
+	@GetMapping("/tableindex")
+
+	public String sysTableInfo(@RequestParam(value = "tableId") String name, Model model) {
+
+		String result = "Configuration_Management/tableindex";
+
+	
+			List<AllConfiguration> allConfiguration = homeConfigurationServices.AllConfigurationindex();
+			model.addAttribute("sysTable", allConfiguration);
+			model.addAttribute("tableId", "SYS_CONFIGRATION");
+//			model.addAttribute("tableNameArabic", homeConfigurationRepository.getByName("SYS_CONFIGRATION").getNameA());
+
+	
+		
+
+		
+		return result;
+		}
+	
+	
+	@GetMapping("create")
+	public String createOrUpdate(@RequestParam(value = "elementId", required = false) Integer elementId,
+			 Model model, final RedirectAttributes redirectAttributes) { 
+		String result = "/Configuration_Management/create";
+
+		String actionType = null;
+	
+
+						
+						AllConfiguration	allConfiguration = new AllConfiguration();
+
+						allConfiguration = homeConfigurationServices.findById((long) elementId);
+						model.addAttribute("sysTable", allConfiguration);
+						model.addAttribute("tableId", "SYS_CONFIGRATION");
+
+	
+	
+					return result;
+
+	}
+	
+	
+	
+	@GetMapping("/list_configuration")
+	public String list(@RequestParam(value = "tableId" ,required = false) String name, Model model) {
+
+		String result = "Configuration_Management/list_configuration";
+
+	
+			List<AllConfiguration> allConfiguration = homeConfigurationServices.AllConfigurationindex();
+			System.out.println(allConfiguration);
+			model.addAttribute("sysTable", allConfiguration);
+			model.addAttribute("tableId", "SYS_CONFIGRATION");
+//			model.addAttribute("tableNameArabic", homeConfigurationRepository.getByName("SYS_CONFIGRATION").getNameA());
+
+	
+			System.out.println("**********************"+allConfiguration);
+
+		
+		return result;
+		}
+	
+	
+		@PostMapping("/save")
+		public String save(
+				@ModelAttribute("allConfiguration") AllConfiguration allConfiguration,	
+				@RequestParam(value = "tableId", required = true) String name, Model model,
+	
+				
+				final RedirectAttributes redirectAttributes) {
+
+			System.out.println("**********************"+allConfiguration);
+
+					model.addAttribute("tableId", "SYS_CONFIGRATION");
+					homeConfigurationServices.save(allConfiguration);
+					return "redirect:/HomeConfiguration/list_configuration";
+							//+ "?id=" + allConfiguration.getId() + "&tableId=" + name;
+
+			
+
+	
+	}
+		
+		@GetMapping("/editEnableFlage")
+		public String editEnableFlag(@RequestParam(value = "tableId") String name, Model model) {
+
+			String result = "Configuration_Management/tableindex";
+
+		
+				List<AllConfiguration> allConfiguration = homeConfigurationServices.AllConfigurationindex();
+				model.addAttribute("sysTable", allConfiguration);
+				model.addAttribute("tableId", "SYS_CONFIGRATION");
+//				model.addAttribute("tableNameArabic", homeConfigurationRepository.getByName("SYS_CONFIGRATION").getNameA());
+
+		
+			
+
+			
+			return result;
+			}
+		
+
+}

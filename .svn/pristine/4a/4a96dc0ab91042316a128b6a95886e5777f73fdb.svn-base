@@ -1,0 +1,299 @@
+package com.template.Service.Table.Tax;
+
+import java.util.Date;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.ActionEnum;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.User;
+import com.template.Model.Basic.SystemLog.SystemLog;
+import com.template.Model.Table.Tax.Tax;
+import com.template.Repository.Basic.RoleRep;
+import com.template.Repository.Table.Tax.TaxRep;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Basic.SystemLog.ModifyLogService;
+import com.template.Service.Basic.SystemLog.SystemLogService;
+
+import repackage.Repackage;
+
+@Service
+public class TaxService {
+
+
+	@Autowired
+	public CActionHandler actionHandler;
+	@Autowired
+	private TaxRep taxRep;
+	@Autowired
+	public UserService userService;
+	
+	@Autowired
+	SystemLogService systemLogService;
+	
+	
+	
+	@Autowired
+	ModifyLogService modifyLogService;
+	
+	 @PersistenceContext
+	  private EntityManager entityManager;
+	
+	public CResponse findAll() {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(taxRep.findAll());
+		return response;
+	}
+
+	public CResponse findAllAsPage(PageRequest pageRequest) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(taxRep.findAllpage(pageRequest));
+		return response;
+	}
+
+	public CResponse findTaxById(Long id) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(taxRep.findTaxById(id));
+		return response;
+	}
+	
+
+	public CResponse findtaxByNameEnglish(String nameEnglish) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(taxRep.findTaxByNameEnglish(nameEnglish));
+		return response;
+	}
+
+	public CResponse findTaxByNameArabic(String nameArabic) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(taxRep.findTaxByNameArabic(nameArabic));
+		return response;
+	}
+
+	public CResponse createTax(Tax tax) throws Exception {
+		CResponse response = null;
+	
+		response = new CResponse();
+		response = ValidatecreateTax(tax);
+		if (!response.isSuccess()) {
+			return response;
+		}
+		tax.setIsDeleted(0);
+		tax.setInsertBy(userService.getAuthenticatedUser());
+		tax.setInsertDate(new Date());
+		taxRep.save(tax);
+		response.setSuccessMessage("تم إضافة الضريبة بنجاح");
+		return response;
+	}
+
+	public CResponse ValidatecreateTax(Tax tax) throws Exception {
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+
+		try {
+			do {
+				response = new CResponse();
+				if (tax == null) {
+					response.setSuccess(false);
+					response.setErrorMessage("Null Object");
+					response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+					break;
+				}
+
+				// validation
+
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.TAX.toString(), tax);
+				
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_TAX,
+						actionValidationParameters);
+
+				if (!actionValidationResult.isValid()) {
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw e;
+		}
+
+		return response;
+	}
+
+	public CResponse updateTax(Tax tax) throws Exception {
+		CResponse response = null;
+		Tax old = taxRep.findTaxById(tax.getID());
+		System.err.println("old: " + old.getNameA());
+		response = new CResponse();
+		response = ValidateupdateTax(tax);
+		if (!response.isSuccess()) {
+			return response;
+		}
+		tax.setIsDeleted(0);
+		tax.setLastUpdateBy(userService.getAuthenticatedUser());
+		tax.setLastUpdateDate(new Date());
+		
+		//insert to modify log
+		modifyLogService.saveSystemLogAndModifyLog(old,tax,ActionEnum.update_tax.toString());
+		System.err.println("new: " + tax.getNameA());
+		taxRep.save(tax);
+		response.setSuccessMessage("تم تعديل الضريبة بنجاح");
+		return response;
+	}
+
+	public CResponse ValidateupdateTax(Tax tax) throws Exception {
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+
+		try {
+			do {
+				response = new CResponse();
+
+				if (tax == null) {
+					response.setSuccess(false);
+					response.setErrorMessage("Null Object");
+					response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+					break;
+				}
+
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.TAX.toString(), tax);
+					actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_TAX,
+						actionValidationParameters);
+
+				if (!actionValidationResult.isValid()) {
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+
+			}
+
+			while (false);
+
+		} catch (Exception e) {
+
+			throw e;
+		}
+
+		return response;
+	}
+
+	public CResponse deleteTax(Long id) throws Exception {
+		CResponse response = null;
+		response = new CResponse();
+	
+		
+		 Tax tax = taxRep.findById(id).get();
+		
+		
+		response = ValidatedeleteTax(tax);
+		if (!response.isSuccess()) {
+			return response;
+		}
+		
+		tax.setIsDeleted(1);
+		tax.setLastUpdateBy(userService.getAuthenticatedUser());
+		tax.setDeletedDate(new Date());
+		taxRep.save(tax);
+		response.setSuccessMessage("تم حذف بيانات الضريبة بنجاح");
+
+		return response;
+	}
+
+	public CResponse ValidatedeleteTax(Tax tax) throws Exception {
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+
+		try {
+			do {
+				response = new CResponse();
+
+				if (tax == null) {
+					response.setSuccess(false);
+					response.setErrorMessage("الضريبة غير موجودة ");
+					response.setErrorCode(EErrorCode.TAX_IS_NOT_FOUND.toString());
+					break;
+				}
+			
+				// validation
+
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.TAX.toString(), tax);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_TAX,
+						actionValidationParameters);
+				;
+
+				if (!actionValidationResult.isValid()) {
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+
+			}
+
+			while (false);
+
+		} catch (Exception e) {
+
+			throw e;
+		}
+
+		return response;
+	}
+
+	public boolean checkTaxIsExist(Tax tax) {
+		Tax taxByname_b = null;
+		Tax taxByname_a = null;
+		CResponse response = new CResponse();
+	
+		response = findtaxByNameEnglish(tax.getNameB());
+		taxByname_b = (Tax) response.getReturnedObject();
+		response = findTaxByNameArabic(tax.getNameA());
+		taxByname_a= (Tax) response.getReturnedObject();
+
+		if ((taxByname_b != null && (tax.getID() == null || taxByname_b.getID() != tax.getID()))
+				|| (taxByname_a != null && (tax.getID() == null || taxByname_a.getID() != tax.getID()))) {
+			return true;
+		}
+
+	return false;
+	}
+
+	public boolean checkTaxIsDeleted(Long id) {
+		Tax tax = taxRep.getById(id);
+		if(tax.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+}

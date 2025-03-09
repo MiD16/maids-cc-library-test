@@ -1,0 +1,63 @@
+package com.template.Service.Basic.SystemLog;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CResponse;
+import com.template.Class.UserInformation;
+import com.template.Model.Basic.SystemLog.ExceptionLogAction;
+import com.template.Repository.Basic.UsersRep;
+import com.template.Repository.Basic.SystemLog.ExceptionLogActionRepository;
+import com.template.Service.Basic.UserService;
+
+
+@Service
+public class ExceptionLogActionService {
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	private ExceptionLogActionRepository exceptionLogActionRepository;
+	
+	@Autowired
+	private UsersRep userRep;
+
+	
+	public void addExLogAction(String action_index, String param,int linenumber,String functionname,String classname) {
+		Authentication auth = null;
+		ExceptionLogAction a = null;
+		auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!auth.getPrincipal().toString().equals("anonymousUser")) {
+			a = new ExceptionLogAction(userRep.findById(((UserInformation) auth.getPrincipal()).getUser_id()).get(),
+					Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()), action_index, param,linenumber,functionname,classname);
+		} else
+			a = new ExceptionLogAction(userRep.findUserByUserName("visitor"),
+					Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()), action_index, param,linenumber,functionname,classname);
+		exceptionLogActionRepository.save(a);
+
+	}
+	
+	
+	//find all not deleted
+	public CResponse getAllExceptionLogAction(PageRequest pageRequest) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(exceptionLogActionRepository.getAll(pageRequest));
+		return response;
+	}
+
+	// get object by id
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(exceptionLogActionRepository.findById(id).get());
+		return response;
+	}
+}

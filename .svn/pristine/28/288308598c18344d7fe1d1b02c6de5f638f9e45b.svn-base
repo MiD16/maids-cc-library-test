@@ -1,0 +1,28 @@
+package com.template.Repository.Table.ElectronicOperation;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.IndBranchType;
+import com.template.Model.Table.Commission.ActionCommission;
+import com.template.Model.Table.ElectronicOperation.ATM;
+import com.template.Model.Table.Interests.AccInterest;
+@Repository
+public interface ATMRepository extends JpaRepository <ATM, Long> {
+	 
+	  @Query("Select a from ATM a where a.IsDeleted != 1")
+	  public List<ATM> getAll();
+	  
+	  @Query("Select a From ATM a WHERE a.IsDeleted = 1 order by a.id desc"
+	  ) public List<ATM> getAllDeleted();
+	 
+	  @Query("Select a from ATM a where a.IsDeleted = 0 and a.AtmCode = :code ")
+	  public ATM findByCode(@Param("code") String code);
+}
+

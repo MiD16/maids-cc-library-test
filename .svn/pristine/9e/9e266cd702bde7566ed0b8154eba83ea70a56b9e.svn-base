@@ -1,0 +1,17 @@
+
+package com.template.Service.Table.AllIndexes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.template.Repository.Table.AllIndexes.AccIndInterestTypeRepository;
+@Service
+public class AccIndInterestTypeServices {
+
+	@Autowired
+	AccIndInterestTypeRepository accIndInterestTypeRepository;
+
+
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}}
+	

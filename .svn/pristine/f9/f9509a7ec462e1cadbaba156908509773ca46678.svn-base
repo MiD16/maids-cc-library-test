@@ -1,0 +1,42 @@
+package com.template.API.Response.DTO.Mapper;
+
+import com.template.API.Response.DTO.CUserDTO;
+import com.template.Model.Basic.User;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+
+public class CUserMapper
+{	
+	public static CUserDTO parse(User user)
+	{
+		CUserDTO userDTO = null;
+		
+		do 
+		{
+			if(user == null) break;
+			
+			userDTO = new CUserDTO();	
+			
+			userDTO.setID(user.getID());
+			userDTO.setUserName(user.getUsername());
+			userDTO.setFirstNameA(user.getFirst_name_a());
+			userDTO.setFirstNameB(user.getFirst_name_b());
+			userDTO.setLastNameA(user.getLast_name_a());
+			userDTO.setLastNameB(user.getLast_name_b());
+			userDTO.setFatherNameA(user.getFather_name_a());
+			userDTO.setFatherNameB(user.getFather_name_b());
+			userDTO.setMobile(user.getMobile());
+		} 
+		while (false);
+		
+		return userDTO;	
+	}
+
+}

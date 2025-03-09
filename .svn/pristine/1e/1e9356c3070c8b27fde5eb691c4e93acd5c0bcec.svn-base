@@ -1,0 +1,51 @@
+package com.Shared.Enum;
+
+public enum EError
+{
+	NOT_FOUND_OBJECT(1, "Not Found Object", ""),
+	NULL_OBJECT(2, "Null OBject", "Null OBject"),
+	INVALID_PARAMETER(3, "Inavalid Parameter", "Inavalid Parameter"),
+	INVALID_CREDENTIALS(4, "اسم المستخدم أو كلمة المرور غير صحيحة", ""),
+	INVALID_TOKEN(5, "رمز التفويض غير صحيح", ""),
+	TOKEN_IS_EXPIRED(6, "صلاحية رمز التفويض منتهية", ""),
+	USER_IS_LOCKED(7, "المستخدم مقفل", ""),
+	
+	TAX_IS_DELETED(0, "الضريبة محذوفة", ""),
+	TAX_IS_NOT_FOUND(0, "الضريبة غير موجودة", ""),
+	
+	ATM_NOT_FOUND(8, "الصراف غير موجود", "ATM is not found"),
+	Credit_Card_NOT_FOUND (9,"البطاقة غيلر موجودة","CreditCard_FOUND"),
+	Credit_Card_Account_NOT_FOUND (10,"حساب البطاقة غيلر موجود","Credit_Card_Account_NOT_FOUND"),
+	POS_NOT_FOUND(11, "المركز غير موجود", "POS is not found"),
+	POS_IS_Not_EXISTS(12, "المركز غير موجود", "POS_IS_EXISTS"),
+	EMPTY_TABLE(13, "Empty Table", "Empty Table"),
+	ALREDEY_DELETED (14, "محذوف مسبقا", "ALREDEY_DELETED"),
+	ALREDEY_DISABLED (15, "موقف سابقا", "ALREDEY_DISABLED"),
+	ALREDEY_ENABLED (16, "مفعل سابقا", "ALREDEY_ENABLED"),
+	ALREDEY_EXIST (17, "موجود مسبقا", "ALREDEY_EXIST");
+
+
+
+	private final int errorCode;
+	private final String arError;
+	private final String enError;
+	
+	EError(int errorCode, String arError, String enError)
+	{
+		this.errorCode = errorCode;
+		this.arError = arError;
+		this.enError = enError;
+	}
+	
+    public int getErrorCode() {
+        return errorCode;
+    }
+    
+    public String getArError() {
+        return arError;
+    }
+    
+    public String getEnError() {
+        return enError;
+    }
+}

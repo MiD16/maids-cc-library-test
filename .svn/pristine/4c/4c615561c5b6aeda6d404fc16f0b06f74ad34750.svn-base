@@ -1,0 +1,168 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+
+import com.template.Repository.Table.AllIndexes.IndCountryRepository;
+import com.template.Repository.Table.AllIndexes.IndCustomerTypeRepository;
+
+@Service
+public class IndCustomerTypeServices {
+
+
+	
+	@Autowired
+	IndCustomerTypeRepository  indCustomerTypeRepository;
+	
+
+	@Autowired CActionHandler actionHandler;
+	
+	public CResponse createIndCustomerType(IndCustomerType indCustomerType) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.Ind_Customer_Type.toString(), indCustomerType);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_Ind_Customer_Type, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indCustomerType.setInsertBy(0);
+			indCustomerType.setIsDeleted(0);
+			indCustomerType.setInsertDate(new Date());
+			indCustomerTypeRepository.save(indCustomerType);
+			
+			response.setReturnedObject(indCustomerType);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+	public IndCustomerType updateIndCustomerType(IndCustomerType indCustomerType) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(indCustomerType.getId() == null) 
+		{
+			
+			indCustomerType.setInsertBy(0);
+		}
+		
+		
+		
+		else if(indCustomerType.getId() != null)
+		{
+			IndCustomerType temSocialStatus = indCustomerTypeRepository.findById(indCustomerType.getId()).get();
+			indCustomerType.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indCustomerTypeRepository.save(indCustomerType);
+		return indCustomerType;
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public IndCustomerType findByNames(String nameA, String nameB) {
+		return indCustomerTypeRepository.findByNames(nameA, nameB);
+	}
+	
+
+
+	public IndCustomerType save(IndCustomerType indCustomerType) {
+		if(indCustomerType.getId() == null)
+		{
+			indCustomerType.setInsertBy(0);
+		}else if(indCustomerType.getId() != null){
+			IndCustomerType temSignatureType=indCustomerTypeRepository.findById(indCustomerType.getId()).get();
+			indCustomerType.setInsertDate(temSignatureType.getInsertDate());
+		}
+		indCustomerTypeRepository.save(indCustomerType);
+		return indCustomerType;
+	}
+
+	
+	public IndCustomerType findById(Long id) {
+		return indCustomerTypeRepository.getById(id);
+	}
+	
+	public List<IndCustomerType> getAll(){
+		List<IndCustomerType> all = indCustomerTypeRepository.getAll();
+		return all;
+	}
+	
+	public List<IndCustomerType> getAllDeleted(){
+		List<IndCustomerType> allDeleted = indCustomerTypeRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	
+	public IndCustomerType delete(Long id) {
+		IndCustomerType indCustomerType = indCustomerTypeRepository.findById(id).get();
+		if (indCustomerType == null) {
+			throw new NoDataFoundException("indAddressType With ID : " + id + " Not Found");
+		}
+		indCustomerType.setIsDeleted(1);
+		return indCustomerTypeRepository.save(indCustomerType);
+	}
+	
+	
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

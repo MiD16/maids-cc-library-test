@@ -1,0 +1,111 @@
+package com.template.Model.Basic;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.LastModifiedDate;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "Role")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Role {
+
+	
+	@Id
+	@Column(name="ID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int  ID ; 
+	
+//	@Column(name = "role_name")
+//	private String role_name;
+//	@Column(name = "NAME_ARABIC")
+//	private String role_name_arabic;
+	
+
+	
+	@Column(name = "role_name_a")
+	private String role_name_a;
+	@Column(name = "role_name_b")
+	private String role_name_b;
+	@Column(name = "description_a")
+	private String description_a;
+	
+	@Column(name = "description_b")
+	private String description_b;
+
+
+	@Column(name = "is_deleted")
+	private int isdeleted;
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+
+
+
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@LastModifiedDate
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+	@JsonIgnore
+	@OneToMany(targetEntity = RoleAction.class, mappedBy = "role", cascade = CascadeType.ALL)
+	private List<RoleAction> actions;
+	@Override
+	public String toString() {
+		return "Role [ID=" + ID + ", role_name_b=" + role_name_b + ", description_b=" + description_b 
+				+ "]";
+	}
+
+
+	  @PrePersist
+	  void createdAt() {
+	    this.insertDate = this.lastUpdateDate = new Date();
+	    this.isdeleted = 0;
+	  }
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	  }
+
+	
+	
+}

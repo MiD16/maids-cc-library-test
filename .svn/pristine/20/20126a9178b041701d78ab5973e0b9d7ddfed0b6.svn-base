@@ -1,0 +1,78 @@
+package com.template.Service.Basic.SystemLog;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.template.Model.Basic.User;
+import com.template.Model.Basic.SystemLog.ModifyLog;
+import com.template.Model.Basic.SystemLog.SystemLog;
+import com.template.Repository.Basic.SystemLog.ModifyLogRepository;
+import com.template.Service.Basic.UserService;
+
+
+@Service
+public class ModifyLogService {
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	ModifyLogRepository modifyLogRepository;
+	
+	@Autowired
+	SystemLogService systemLogService;
+	
+	// create ModifyLog
+		public CResponse saveSystemLogAndModifyLog(Object oldObj, Object newObj, String actionName) throws Exception {
+			CResponse response = new CResponse();
+			
+			ModifyLog modifyLog = new ModifyLog(); 
+			User user = userService.getAuthenticatedUser();
+			System.err.println(";r;;rr;;r;r");
+			modifyLog.setInsertBy(user);
+			System.err.println(";r;;rr;;r;r22222");
+			modifyLog.setSystemLogId(systemLogService.saveSystemLog(actionName,user.getID()));
+			System.err.println(";r;;rr;;r;r333");
+			ObjectMapper objectMapper = new ObjectMapper();
+			System.err.println(";r;;rr;;r;r44444");
+			try {
+	            // Convert the Person object to JSON
+	            String old = objectMapper.writeValueAsString(oldObj);
+	            System.err.println("OLD: "+old);
+	            modifyLog.setOldObject(old);
+	            
+	            String new1 = objectMapper.writeValueAsString(newObj);
+	            System.err.println("NEW: "+new1);
+	            modifyLog.setNewObject(new1);
+	            
+	        } catch (JsonProcessingException e) {
+	            e.printStackTrace();
+	        }
+						
+			modifyLogRepository.save(modifyLog);
+			response.setSuccessMessage("تم الإضافة بنجاح");
+			return response;
+		}
+	
+	//find all not deleted
+	public CResponse getAllModifyLog(PageRequest pageRequest) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(modifyLogRepository.getAll(pageRequest));
+		return response;
+	}
+
+	// get object by id
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(modifyLogRepository.findById(id).get());
+		return response;
+	}
+}

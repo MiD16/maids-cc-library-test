@@ -1,0 +1,27 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.AllIndexes.IndBlacklistDocStatus;
+
+@Repository
+public interface AccIndInterestTypeRepository extends JpaRepository <AccIndInterestType, Long> {
+	
+	@Query("Select a from AccIndInterestType a where a.isDeleted = 0")
+	public List<AccIndInterestType> getAll();
+	
+	@Query("Select a From AccIndInterestType a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<AccIndInterestType> getAllDeleted();
+	
+	
+	@Query("Select a from  AccIndInterestType a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public AccIndInterestType findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+
+}

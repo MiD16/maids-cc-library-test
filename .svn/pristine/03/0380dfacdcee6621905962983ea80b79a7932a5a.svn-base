@@ -1,0 +1,152 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndGlClass;
+import com.template.Model.Table.AllIndexes.IndJournalStatus;
+import com.template.Repository.Table.AllIndexes.IndGlClassRepository;
+import com.template.Repository.Table.AllIndexes.IndJournalStatusRepository;
+
+@Service
+public class IndGlClassServices {
+
+@Autowired
+IndGlClassRepository indGlClassRepository;
+@Autowired CActionHandler actionHandler;
+
+
+public CResponse createIndJournalStatus(IndGlClass indGlClass) 
+{
+	CResponse response = null;
+	CActionValidationParameters actionValidationParameters = null;
+	CActionValidationResult actionValidationResult = null;
+	
+	do
+	{
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		
+		actionValidationParameters.addParameter(EKeyCode.IND_GL_CLASS.toString(), indGlClass);
+		
+		actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IND_GL_CLASS, actionValidationParameters);
+		
+		if(!actionValidationResult.isValid())
+		{
+			response.setSuccess(false);
+			response.setErrorMessage(actionValidationResult.getErrorMessage());
+			break;
+		}
+		
+		indGlClass.setInsertBy(0);
+		indGlClass.setInsertDate(new Date());
+		indGlClassRepository.save(indGlClass);
+		
+		response.setReturnedObject(indGlClass);
+	}
+	while(false);
+	
+	return response;
+}
+
+public IndGlClass updateIndJournalStatus(IndGlClass indGlClass) 
+{
+	CResponse response = null;
+	CActionValidationParameters actionValidationParameters = null;
+	CActionValidationResult actionValidationResult = null;
+	
+	response = new CResponse();
+	actionValidationParameters = new CActionValidationParameters();
+	actionValidationResult = new CActionValidationResult();
+	
+	if(indGlClass.getId() == null) 
+	{
+		
+		indGlClass.setInsertBy(0);
+	}
+	
+	
+	
+	else if(indGlClass.getId() != null)
+	{
+		IndGlClass temSocialStatus = indGlClassRepository.findById(indGlClass.getId()).get();
+		indGlClass.setInsertDate(temSocialStatus.getInsertDate());
+	}
+	indGlClassRepository.save(indGlClass);
+	return indGlClass;
+}
+
+
+
+
+
+public IndGlClass findByNames(String nameA, String nameB) {
+	return indGlClassRepository.findByNames(nameA, nameB);
+}
+
+public IndGlClass save(IndGlClass indGlClass) {
+	if(indGlClass.getId() == null)
+	{
+		indGlClass.setInsertBy(0);
+	}else if(indGlClass.getId() != null){
+		IndGlClass temSignatureType=indGlClassRepository.findById(indGlClass.getId()).get();
+		indGlClass.setInsertDate(temSignatureType.getInsertDate());
+	}
+	indGlClassRepository.save(indGlClass);
+	return indGlClass;
+}
+
+
+public void update(IndGlClass indGlClass) {
+	indGlClassRepository.save(indGlClass);
+}
+
+public IndGlClass findById(Long id) {
+	return indGlClassRepository.getById(id);
+}
+
+public List<IndGlClass> getAll(){
+	List<IndGlClass> all = indGlClassRepository.getAll();
+	return all;
+}
+
+public List<IndGlClass> getAllDeleted(){
+	List<IndGlClass> allDeleted = indGlClassRepository.getAllDeleted();
+	return allDeleted;
+}
+
+public IndGlClass delete(Long id) {
+	IndGlClass indGlClass = indGlClassRepository.findById(id).get();
+	if (indGlClass == null) {
+		throw new NoDataFoundException("indSignatureType With ID : " + id + " Not Found");
+	}
+	indGlClass.setIsDeleted(1);
+	return indGlClassRepository.save(indGlClass);
+
+	
+}
+
+
+public boolean checkIndGlClassIsDeleted(long id) {
+	IndGlClass indGlClass= indGlClassRepository.findById(id).get();
+	if (indGlClass.getIsDeleted() == 1)
+		return true;
+	return false;
+}
+
+
+
+
+
+
+}

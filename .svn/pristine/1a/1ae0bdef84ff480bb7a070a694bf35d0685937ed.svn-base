@@ -1,0 +1,36 @@
+package com.template.Class.OneInSession;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.template.Model.Basic.User;
+
+import lombok.Getter;
+import lombok.Setter;
+@Setter
+@Getter
+public class Users {
+	 
+	 public List<User> contacts;
+
+	    // default and parameterized constructor
+
+	    public void add(User user) {
+	        this.contacts.add(user);
+	    }
+
+	    public void setUserList(List<User> user) {
+	        this.contacts=user;
+	    }
+	    public Users(List<User> users) {
+	         this.contacts = users;
+	    }
+	    public Users() {
+	         this.contacts = new ArrayList<User>();
+	    }
+	    public List<User> getUserList() {
+	        return contacts;
+	    }
+
+	  
+}

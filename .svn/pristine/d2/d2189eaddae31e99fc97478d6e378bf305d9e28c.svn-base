@@ -1,0 +1,58 @@
+package com.template.Class;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.NamedNativeQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class SearchCustomer {
+
+	private Long id;
+	private String nationalNumber;
+
+	private String firstNameA;
+
+	private String fatherNameA;
+
+	private String lastNameA;
+
+	private String motherNameA;
+
+	private String firstNameB; 
+
+	private String fatherNameB;
+
+	private String lastNameB;
+
+	private String motherNameB;
+
+	private String nameCompany;
+
+	private Integer ecoActiv;
+
+	private Integer compType;
+
+	private Integer comprRsidCountry;
+
+	private String cif;
+
+	private Integer customerType;
+
+	private String customerTypeName;
+	
+	private Integer branchId;
+	
+	private String fileNumber;
+
+}

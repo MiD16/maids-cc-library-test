@@ -1,0 +1,331 @@
+package com.template.BusinessRule;
+
+public class CBusinessRuleConstant {
+
+	public static final String USER_IS_NOT_DELETED = "USER_IS_NOT_DELETED";
+	public static final String USER_IS_NOT_EXIST = "USER_IS_NOT_EXIST";
+	public static final String USER_IS_NOT_LOCK = "USER_IS_NOT_LOCK";
+	public static final String USER_IS_LOCK = "USER_IS_LOCK";
+	public static final String USER_IS_VALIDATE_PASSWORD = "USER_IS_VALIDATE_PASSWORD";
+	public static final String USER_IS_NOT_LINKED_WITH_USER_ROLE = "USER_IS_NOT_LINKED_WITH_USER_ROLE";
+	public static final String USER_IS_NOT_LINKED_WITH_USER_ACTION = "USER_IS_NOT_LINKED_WITH_USER_ACTION";
+
+	public static final String ROLE_IS_NOT_DELETED = "ROLE_IS_NOT_DELETED";
+	public static final String ROLE_IS_NOT_EXIST = "ROLE_IS_NOT_EXIST";
+	public static final String ROLE_IS_NOT_LINKED_WITH_ROLE_ACTION = "ROLE_IS_NOT_LINKED_WITH_ROLE_ACTION";
+	public static final String ROLE_IS_NOT_LINKED_WITH_USER_ROLE = "ROLE_IS_NOT_LINKED_WITH_USER_ROLE";
+	public static final String ROLE_IS_NOT_LINKED_WITH_USER_ACTION = "ROLE_IS_NOT_LINKED_WITH_USER_ACTION";
+
+	public static final String ACTION_IS_NOT_DELETED = "ACTION_IS_NOT_DELETED";
+	public static final String ACTION_IS_NOT_EXIST = "ACTION_IS_NOT_EXIST";
+
+	public static final String SUBPONEA_REQUEST_DETAILS_IS_NOT_EXIST = "SUBPONEA_REQUEST_DETAILS_IS_NOT_EXIST";
+	public static final String SUBPONEA_REQUEST_IS_NOT_DELETED = "SUBPONEA_REQUEST_IS_NOT_DELETED";
+
+	public static final String IND_SUBPONEA_REQUEST_IS_NOT_DELETED = "IND_SUBPONEA_REQUEST_IS_NOT_DELETED";
+	public static final String IND_SUBPONEA_REQUEST_IS_NOT_EXIST = "IND_SUBPONEA_REQUEST_IS_NOT_EXIST";
+
+	public static final String SUBPONEA_REQUEST_DETAILS_IS_NOT_DELETED = "SUBPONEA_REQUEST_DETAILS_IS_NOT_DELETED";
+
+	public static final String SUBPONEA_REQUEST_DETAILS_IS_NOT_ACTIVATE = "SUBPONEA_REQUEST_DETAILS_IS_NOT_ACTIVATE";
+
+	public static final String SUBPONEA_REQUEST_DETAILS_IS_NOT_DEACTIVATE = "SUBPONEA_REQUEST_DETAILS_IS_NOT_DEACTIVATE";
+
+	public static final String IND_HOLIDAY_IS_NOT_EXIST = "IND_HOLIDAY_IS_NOT_EXIST";
+	public static final String IND_HOLIDAY_IS_NOT_DELETED = "IND_HOLIDAY_IS_NOT_DELETED";
+	public static final String IND_HOLIDAY_IS_NOT_GENERATED_DAY = "IND_HOLIDAY_IS_NOT_GENERATED_DAY";
+	public static final String IND_HOLIDAY_IS_ACTIVATE = "IND_HOLIDAY_IS_ACTIVATE";
+	public static final String IND_HOLIDAY_IS_NOT_ACTIVATE = "IND_HOLIDAY_IS_NOT_ACTIVATE";
+	public static final String IND_HOLIDAY_IS_NOT_DEACTIVATE = "IND_HOLIDAY_IS_NOT_DEACTIVATE";
+
+	public static final String HOLIDAY_IS_NOT_EXIST = "HOLIDAY_IS_NOT_EXIST";
+	public static final String HOLIDAY_IS_NOT_DELETED = "HOLIDAY_IS_NOT_DELETED";
+	public static final String HOLIDAY_IS_NOT_PASSED = "HOLIDAY_IS_NOT_PASSED";
+	public static final String HOLIDAY_IS_NOT_ACTIVATE = "HOLIDAY_IS_NOT_ACTIVATE";
+	public static final String HOLIDAY_IS_NOT_DEACTIVATE = "HOLIDAY_IS_NOT_DEACTIVATE";
+
+	public static final String BRANCH_IS_NOT_DELETED = "BRANCH_IS_NOT_DELETED";
+
+	public static final String BRANCH_HOLIDAY_IS_NOT_EXIST = "BRANCH_HOLIDAY_IS_NOT_EXIST";
+
+	public static final String IND_SOCIAL_STATUS_IS_NOT_EXIST = "IND_SOCIAL_STATUS_IS_NOT_EXIST";
+	public static final String IND_SOCIAL_STATUS_IS_NOT_DELETE = "IND_SOCIAL_STATUS_IS_NOT_DELETE";
+	public static final String IND_SOCIAL_STATUS_IS_NOT_GENERATED_DAY = "IND_SOCIAL_STATUS_IS_NOT_GENERATED_DAY";
+
+	public static final String IND_SIGNATURE_TYPE_IS_NOT_EXIST = "IND_SIGNATURE_TYPE_IS_NOT_EXIST";
+	public static final String IND_SIGNATURE_TYPE_IS_NOT_DELETE = "IND_SIGNATURE_TYPE_IS_NOT_DELETE";
+	public static final String IND_SIGNATURE_TYPE_IS_NOT_GENERATED_DAY = "IND_SIGNATURE_TYPE_IS_NOT_GENERATED_DAY";
+	public static final String BRANCH_HOLIDAY_IS_EXIST = "BRANCH_HOLIDAY_IS_EXIST";
+	public static final String USER_ACTION_IS_NOT_DELETED = "USER_ACTION_IS_NOT_DELETED";
+	public static final String USER_ROLE_IS_NOT_DELETED = "USER_ROLE_IS_NOT_DELETED";
+	public static final String ROLE_ACTION_IS_NOT_EXIST = "ROLE_ACTION_IS_NOT_EXIST";
+	public static final String ROLE_ACTION_IS_NOT_DELETE = "ROLE_ACTION_IS_NOT_DELETE";
+
+	public static final String IND_SECTOR_TYPE_IS_NOT_EXIST = "IND_SECTOR_TYPE_IS_NOT_EXIST";
+	public static final String IND_SECTOR_TYPE_IS_NOT_DELETE = "IND_SECTOR_TYPE_IS_NOT_EXISTIS_NOT_DELETE";
+	public static final String INTEREST_IS_NOT_EXIST = "INTEREST_IS_NOT_EXIST";
+	public static final String INTEREST_IS_NOT_DELETED = "INTEREST_IS_NOT_DELETED";
+
+	public static final String ACCOUNT_TYPE_IS_EXIST = "ACCOUNT_TYPE_IS_EXIST";
+
+	public static final String IND_SECTOR_TYPE_IS_NOT_EXISTIS_NOT_GENERATED_DAY = "IND_SECTOR_TYPE_IS_NOT_EXISTIS_NOT_GENERATED_DAY";
+
+	public static final String IND_RELATIONSHIP_TYPE_IS_NOT_EXIST = "IND_RELATIONSHIP_TYPE_IS_NOT_EXIST";
+	public static final String IND_RELATIONSHIP_TYPE_IS_NOT_EXISTIS_NOT_DELETE = "IND_RELATIONSHIP_TYPE_IS_NOT_EXISTIS_NOT_DELETE";
+	public static final String IND_RELATIONSHIP_TYPE_IS_NOT_EXISTIS_NOT_GENERATED_DAY = "IND_RELATIONSHIP_TYPE_IS_NOT_EXISTIS_NOT_GENERATED_DAY";
+	public static final String IND_RELATIONSHIP_TYPE_IS_NOT_DELETED = "IND_RELATIONSHIP_TYPE_IS_NOT_DELETED";
+
+	public static final String ACCOUNT_TYPE_CURRENCY_IS_EMPTY = "ACCOUNT_TYPE_CURRENCY_IS_EMPTY";
+	public static final String ACCOUNT_TYPE_CURRENCY_IS_EXIST = "ACCOUNT_TYPE_CURRENCY_IS_EXIST";
+	public static final String ACCOUNT_TYPE_IS_NOT_DELETE = "ACCOUNT_TYPE_IS_NOT_DELETE";
+	public static final String ACCOUNT_TYPE_CATEGORY_IS_NOT_DELETE = "ACCOUNT_TYPE_CATEGORY_IS_NOT_DELETE";
+	public static final String ACCOUNT_TYPE_IS_NOT_ACTIVATE = "ACCOUNT_TYPE_IS_NOT_ACTIVATE";
+
+	public static final String ACCOUNT_TYPE_CURRENCY_IS_NOT_DELETED = "ACCOUNT_TYPE_CURRENCY_IS_NOT_DELETED";
+
+	public static final String IND_REGION_IS_NOT_EXIST = "IND_REGION_IS_NOT_EXIST";
+	public static final String ACCOUNT_TYPE_NATURE_IS_EMPTY = "ACCOUNT_TYPE_NATURE_IS_EMPTY";
+
+	public static final String IND_INTEREST_TYPE_IS_NOT_DELETED = "IND_INTEREST_TYPE_IS_NOT_DELETED";
+
+	public static final String CURRENCY_SEGMENT_IS_NOT_DELETED = "CURRENCY_SEGMENT_IS_NOT_DELETED";
+	public static final String CURRENCY_SEGMENT_IS_NOT_EXIST = "CURRENCY_SEGMENT_IS_NOT_EXIST";
+
+	public static final String IND_REGION_IS_NOT_EXISTIS_NOT_DELETE = "IND_REGION_IS_NOT_EXISTIS_NOT_DELETE";
+	public static final String IND_REGION_IS_NOT_EXISTIS_NOT_GENERATED_DAY = "IND_REGION_IS_NOT_EXISTIS_NOT_GENERATED_DAY";
+	public static final String IND_REGION_IS_NOT_DELETED = "IND_REGION_IS_NOT_DELETED";
+
+	public static final String IND_POSITION_IS_NOT_EXIST = "IND_POSITION_IS_NOT_EXIST";
+	public static final String IND_POSITION_IS_NOT_EXISTIS_NOT_DELETE = "IND_POSITIONIS_IS_NOT_EXISTIS_NOT_DELETE";
+	public static final String IND_POSITION__IS_NOT_EXISTIS_NOT_GENERATED_DAY = "IND_POSITIONIS__IS_NOT_EXISTIS_NOT_GENERATED_DAY";
+	public static final String IND_POSITION_IS_NOT_DELETED = "IND_POSITION_IS_NOT_DELETED";
+
+	
+	public static final String Ind_Econmic_Activity_IS_NOT_EXIST = "Ind_Econmic_Activity_IS_NOT_EXIST";
+	public static final String Ind_Econmic_Activity_IS_NOT_EXISTIS_NOT_DELETE = "Ind_Econmic_Activity_IS_NOT_EXISTIS_NOT_DELETE";
+	public static final String Ind_Econmic_Activity__IS_NOT_EXISTIS_NOT_GENERATED_DAY = "Ind_Econmic_Activity__IS_NOT_EXISTIS_NOT_GENERATED_DAY";
+	public static final String Ind_Econmic_Activity_IS_NOT_DELETED = "Ind_Econmic_Activity_IS_NOT_DELETED";
+
+
+	
+	
+	public static final String INTEREST_RATE_IS_NOT_DELETED = "INTEREST_RATE_IS_NOT_DELETED";
+	public static final String INTEREST_RATE_IS_NOT_EXIST = "INTEREST_RATE_IS_NOT_EXIST";
+	public static final String INTEREST_RATE_IS_NOT_CONFLICTED = "INTEREST_RATE_IS_NOT_CONFLICTED";
+
+	public static final String IND_NON_CUST_STATUS_IS_NOT_EXIST = "IND_NON_CUST_STATUS_IS_NOT_EXIST";
+	public static final String IND_NON_CUST_STATUS_IS_NOT_DELETE = "IND_NON_CUST_STATUS_IS_NOT_DELETE";
+	
+	public static final String CURRENCY_IS_NOT_DELETED = "CURRENCY_IS_NOT_DELETED";
+	public static final String PERIOD_IS_NOT_DELETED = "PERIOD_IS_NOT_DELETED";
+	public static final String TAX_IS_NOT_DELETED = "TAX_IS_NOT_DELETED";
+
+	public static final String PERIOD_IS_NOT_EXIST = "PERIOD_IS_NOT_EXIST";
+	public static final String IND_DATE_UNIT_IS_NOT_DELETED = "IND_DATE_UNIT_IS_NOT_DELETED";
+	public static final String IND_DATE_UNIT_IS_NOT_EXIST = "IND_DATE_UNIT_IS_NOT_EXIST";
+
+	public static final String INTEREST_RATE_SEGMENT_IS_NOT_DELETED = "INTEREST_RATE_SEGMENT_IS_NOT_DELETED";
+	public static final String INTEREST_RATE_SEGMENT_IS_NOT_EXIST = "INTEREST_RATE_SEGMENT_IS_NOT_EXIST";
+
+	public static final String COMMISSION_IS_NOT_EXIST = "COMMISSION_IS_NOT_EXIST";
+	public static final String COMMISSION_IS_NOT_DELETE = "COMMISSION_IS_NOT_DELETE";
+	public static final String COMMISSION_IS_NOT_ACTIVATE = "COMMISSION_IS_NOT_ACTIVATE";
+	public static final String IND_NON_CUST_STATUS_IS_NOT_GENERATED_DAY = "IND_NON_CUST_STATUS_IS_NOT_GENERATED_DAY";
+
+	public static final String IND_NON_CUST_DOCUMENT_IS_NOT_EXIST = "IND_NON_CUST_DOCUMENT_IS_NOT_EXIST";
+	public static final String IND_NON_CUST_DOCUMENT_IS_NOT_DELETE = "IND_NON_CUST_DOCUMENT_IS_NOT_DELETE";
+	public static final String IND_NON_CUST_DOCUMENT_IS_NOT_GENERATED_DAY = "IND_NON_CUST_DOCUMENT_IS_NOT_GENERATED_DAY";
+
+	public static final String COMMISSION_EFFICTIVE_FROM_DATE_IS_NOT_PASSED = "COMMISSION_EFFICTIVE_FROM_DATE_IS_NOT_PASSED";
+	public static final String COMMISSION_EFFICTIVE_TO_DATE_IS_NOT_PASSED = "COMMISSION_EFFICTIVE_TO_DATE_IS_NOT_PASSED";
+	public static final String ACTION_COMMISSION_IS_NOT_DUPLICATE = "ACTION_COMMISSION_IS_NOT_DUPLICATE";
+	public static final String IND_NATIONALITY_IS_NOT_EXIST = "IND_NATIONALITY_IS_NOT_EXIST";
+	public static final String IND_NATIONALITY_IS_NOT_DELETE = "IND_NATIONALITY_IS_NOT_DELETE";
+	public static final String IND_NATIONALITY_IS_NOT_GENERATED_DAY = "IND_NATIONALITY_IS_NOT_GENERATED_DAY";
+
+	public static final String ACC_PERIOD_IS_NOT_DELETED = "ACC_PERIOD_IS_NOT_DELETED";
+	public static final String IND_CATIGORY_MODULE_IS_NOT_DELETED = "IND_CATIGORY_MODULE_IS_NOT_DELETED";
+
+	public static final String IND_CREDIT_DEBIT_CATEGORY_IS_NOT_DELETED = "IND_CREDIT_DEBIT_CATEGORY_IS_NOT_DELETED";
+	public static final String CUSTOMER_NATURE_IS_NOT_DELETED = "ACCOUNT_TYPE_NATURE_IS_NOT_DELETED";
+	public static final String IndMemberRole_IS_NOT_EXIST = "IndMemberRole_IS_NOT_EXIST";
+	public static final String IndMemberRole_IS_NOT_DELETE = "IndMemberRole_IS_NOT_DELETE";
+	public static final String IndMemberRole_IS_NOT_GENERATED_DAY = "IndMemberRole_IS_NOT_GENERATED_DAY";
+	public static final String ACCOUNT_TYPE_PERIOD_IS_NOT_DELETED = "ACCOUNT_TYPE_PERIOD_IS_NOT_DELETED";
+	public static final String FILE_TYPE_IS_NOT_DELETED = "FILE_TYPE_IS_NOT_DELETED";
+	public static final String ACCOUNT_TYPE_NATURE_IS_NOT_DELTED = "ACCOUNT_TYPE_NATURE_IS_NOT_DELTED";
+
+	public static final String IndNationality_IS_NOT_EXIST = "IndNationality_IS_NOT_EXIST";
+	public static final String IndNationality_IS_NOT_DELETE = "IndNationality_IS_NOT_DELETE";
+	public static final String IndNationality_IS_NOT_GENERATED_DAY = "IndNationality_IS_NOT_GENERATED_DAY";
+
+	public static final String IndLegalStatus_IS_NOT_EXIST = "IndLegalStatus_IS_NOT_EXIST";
+	public static final String IndLegalStatus_IS_NOT_DELETE = "IndLegalStatus_IS_NOT_DELETE";
+	public static final String IndLegalStatus_IS_NOT_GENERATED_DAY = "IndLegalStatus_IS_NOT_GENERATED_DAY";
+
+	public static final String Ind_Income_Type_IS_NOT_EXIST = "IndIncomeType_IS_NOT_EXIST";
+	public static final String Ind_Income_Type_IS_NOT_DELETE = "IndIncomeType_IS_NOT_DELETE";
+	public static final String Ind_Income_Type_IS_NOT_GENERATED_DAY = "IndIncomeType_IS_NOT_GENERATED_DAY";
+
+	public static final String Ind_ID_Type_IS_NOT_EXIST = "Ind_ID_Type_IS_NOT_EXIST";
+	public static final String Ind_ID_Type_IS_NOT_DELETE = "Ind_ID_Type_IS_NOT_DELETE";
+	public static final String Ind_ID_TypeIS_NOT_GENERATED_DAY = "StringInd_ID_TypeIS_NOT_GENERATED_DAY";
+
+	public static final String IND_GENDER_IS_NOT_EXIST = "IND_GENDER_IS_NOT_EXIST";
+	public static final String IND_GENDER_IS_NOT_DELETE = "IND_GENDER_IS_NOT_DELETE";
+	public static final String IND_GENDER_NOT_GENERATED_DAY = "IND_GENDER_NOT_GENERATED_DAY";
+
+	public static final String Ind_File_Type_IS_NOT_EXIST = "Ind_File_Type_IS_NOT_EXIST";
+	public static final String Ind_File_Type_IS_NOT_DELETE = "Ind_File_Type_IS_NOT_DELETE";
+	public static final String Ind_File_Type_NOT_GENERATED_DAY = "Ind_File_Type_NOT_GENERATED_DAY";
+
+	public static final String Ind_Family_Member_Type_IS_NOT_EXIST = "Ind_Family_Member_Type_IS_NOT_EXIST";
+	public static final String Ind_Family_Member_Type_IS_NOT_DELETE = "Ind_Family_Member_Type_IS_NOT_DELETE";
+	public static final String Ind_Family_Member_Type_NOT_GENERATED_DAY = "Ind_Family_Member_Type_NOT_GENERATED_DAY";
+	public static final String ACCOUNT_TYPE_IS_ACTIVATE = "ACCOUNT_TYPE_IS_ACTIVATE";
+
+	public static final String Ind_Economic_Sector_IS_NOT_EXIST = "Ind_Economic_Sector_IS_NOT_EXIST";
+	public static final String Ind_Economic_Sector_IS_NOT_DELETE = "Ind_Economic_Sector_IS_NOT_DELETE";
+	public static final String Ind_Economic_Sector_NOT_GENERATED_DAY = "Ind_Economic_Sector_NOT_GENERATED_DAY";
+	public static final String Ind_Economic_Sector_IS_NOT_EXISTIS_NOT_DELETE = "Ind_Econmic_Activity_IS_NOT_EXISTIS_NOT_DELETE";
+	public static final String Ind_Economic_Sector_IS_NOT_EXISTIS_NOT_GENERATED_DAY = "Ind_Econmic_Activity__IS_NOT_EXISTIS_NOT_GENERATED_DAY";
+	public static final String Ind_Economic_Sector_IS_NOT_DELETED = "Ind_Econmic_Activity_IS_NOT_DELETED";
+
+
+	public static final String Ind_Customer_Type_IS_NOT_EXIST = "Ind_Customer_Type_IS_NOT_EXIST";
+	public static final String Ind_Customer_Type_IS_NOT_DELETED = "Ind_Customer_Type_IS_NOT_DELETED";
+	public static final String Ind_Customer_Type_NOT_GENERATED_DAY = "Ind_Customer_Type_NOT_GENERATED_DAY";
+
+	public static final String Ind_Customer_Nature_Key_IS_NOT_EXIST = "Ind_Customer_Nature_Key_IS_NOT_EXIST";
+	public static final String Ind_Customer_Nature_Key_IS_NOT_DELETE = "IInd_Customer_Nature_Key_IS_NOT_DELETE";
+	public static final String Ind_Customer_Nature_Key_NOT_GENERATED_DAY = "Ind_Customer_Nature_Key_NOT_GENERATED_DAY";
+
+	public static final String Ind_Customer_Nature_IS_NOT_EXIST = "Ind_Customer_Nature_IS_NOT_EXIST";
+	public static final String Ind_Customer_Nature_IS_NOT_DELETE = "Ind_Customer_Nature_IS_NOT_DELETE";
+	public static final String Ind_Customer_Nature_NOT_GENERATED_DAY = "Ind_Customer_Nature_NOT_GENERATED_DAY";
+
+	public static final String Ind_Customer_Member_Type_IS_NOT_EXIST = "Ind_Customer_Member_Type_IS_NOT_EXIST";
+	public static final String Ind_Customer_Member_Type_IS_NOT_DELETE = "Ind_Customer_Member_Type__IS_NOT_DELETE";
+	public static final String Ind_Customer_Member_Type_NOT_GENERATED_DAY = "Ind_Customer_Member_Type__NOT_GENERATED_DAY";
+
+	public static final String Ind_Customer_Document_IS_NOT_EXIST = "Ind_Customer_Document_IS_NOT_EXIST";
+	public static final String Ind_Customer_Document_IS_NOT_DELETE = "Ind_Customer_Document_IS_NOT_DELETE";
+	public static final String Ind_Customer_Document_NOT_GENERATED_DAY = "Ind_Customer_Document_NOT_GENERATED_DAY";
+
+	public static final String Ind_Country_IS_NOT_EXIST = "Ind_Country_IS_NOT_EXIST";
+	public static final String Ind_Country_IS_NOT_DELETE = "Ind_Country_IS_NOT_DELETE";
+	public static final String Ind_Country_NOT_GENERATED_DAY = "Ind_Country_NOT_GENERATED_DAY";
+
+	public static final String Ind_Company_Type_IS_NOT_EXIST = "Ind_Company_Type_IS_NOT_EXIST";
+	public static final String Ind_Company_Type_IS_NOT_DELETE = "Ind_Company_Type_IS_NOT_DELETE";
+	public static final String Ind_Company_Type_NOT_GENERATED_DAY = "Ind_Company_Type_NOT_GENERATED_DAY";
+
+	public static final String Ind_Commission_Type_IS_NOT_EXIST = "Ind_Commission_Type_IS_NOT_EXIST";
+	public static final String Ind_Commission_Type_IS_NOT_DELETE = "Ind_Commission_Type_IS_NOT_DELETE";
+	public static final String Ind_Commission_Type_NOT_GENERATED_DAY = "Ind_Commission_Type_NOT_GENERATED_DAY";
+
+	public static final String Ind_City_IS_NOT_EXIST = "Ind_City_IS_NOT_EXIST";
+	public static final String Ind_City_IS_NOT_DELETE = "Ind_City_IS_NOT_DELETE";
+	public static final String Ind_City_NOT_GENERATED_DAY = "Ind_City_NOT_GENERATED_DAY";
+
+	public static final String Ind_Certificate_Type_IS_NOT_EXIST = "Ind_Certificate_Type_IS_NOT_EXIST";
+	public static final String Ind_Certificate_Type_IS_NOT_DELETE = "Ind_Certificate_Type_IS_NOT_DELETE";
+	public static final String Ind_Certificate_Type_NOT_GENERATED_DAY = "Ind_Certificate_Type_NOT_GENERATED_DAY";
+
+	public static final String Ind_Branch_Type_IS_NOT_EXIST = "Ind_Branch_Type_IS_NOT_EXIST";
+	public static final String Ind_Branch_Type_IS_NOT_DELETE = "Ind_Branch_Type_IS_NOT_DELETE";
+	public static final String Ind_Branch_Type_NOT_GENERATED_DAY = "Ind_Branch_Type_NOT_GENERATED_DAY";
+
+	public static final String Customer_Situation_IS_NOT_EXIST = "Customer_Situation_IS_NOT_EXIST";
+	public static final String Customer_Situation_IS_NOT_DELETE = "Customer_Situation_IS_NOT_DELETE";
+	public static final String Customer_Situation_NOT_GENERATED_DAY = "Customer_Situation_NOT_GENERATED_DAY";
+
+	public static final String Branch_IS_NOT_EXIST = "Branch_IS_NOT_EXIST";
+	public static final String Branch_IS_NOT_DELETE = "Branch_IS_NOT_DELETE";
+	public static final String Branch_NOT_GENERATED_DAY = "Branch_NOT_GENERATED_DAY";
+
+	public static final String Customer_NAture_IS_NOT_EXIST = "Customer_NAture_IS_NOT_EXIST";
+	public static final String Customer_NAture_IS_NOT_DELETE = "Customer_NAture_IS_NOT_DELETE";
+	public static final String Customer_NAture_NOT_GENERATED_DAY = "Customer_NAture_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Warning_Sign_IS_NOT_EXIST = "Acc_Ind_Warning_Sign_IS_NOT_EXIST";
+	public static final String Acc_Ind_Warning_Sign_IS_NOT_DELETE = "Acc_Ind_Warning_Sign_IS_NOT_DELETE";
+	public static final String Acc_Ind_Warning_Sign_NOT_GENERATED_DAY = "Acc_Ind_Warning_Sign_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Reservation_Sign_IS_NOT_EXIST = "Acc_Ind_Reservation_Sign_IS_NOT_EXIST";
+	public static final String Acc_Ind_Reservation_Sign_IS_NOT_DELETE = "Acc_Ind_Reservation_Sign_IS_NOT_DELETE";
+	public static final String Acc_Ind_Reservation_Sign_NOT_GENERATED_DAY = "Acc_Ind_Reservation_Sign_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Pass_Book_Status_IS_NOT_EXIST = "Acc_Ind_Pass_Book_Status_IS_NOT_EXIST";
+	public static final String Acc_Ind_Pass_Book_Status_IS_NOT_DELETE = "Acc_Ind_Pass_Book_Status_IS_NOT_DELETE";
+	public static final String Acc_Ind_Pass_Book_Status_NOT_GENERATED_DAY = "Acc_Ind_Pass_Book_Status_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Interest_Type_IS_NOT_EXIST = "Acc_Ind_Interest_Type_IS_NOT_EXIST";
+	public static final String Acc_Ind_Interest_Type_IS_NOT_DELETE = "Acc_Ind_Interest_Type_IS_NOT_DELETE";
+	public static final String Acc_Ind_Interest_Type_NOT_GENERATED_DAY = "Acc_Ind_Interest_Type_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Date_Unit_IS_NOT_EXIST = "Acc_Ind_Date_Unit_IS_NOT_EXIST";
+	public static final String Acc_Ind_Date_Unit_IS_NOT_DELETE = "Acc_Ind_Date_Unit_IS_NOT_DELETE";
+	public static final String Acc_Ind_Date_Unit_NOT_GENERATED_DAY = "Acc_Ind_Date_Unit_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Account_Type_Categories_IS_NOT_EXIST = "Acc_Ind_Account_Type_Categories_IS_NOT_EXIST";
+	public static final String Acc_Ind_Account_Type_Categories_IS_NOT_DELETE = "Acc_Ind_Account_Type_Categories_IS_NOT_DELETE";
+	public static final String Acc_Ind_Account_Type_Categories_NOT_GENERATED_DAY = "Acc_Ind_Account_Type_Categories_NOT_GENERATED_DAY";
+
+	public static final String Ind_Adress_IS_NOT_EXIST = "Ind_Adress_IS_NOT_EXIST";
+	public static final String Ind_Adress_IS_NOT_DELETE = "Ind_Adress_IS_NOT_DELETE";
+	public static final String Ind_Adress_NOT_GENERATED_DAY = "Ind_Adress_NOT_GENERATED_DAY";
+
+	public static final String Ind_Category_IS_NOT_EXIST = "Ind_Category_IS_NOT_EXIST";
+	public static final String Ind_Category_IS_NOT_DELETE = "Ind_Category_IS_NOT_DELETE";
+	public static final String Ind_Category_NOT_GENERATED_DAY = "Ind_Category_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Cust_Acc_Status_IS_NOT_EXIST = "Acc_Ind_Cust_Acc_Status_IS_NOT_EXIST";
+	public static final String Acc_Ind_Cust_Acc_Status_IS_NOT_DELETE = "Acc_Ind_Cust_Acc_Status_IS_NOT_DELETE";
+	public static final String Acc_Ind_Cust_Acc_Status_NOT_GENERATED_DAY = "Acc_Ind_Cust_Acc_Status_NOT_GENERATED_DAY";
+
+	public static final String Action_Customer_Nature_IS_NOT_EXIST = "Action_Customer_Nature_IS_NOT_EXIST";
+	public static final String Action_Customer_Nature_IS_NOT_DELETE = "Action_Customer_Nature_IS_NOT_DELETE";
+	public static final String Action_Customer_Nature_NOT_GENERATED_DAY = "Action_Customer_Nature_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Reservation_Categories_IS_NOT_EXIST = "Acc_Ind_Reservation_Categories_IS_NOT_EXIST";
+	public static final String Acc_Ind_Reservation_Categories_IS_NOT_DELETE = "Acc_Ind_Reservation_Categories_IS_NOT_DELETE";
+	public static final String Acc_Ind_Reservation_Categories_NOT_GENERATED_DAY = "Acc_Ind_Reservation_Categories_NOT_GENERATED_DAY";
+
+	public static final String Acc_Ind_Reservation_Resoan_IS_NOT_EXIST = "Acc_Ind_Reservation_IS_NOT_EXIST";
+	public static final String Acc_Ind_Reservation_Resoan_IS_NOT_DELETE = "Acc_Ind_Reservation_IS_NOT_DELETE";
+	public static final String Acc_Ind_Reservation_Resoan_NOT_GENERATED_DAY = "Acc_Ind_Reservation_NOT_GENERATED_DAY";
+
+	public static final String TAX_IS_NOT_EXIST = "TAX_IS_NOT_EXIST";
+
+	public static final String IND_JOURNAL_STATUS_IS_NOT_EXIST = "IND_JOURNAL_STATUS_IS_NOT_EXIST";
+	public static final String IND_JOURNAL_STATUS_IS_NOT_DELETE = "IND_JOURNAL_STATUS_IS_NOT_DELETE";
+	public static final String IND_JOURNAL_STATUS_NOT_GENERATED_DAY = "IND_JOURNAL_STATUS_NOT_GENERATED_DAY";
+
+	public static final String IND_JOURNAL_TYPE_IS_NOT_EXIST = "IND_JOURNAL_TYPE_IS_NOT_EXIST";
+	public static final String IND_JOURNAL_TYPE_IS_NOT_DELETE = "IND_JOURNAL_TYPE_IS_NOT_DELETE";
+	public static final String IND_JOURNAL_TYPE_NOT_GENERATED_DAY = "IND_JOURNAL_TYPE_NOT_GENERATED_DAY";
+
+	public static final String IND_GL_CLASS_IS_NOT_EXIST = "IND_GL_CLASS_IS_NOT_EXIST";
+	public static final String IND_GL_CLASS_IS_NOT_DELETE = "IND_GL_CLASS_IS_NOT_DELETE";
+	public static final String IND_GL_CLASSE_NOT_GENERATED_DAY = "IND_GL_CLASSE_NOT_GENERATED_DAY";
+	public static final String IND_GL_CLASSE_CHECK_MIN_MAX = "IND_GL_CLASSE_CHECK_MIN_MAX";
+
+	
+	
+	public static final String IND_FISCAL_YEAR_STATUS_IS_NOT_EXIST = "IND_FISCAL_YEAR_STATUS_IS_NOT_EXIST";
+	public static final String IND_FISCAL_YEAR_STATUS_IS_NOT_DELETE = "IND_FISCAL_YEAR_STATUS_IS_NOT_DELETE";
+	public static final String IND_FISCAL_YEAR_STATUS_NOT_GENERATED_DAY = "IND_FISCAL_YEAR_STATUS_NOT_GENERATED_DAY";
+
+	public static final String IND_INSTITUTION_IS_NOT_EXIST = "IND_INSTITUTION_IS_NOT_EXIST";
+	public static final String IND_INSTITUTION_IS_NOT_DELETE = "IND_INSTITUTION_IS_NOT_DELETE";
+	public static final String IND_INSTITUTION_NOT_GENERATED_DAY = "IND_INSTITUTION_NOT_GENERATED_DAY";
+
+	public static final String ATM_IS_NOT_EXIST = "ATM_IS_NOT_EXIST";
+	public static final String ATM_IS_NOT_DELETED = "ATM_IS_NOT_DELETED";
+	
+	
+	public static final String CREDIT_CARD_IS_NOT_EXIST = "CREDIT_CARD_IS_NOT_EXIST";
+	public static final String CREDIT_CARD_IS_NOT_DELETE = "CREDIT_CARD_IS_NOT_DELETE";
+	public static final String CREDIT_CARD_NOT_GENERATED_DAY = "CREDIT_CARD_NOT_GENERATED_DAY";
+}

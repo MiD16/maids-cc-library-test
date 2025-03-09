@@ -1,0 +1,57 @@
+package com.template.BusinessRule.Interest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Interests.AccInterest;
+import com.template.Service.Table.Interest.AccInterestService;
+@Component(CBusinessRuleConstant.INTEREST_IS_NOT_DELETED)
+@Lazy
+public class CBRInterestIsNotDeleted implements IBusinessRule {
+	@Autowired
+	AccInterestService accInterestService;
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccInterest interest = null;
+		AccInterest interestDebit = null;
+		AccInterest interestCreidt = null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				interest= (AccInterest) parameters.getParameter(EKeyCode.INTEREST.toString());
+				
+				interestDebit = (AccInterest) parameters.getParameter(EKeyCode.INTEREST_DEBIT.toString());
+				interestCreidt = (AccInterest) parameters.getParameter(EKeyCode.INTEREST_CREDIT.toString());
+				if(interest != null)
+					if (accInterestService.checkInterestIsDeleted(interest.getId())) {
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage("الفائدة محذوفة");
+						actionValidationResult.setErrorCode(EErrorCode.INTEREST_IS_DELETED.toString());
+				}
+				
+				if(interestCreidt!=null)
+					if (accInterestService.checkInterestIsDeleted(interestCreidt.getId())) {
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage("الفائدة الدائنة محذوفة");
+						actionValidationResult.setErrorCode(EErrorCode.INTEREST_IS_DELETED.toString());
+				}
+				
+				if(interestDebit!=null)
+					if (accInterestService.checkInterestIsDeleted(interestDebit.getId())) {
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage("الفائدة المدينة محذوفة");
+						actionValidationResult.setErrorCode(EErrorCode.INTEREST_IS_DELETED.toString());
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		return actionValidationResult;
+	}
+}

@@ -1,0 +1,23 @@
+package com.template.Action.IndNonCustDocument;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.UPDATE_IND_NON_CUST_DOCUMENT)
+@Lazy
+public class IndNonCustDocumentUpdate extends CAction {
+	public IndNonCustDocumentUpdate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.IND_NON_CUST_DOCUMENT_IS_NOT_DELETE);
+		addBusinessnRule(CBusinessRuleConstant.IND_NON_CUST_DOCUMENT_IS_NOT_EXIST);
+	}
+}

@@ -1,0 +1,49 @@
+package com.template.BusinessRule.IndSubpoenaRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndSubpoenaRequest;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Service.Table.AllIndexes.IndSubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+
+@Component(CBusinessRuleConstant.IND_SUBPONEA_REQUEST_IS_NOT_DELETED)
+@Lazy
+public class CBRIndSubpoenaRequestIsNotDeleted implements IBusinessRule {
+
+	@Autowired
+	IndSubpoenaRequestServices indSubpoenaRequestServices;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		IndSubpoenaRequest indSubpoenaRequest = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+
+				indSubpoenaRequest = (IndSubpoenaRequest) parameters.getParameter(EKeyCode.IND_SUBPOENA_REQUEST.toString());
+
+				if (indSubpoenaRequestServices.checkIndSubpoenaRequestIsDeleted(indSubpoenaRequest.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("نوع طلب الاستدعاء محذوف");
+					actionValidationResult.setErrorCode(EErrorCode.IND_SUBPOENA_REQUEST_IS_DELETED.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

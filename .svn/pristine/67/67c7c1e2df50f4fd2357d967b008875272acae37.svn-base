@@ -1,0 +1,19 @@
+package com.template.Class;
+
+import java.util.List;
+import com.template.Class.Pageing.PageInfo;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor 
+public class SearchInfo {
+
+	private List<SearchForAccountType> searchForAccountType;
+	
+	private PageInfo<SearchForAccountType> pageInfo;
+}

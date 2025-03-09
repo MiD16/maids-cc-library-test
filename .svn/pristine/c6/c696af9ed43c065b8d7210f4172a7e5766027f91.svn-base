@@ -1,0 +1,102 @@
+package com.template.RestController.Basic;
+
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.Base.Enum.EServletRequestAttribute;
+import com.template.API.Request.User.CGenerateAuthTokenRequest;
+import com.template.API.Response.DTO.CUserDTO;
+import com.template.API.Response.User.CGenerateAuthTokenResponse;
+import com.template.Model.Basic.User;
+import com.template.Service.Basic.UserService;
+
+
+
+@RestController
+@RequestMapping("/api/users")
+public class UsersController {
+	@Autowired
+	UserService userService;
+	
+	@PostMapping("/generate-auth-token")
+	public CGenerateAuthTokenResponse generateAutnToken(HttpServletRequest request, @RequestBody CGenerateAuthTokenRequest requestBody) 
+	{
+		CGenerateAuthTokenResponse apiResponse = null;
+		User user = null;
+		CUserDTO userDTO = null;
+		String jwtToken = null;
+		
+		try
+		{
+			do
+			{
+				user = (User)request.getAttribute(EServletRequestAttribute.USER.toString());
+				
+				jwtToken = userService.generateAutnToken(user);
+				
+				userDTO = CUserDTO.parse(user);
+				
+				userDTO.setToken(jwtToken);
+				
+				apiResponse = new CGenerateAuthTokenResponse();
+				
+				apiResponse.setStatus(HttpStatus.OK);
+				
+				apiResponse.setUser(userDTO);
+			}
+			while(false);
+		}
+		catch(Exception e)
+		{
+			apiResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return apiResponse;
+	}
+	
+//	@PostMapping("/signup")
+//	public Response<Integer> singup(@RequestBody SingUpRequest request)  {
+//		Response<Integer> response=null;
+//		Integer userId = accountService.saveMobileUser(request);
+//		if (userId != null) {
+//			response = IDResponse.success(userId);
+//		} else {
+//			response = IDResponse.error(ResultCode.ALREADY_EXISTS.getValue(), ResultCode.ALREADY_EXISTS.getDescription());
+//		}
+//		return response;
+//	}
+//	
+//	@PostMapping("/verifyOTP")
+//	public Response<Boolean> verifyOTP(@RequestBody OTPRequest request)  {
+//		Response<Boolean> response = null;
+//		Boolean otpResult = accountService.verifyOTP(request);
+//		if (otpResult != null) {
+//			response = StatusResponse.success(otpResult);
+//		} else {
+//			response = StatusResponse.error(ResultCode.FAILE.getValue(), ResultCode.FAILE.getDescription());
+//		}
+//		return response;
+//	}
+	
+//	@GetMapping("/user")
+//	public Response<UserDTO> getAllUser(@RequestBody Request request) {
+//		PageResponse<UserDTO> pageResponse=null;
+//		Response<UserDTO> response ;
+//		pageResponse = demoService.getAllUser(request);
+//		if(pageResponse != null && pageResponse.getContent().size()!=0) {
+//			response = DemoPesponse.success(pageResponse.getContent(), pageResponse.getPageInfo());
+//		}
+//		else {
+//			response = DemoPesponse.error(ResultCode.FAILE.getValue(), ResultCode.FAILE.getDescription());
+//		}
+//		return response;
+//	}
+
+
+}

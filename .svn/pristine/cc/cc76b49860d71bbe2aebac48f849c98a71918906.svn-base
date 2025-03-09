@@ -1,0 +1,113 @@
+package com.template.Advisor;
+
+import java.util.List;
+
+import javax.persistence.NonUniqueResultException;
+import javax.validation.ConstraintViolationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.Authentication;
+
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.template.Class.UserInformation;
+import com.template.Enum.ExceptionLogName;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.Notification;
+import com.template.Repository.Basic.NotificationsRep;
+
+
+import com.template.Service.Basic.NotificationsService;
+import com.template.Service.Basic.SystemLog.ExceptionLogActionService;
+
+@ControllerAdvice(basePackages = "com.template.Controller")
+public class ControllerAdvisor {
+	@Autowired
+	public ExceptionLogActionService exceptionLogActionService;
+	@Autowired
+	public NotificationsService notificationsService;
+
+	@Autowired
+	public NotificationsRep notificationsRep;
+
+	@ExceptionHandler(NoDataFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+
+	public String handleNodataFoundException(NoDataFoundException ex) {
+	
+		exceptionLogActionService.addExLogAction(ExceptionLogName.NoDataFoundException.toString(), ex.getMessage(),ex.getStackTrace()[0].getLineNumber(),ex.getStackTrace()[0].getMethodName(),ex.getStackTrace()[0].getClassName());
+
+		return "bayan";
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	public String ConstraintViolationException(ConstraintViolationException ex) {
+		exceptionLogActionService.addExLogAction(ExceptionLogName.NoDataFoundException.toString(), ex.getMessage(),ex.getStackTrace()[0].getLineNumber(),ex.getStackTrace()[0].getMethodName(),ex.getStackTrace()[0].getClassName());
+
+		return "/errorPage";
+	}
+	
+	@ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+	public String AccessDeniedExcepteeion(ConstraintViolationException ex) {
+		return "/accessDenied";
+	}
+	
+	@ExceptionHandler(NullPointerException.class)
+	public String NullPointerException(NullPointerException ex) {
+		exceptionLogActionService.addExLogAction(ExceptionLogName.NullPointerException.toString(), ex.getMessage(),ex.getStackTrace()[0].getLineNumber(),ex.getStackTrace()[0].getMethodName(),ex.getStackTrace()[0].getClassName());
+		return "/errorPage";
+	}
+
+	@ExceptionHandler(NumberFormatException.class)
+	public String NumberFormatException(NumberFormatException ex) {
+		exceptionLogActionService.addExLogAction(ExceptionLogName.NumberFormatException.toString(), ex.getMessage(),ex.getStackTrace()[0].getLineNumber(),ex.getStackTrace()[0].getMethodName(),ex.getStackTrace()[0].getClassName());
+		return "/errorPage";
+	}
+
+	@ExceptionHandler(NonUniqueResultException.class)
+	public String NonUniqueResultException(NonUniqueResultException ex) {
+		exceptionLogActionService.addExLogAction(ExceptionLogName.NonUniqueResultException.toString(), ex.getMessage(),ex.getStackTrace()[0].getLineNumber(),ex.getStackTrace()[0].getMethodName(),ex.getStackTrace()[0].getClassName());
+		return "/errorPage";
+	}
+
+	@ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+	public String AuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException ex) {
+		exceptionLogActionService.addExLogAction(ExceptionLogName.NonUniqueResultException.toString(), ex.getMessage(),ex.getStackTrace()[0].getLineNumber(),ex.getStackTrace()[0].getMethodName(),ex.getStackTrace()[0].getClassName());
+		return "redirect:/login";
+	}
+	
+	
+	@ExceptionHandler(Exception.class)
+	public String Exception(Exception ex) {
+		exceptionLogActionService.addExLogAction(ExceptionLogName.GeneralException.toString(), ex.getMessage(),ex.getStackTrace()[0].getLineNumber(),ex.getStackTrace()[0].getMethodName(),ex.getStackTrace()[0].getClassName());
+		return "/errorPage";
+	}
+
+	@ExceptionHandler(RuntimeException.class)
+	public String RuntimeException(RuntimeException ex) {
+		exceptionLogActionService.addExLogAction(ExceptionLogName.RuntimeException.toString(), ex.getMessage(),ex.getStackTrace()[0].getLineNumber(),ex.getStackTrace()[0].getMethodName(),ex.getStackTrace()[0].getClassName());
+		return "/errorPage";
+	}
+
+	@ModelAttribute("listNot")
+	public List<Notification> getnotifi(Authentication auth) {
+		if(auth == null)
+			return null ;
+		return notificationsService.getTopCertNotif(((UserInformation) auth.getPrincipal()).getUser_id());
+	}
+	@ModelAttribute("NotNum")
+	public Integer getnotifinum(Authentication auth) {
+		if(auth == null)
+			return null ;
+		return notificationsRep.getNumberNewNotificationsByUserId(((UserInformation) auth.getPrincipal()).getUser_id());
+
+	}
+
+}

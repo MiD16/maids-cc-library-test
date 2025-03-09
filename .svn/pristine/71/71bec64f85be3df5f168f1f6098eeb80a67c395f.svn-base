@@ -1,0 +1,97 @@
+package com.template.Model.Table.Interests;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.Products.AccountType;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name="ACC_INTEREST")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
+public class AccInterest {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name="ACC_INTEREST_CODE")
+	private String accInterestCode;
+	
+	@Column(name="DESCRIPTION_A")
+	private String descriptionA;
+	
+	@Column(name="DESCRIPTION_B")
+	private String descriptionB;
+	
+	@ManyToOne
+	@JoinColumn(name="ACC_INTEREST_TYPE_ID")
+	private AccIndInterestType accInterestTypeId;
+	
+	@Column(name="IS_DELETED")
+	private Integer isDeleted;
+	
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+	
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	
+	@Column(name="NOTE")
+	private String note;
+	
+	@PrePersist
+	  void createdAt() {
+	    this.insertDate = this.lastUpdateDate = new Date();
+	    this.isDeleted = 0;
+	  }
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	  }
+	
+
+}

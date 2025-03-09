@@ -1,0 +1,19 @@
+package com.template.Action.Period;
+import javax.annotation.PostConstruct;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.DELETE_PERIOD)
+@Lazy
+public class CAPeriodDelete extends CAction {
+	public CAPeriodDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.PERIOD_IS_NOT_DELETED);
+	}
+}

@@ -1,0 +1,59 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndBranchType;
+import com.template.Repository.Table.AllIndexes.IndBranchTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndSignatureTypeRepository;
+
+@Service
+public class IndBranchTypeServices {
+
+	
+	@Autowired
+	IndBranchTypeRepository indBranchTypeRepository;
+	
+	public IndBranchType save(IndBranchType indBranchType) {
+		if(indBranchType.getId() == null)
+		{
+			indBranchType.setInsertBy(0);
+		}else if(indBranchType.getId() != null){
+			IndBranchType temSignatureType=indBranchTypeRepository.findById(indBranchType.getId()).get();
+			indBranchType.setInsertDate(temSignatureType.getInsertDate());
+		}
+		indBranchTypeRepository.save(indBranchType);
+		return indBranchType;
+	}
+	
+	public void update(IndBranchType indBranchType) {
+		indBranchTypeRepository.save(indBranchType);
+	}
+	
+	public IndBranchType findById(Long id) {
+		return indBranchTypeRepository.getById(id);
+	}
+	
+	public List<IndBranchType> getAll(){
+		List<IndBranchType> all = indBranchTypeRepository.getAll();
+		return all;
+	}
+	
+	public List<IndBranchType> getAllDeleted(){
+		List<IndBranchType> allDeleted = indBranchTypeRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndBranchType delete(Long id) {
+		IndBranchType indBranchType = indBranchTypeRepository.findById(id).get();
+		if (indBranchType == null) {
+			throw new NoDataFoundException("indSignatureType With ID : " + id + " Not Found");
+		}
+		indBranchType.setIsDeleted(1);
+		return indBranchTypeRepository.save(indBranchType);
+	}
+	
+}

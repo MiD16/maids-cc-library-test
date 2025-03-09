@@ -1,0 +1,70 @@
+package com.template.BusinessRule.IndLegalStatus;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndLegalStatus;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Service.Table.AllIndexes.IndLegalStatusServices;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+
+@Component(CBusinessRuleConstant.IndLegalStatus_IS_NOT_EXIST)
+@Lazy
+public class CBRIndLegalStatusIsNorExist implements IBusinessRule {
+		@Autowired
+		IndLegalStatusServices indLegalStatusServices;
+
+		public CActionValidationResult validate(CActionValidationParameters parameters) {
+			CActionValidationResult actionValidationResult = null;
+			IndLegalStatus indLegalStatus = null;
+			IndLegalStatus indLegalStatusName = null;
+			long idSubpoenaRequestDetails;
+			long idSubpoenaRequestDetailsBySubpoenaRequest;
+			String path = null;
+			try {
+				do {
+					actionValidationResult = new CActionValidationResult();
+					
+					indLegalStatus = (IndLegalStatus) parameters.getParameter(EKeyCode.IND_LEGAL_STATUS.toString());
+					path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+					indLegalStatusName = indLegalStatusServices.findByNames(indLegalStatus.getNameA(), indLegalStatus.getNameB());
+					
+					if (indLegalStatusName != null) {
+				
+						if (indLegalStatus.getId() == null || (indLegalStatus.getId() != null && indLegalStatus.getId()!=indLegalStatusName.getId())) {
+							String messageString = "<div style='margin-bottom: 12px'>" + indLegalStatusName.getNameA()
+							+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+							+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+							+ indLegalStatusName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+							actionValidationResult.setValid(false);
+							actionValidationResult.setErrorMessage(messageString);
+							actionValidationResult.setErrorCode(EErrorCode.IND_HOLIDAY_IS_EXISTS.toString());
+						}
+					}
+
+				} while (false);
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+
+			return actionValidationResult;
+		}
+
+
+
+
+
+}
+
+
+
+
+
+

@@ -1,0 +1,113 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+
+import com.template.Repository.Table.AllIndexes.IndEconmicActivityRepository;
+import com.template.Repository.Table.AllIndexes.IndNonCustDocumentRepository;
+import com.template.Repository.Table.AllIndexes.IndNonCustStatusRepository;
+@Service
+public class IndNonCustStatusServices {
+	
+	
+	@Autowired
+	IndNonCustStatusRepository  indNonCustStatusRepository;
+	
+	@Autowired CActionHandler actionHandler;
+
+	public CResponse createIndNonCustStatus(IndNonCustStatus indNonCustStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters indNonCustStatusValidationParameters = null;
+		CActionValidationResult indNonCustStatusValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			indNonCustStatusValidationParameters = new CActionValidationParameters();
+			
+			indNonCustStatusValidationParameters.addParameter(EKeyCode.IND_NON_CUST_STATUS.toString(), indNonCustStatus);
+			
+			indNonCustStatusValidationResult = actionHandler.validate(CActionConstant.CREATE_Ind_Non_Cust_Status, indNonCustStatusValidationParameters);
+			
+			if(!indNonCustStatusValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(indNonCustStatusValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indNonCustStatus.setInsertBy(0);
+			indNonCustStatus.setInsertDate(new Date());
+			indNonCustStatusRepository.save(indNonCustStatus);
+			
+			response.setReturnedObject(indNonCustStatus);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+	
+	public IndNonCustStatus save(IndNonCustStatus indNonCustStatus) {
+		if(indNonCustStatus.getId() == null)
+		{
+			indNonCustStatus.setInsertBy(0);
+		}else if(indNonCustStatus.getId() != null){
+			IndNonCustStatus temSignatureType=indNonCustStatusRepository.findById(indNonCustStatus.getId()).get();
+			indNonCustStatus.setInsertDate(temSignatureType.getInsertDate());
+		}
+		indNonCustStatusRepository.save(indNonCustStatus);
+		return indNonCustStatus;
+	}
+	
+
+public IndNonCustStatus findByNames(String nameA, String nameB) {
+	return indNonCustStatusRepository.findByNames(nameA, nameB);
+}
+	
+	public void update(IndNonCustStatus indNonCustStatus) {
+		indNonCustStatusRepository.save(indNonCustStatus);
+	}
+	
+	public IndNonCustStatus findById(Long id) {
+		return indNonCustStatusRepository.getById(id);
+	}
+	
+	public List<IndNonCustStatus> getAll(){
+		List<IndNonCustStatus> all = indNonCustStatusRepository.getAll();
+		return all;
+	}
+	
+	public List<IndNonCustStatus> getAllDeleted(){
+		List<IndNonCustStatus> allDeleted = indNonCustStatusRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndNonCustStatus delete(Long id) {
+		IndNonCustStatus indNonCustStatus = indNonCustStatusRepository.findById(id).get();
+		if (indNonCustStatus == null) {
+			throw new NoDataFoundException("indSocialStatus With ID : " + id + " Not Found");
+		}
+		indNonCustStatus.setIsDeleted(1);
+		return indNonCustStatusRepository.save(indNonCustStatus);
+	}
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+
+}

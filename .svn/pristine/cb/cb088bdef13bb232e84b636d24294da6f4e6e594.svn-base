@@ -1,0 +1,49 @@
+package com.template.Model.Basic;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "ROLE_CONTROLLER")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class RoleController {
+	
+	
+	@Id
+	@Column(name="ID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int ID ; 
+	
+	@ManyToOne( optional = true)
+    @JoinColumn(name = "role_id",unique=false, referencedColumnName = "ID")
+	private Role role ;
+	
+	@ManyToOne( optional = true)
+    @JoinColumn(name = "controller_id",unique=false, referencedColumnName = "ID")
+	private ControllerName controller ;
+	
+	
+	@Column(name="status")
+	private int status;
+	
+	
+}

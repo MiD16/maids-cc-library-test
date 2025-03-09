@@ -1,0 +1,60 @@
+package com.template.DataBase.Seeders;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.springframework.stereotype.Component;
+
+import com.template.DataBase.Seeder;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.RoleAction;
+import com.template.Repository.Basic.ActionsRep;
+import com.template.Repository.Basic.RoleActionRep;
+import com.template.Repository.Basic.RoleRep;
+
+@Component
+public class RoleActionSeeder {
+
+	private final Log logger = LogFactory.getLog(Seeder.class);
+	
+	public RoleActionSeeder() {
+		logger.info("	==>Seeder ==> "+ getClass().getSimpleName());
+	}
+	
+	public void run(RoleRep roleRep,RoleActionRep roleActionRep,ActionsRep actionRep) {
+		/*
+		 * Role role=roleRep.findById(1).get(); List<Action>actions=new
+		 * ArrayList<Action>(); actions=actionRep.findAll(); RoleAction roleAction;
+		 * 
+		 * for(Action action : actions) { roleAction=new RoleAction();
+		 * roleAction.setRole(role); roleAction.setAction(action);
+		 * roleAction.setStatus(0); roleActionRep.save(roleAction);
+		 * 
+		 * } Action action = actionRep.findById(17).get(); role =
+		 * roleRep.findById(3).get(); roleAction=new RoleAction();
+		 * roleAction.setRole(role); roleAction.setAction(action);
+		 * roleAction.setStatus(0); roleActionRep.save(roleAction);
+		 * 
+		 * 
+		 * 
+		 * //------
+		 * 
+		 * action = actionRep.findById(12).get(); roleAction=new RoleAction();
+		 * roleAction.setRole(role); roleAction.setAction(action);
+		 * roleAction.setStatus(0); roleActionRep.save(roleAction);
+		 * 
+		 * 
+		 * //------
+		 * 
+		 * action = actionRep.findById(11).get(); role = roleRep.findById(2).get();
+		 * roleAction=new RoleAction(); roleAction.setRole(role);
+		 * roleAction.setAction(action); roleAction.setStatus(0);
+		 * roleActionRep.save(roleAction);
+		 * 
+		 */
+	}
+	
+}

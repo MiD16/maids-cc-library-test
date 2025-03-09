@@ -1,0 +1,188 @@
+package com.template.DataBase;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+
+
+import com.template.DataBase.Seeders.ActionSeeder;
+
+
+import com.template.DataBase.Seeders.RoleActionSeeder;
+import com.template.DataBase.Seeders.RoleSeeder;
+
+
+import com.template.DataBase.Seeders.UserSeeder;
+import com.template.Repository.Basic.ActionsRep;
+import com.template.Repository.Basic.ControllerRep;
+import com.template.Repository.Basic.RoleActionRep;
+import com.template.Repository.Basic.RoleRep;
+import com.template.Repository.Basic.UsersRep;
+
+
+
+
+
+@Component
+public class Seeder implements CommandLineRunner {
+	
+	@Value("${spring.jpa.hibernate.ddl-auto}")
+	private String schema;
+	
+	private final Log logger = LogFactory.getLog(Seeder.class);
+	
+	@Autowired
+	RoleRep roleRep ;
+	
+	@Autowired
+	UsersRep userRep;
+
+	@Autowired
+	ActionsRep actionsRep;
+	
+	@Autowired
+	RoleActionRep roleActionRep;
+	
+	@Autowired
+	ActionsRep actionRep;
+	
+	
+	@Autowired
+	ControllerRep controllerRep  ;
+	
+//	@Autowired
+//	FaqsRepository faqsRepository;
+
+
+	
+//	@Autowired
+//	CertificateRepository certificateRepositor;
+//	
+//	@Autowired
+//	EduDegreeRepository eduDegreeRepository;
+//	
+//	@Autowired
+//	EduGradeRepository eduGradeRepository;
+//	
+//	@Autowired
+//	SubjectRepository subjectRepository;
+//	
+//	@Autowired 
+//	RecordRepository recordRepository;
+//	
+//	@Autowired 
+//	HelpFileRepository helpFileRepository;
+//	
+//	@Autowired 
+//	QuizRepository quizRepository;
+//	
+//	@Autowired
+//	LectureRepository lectureRepository;
+//	
+//	@Autowired
+//	MessageRepository messageRepository;
+//	
+
+	
+//	@Autowired
+//	InvitationRepository invitationRepositor;
+//	
+//	@Autowired 
+//	StudentFavSubjectRepository studentFavSubjectRepository;
+	
+//	@Autowired 
+//	TeacherFavSubjectRepository teacherFavSubjectRepository;
+	
+//	@Autowired
+//	GroupRepository groupRepository;
+//	
+//	@Autowired 
+//	GroupRecordRepository groupRecordRepository;
+//	
+	
+	
+//	@Autowired
+//	QuizPurchaseRepository quizPurchaseRepositor;
+	
+	public void run(String... strings) {
+
+		logger.info("Running Seeder ==> Status DB:"+schema);
+		if(schema.equalsIgnoreCase("create")) {
+			//when Status Data Base:create in application.properties 
+			
+			create();
+			
+		}else if(schema.equalsIgnoreCase("update")) {
+			
+			//when Status Data Base:update in application.properties 
+			
+			update();
+			
+		}else if(schema.equalsIgnoreCase("create-drop")) {
+			
+			create_drop();
+			
+		}else {
+			all();
+		}
+		
+		return;
+	}
+	
+	public void create() {
+		
+		new ActionSeeder().run(actionsRep);
+		new RoleSeeder().run(roleRep);
+		new RoleActionSeeder().run(roleRep,roleActionRep,actionRep);
+		new UserSeeder().run(roleRep,userRep,roleActionRep);
+		//new ControllerSeeder().run(controllerRep);
+		//new FaqsSeeder().run(faqsRepository);
+		
+//		new CertificateSeeder().run(certificateRepositor, userRep);
+//		new EduDegreeSeeder().run(eduDegreeRepository, userRep);
+//		new EduGradeSeeder().run(eduGradeRepository);
+//		new SubjectSeeder().run(subjectRepository, eduGradeRepository);
+//		new RecordSeeder().run(recordRepository, userRep, subjectRepository);
+//		new HelpFileSeeder().run(helpFileRepository, recordRepository);
+//		new QuizSeeder().run(quizRepository, userRep, subjectRepository);
+//		new LectureSeeder().run(lectureRepository, userRep, subjectRepository);	
+//		new MessageSeeder().run(messageRepository, userRep);
+//		
+		
+//		new InvitationSeeder().run(invitationRepositor, lectureRepository, userRep, transactionRepository);
+//		new StudentFavSubjectSeeder().run(studentFavSubjectRepository, userRep, subjectRepository);
+//		new TeacherFavSubjectSeeder().run(teacherFavSubjectRepository, userRep, subjectRepository);
+//		new GroupSeeder().run(groupRepository, userRep);
+//		new GroupRecordSeeder().run(groupRecordRepository, groupRepository, recordRepository);
+//		new QuizPurchaseSeeder().run(quizPurchaseRepositor, quizRepository, userRep, transactionRepository);
+//		new RecordPurchaseSeeder().run(recordPurchaseRepository, recordRepository, userRep, transactionRepository);
+	}
+	
+	public void update() {
+		//new UserSeeder().run(roleRep,userRep,roleActionRep);
+		//new ActionSeeder().run(actionsRep);
+		//new RoleActionSeeder().run(roleRep,roleActionRep,actionRep);
+		//new UserSeeder().run(roleRep,userRep,roleActionRep);
+		/*
+		 * new RoleSeeder().run(roleRep); new
+		 * RoleActionSeeder().run(roleRep,roleActionRep,actionRep); new
+		 * UserSeeder().run(roleRep,userRep,roleActionRep);
+		 */
+	}
+	
+	public void create_drop() {
+		
+	}
+	
+	public void all() {
+		
+	}
+
+	
+}
+
+

@@ -1,0 +1,42 @@
+package com.template.BusinessRule.SubpoenaRequestDetails;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Service.Table.SubpoenaRequest.SubpoenaRequestDetailsService;
+
+@Component(CBusinessRuleConstant.SUBPONEA_REQUEST_DETAILS_IS_NOT_DEACTIVATE)
+@Lazy
+public class CBRSubpoenaRequestDetailsIsNotDeActivate implements IBusinessRule {
+	@Autowired
+	SubpoenaRequestDetailsService subpoenaRequestDetailsService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		SubpoenaRequestDetails subpoenaRequestDetails = null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				subpoenaRequestDetails = (SubpoenaRequestDetails) parameters.getParameter(EKeyCode.SUBPOENA_REQUEST_DETAILS.toString());				
+				if (subpoenaRequestDetails.getIsEnableFlag() ==0) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("تفاصيل طلب الإستدعاء غير مفعلة");
+					actionValidationResult.setErrorCode(EErrorCode.SUBPOENA_REQUEST_DETAILS_IS_DEACTIVE.toString());
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

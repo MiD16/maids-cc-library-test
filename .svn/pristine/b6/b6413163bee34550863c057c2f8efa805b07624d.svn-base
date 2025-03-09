@@ -1,0 +1,57 @@
+package com.template.Service.Basic.SystemLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CResponse;
+import com.template.Model.Basic.SystemLog.SystemLogExtention;
+import com.template.Repository.Basic.SystemLog.SystemLogExtentionRepository;
+import com.template.Service.Basic.UserService;
+
+
+@Service
+public class SystemLogExtentionService {
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	SystemLogExtentionRepository systemLogExtentionRepository;
+	
+	// create SystemLogExtention
+	public CResponse save(SystemLogExtention systemLogExtention) throws Exception {
+		CResponse response = null;
+		// call validate for create object
+		//response = validateInterestCreate(systemLogExtention);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		systemLogExtention.setInsertBy(userService.getAuthenticatedUser());
+		systemLogExtentionRepository.save(systemLogExtention);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+	
+	//find all not deleted
+	public CResponse getAllSystemLogExtention(PageRequest pageRequest) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(systemLogExtentionRepository.getAll(pageRequest));
+		return response;
+	}
+
+	// get object by id
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(systemLogExtentionRepository.findById(id).get());
+		return response;
+	}
+	public CResponse findBySystemLogId(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(systemLogExtentionRepository.getSystemLogExtentionBySystemLogId(id));
+		return response;
+	}
+}

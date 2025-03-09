@@ -1,0 +1,31 @@
+package com.template.Action.IndEconomicActivity;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.CREATE_Ind_Econmic_Activity)
+@Lazy
+
+public class CAIndEconomicActivityCreate extends CAction 
+{
+	public CAIndEconomicActivityCreate(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		//addBusinessnRule(CBusinessRuleConstant.IND_SOCIAL_STATUS_IS_VALID);
+		addBusinessnRule(CBusinessRuleConstant.Ind_Econmic_Activity_IS_NOT_EXIST);
+	}
+
+}
+

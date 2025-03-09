@@ -1,0 +1,6 @@
+package com.template.Enum;
+
+public enum ConfigurationEnum {
+	password_validity, user_validity
+
+}

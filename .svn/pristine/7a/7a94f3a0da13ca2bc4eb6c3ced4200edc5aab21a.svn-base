@@ -1,0 +1,23 @@
+package com.template.Action.IndNonCustStatus;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.DELETE_Ind_Non_Cust_Status)
+@Lazy
+public class CAIndNonCustStatusDelete extends CAction {
+	public CAIndNonCustStatusDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.IND_NON_CUST_STATUS_IS_NOT_DELETE);
+	}
+}

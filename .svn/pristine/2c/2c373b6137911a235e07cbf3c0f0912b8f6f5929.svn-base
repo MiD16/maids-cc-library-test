@@ -1,0 +1,63 @@
+package com.template.BusinessRule.IndCustomerType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndCustomerType;
+import com.template.Model.Table.AllIndexes.IndPosition;
+import com.template.Service.Table.AllIndexes.IndCustomerTypeServices;
+import com.template.Service.Table.AllIndexes.IndPositionServices;
+
+
+
+@Component(CBusinessRuleConstant.Ind_Customer_Type_IS_NOT_EXIST)
+@Lazy
+public class CBRIndCustomerTypeIsNotExist implements IBusinessRule{
+	@Autowired
+	IndCustomerTypeServices indCustomerTypeServices;
+	
+	
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult indCustomerTypeValidationResult = null;
+		IndCustomerType indCustomerType = null;
+		IndCustomerType indCustomerTypeName = null;
+		long indPositionDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				indCustomerTypeValidationResult = new CActionValidationResult();
+				
+				indCustomerType = (IndCustomerType) parameters.getParameter(EKeyCode.Ind_Customer_Type.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				indCustomerTypeName = indCustomerTypeServices.findByNames(indCustomerType.getNameA(), indCustomerType.getNameB());
+				
+				if (indCustomerType != null) {
+			
+					if (indCustomerType.getId() == null || indCustomerType.getId()!=indCustomerType.getId()) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indCustomerTypeName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ indCustomerTypeName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						indCustomerTypeValidationResult.setValid(false);
+						indCustomerTypeValidationResult.setErrorMessage(messageString);
+						indCustomerTypeValidationResult.setErrorCode(EErrorCode.Ind_Customer_Type_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return indCustomerTypeValidationResult;
+	}}

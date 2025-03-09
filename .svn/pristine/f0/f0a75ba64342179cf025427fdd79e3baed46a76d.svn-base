@@ -1,0 +1,435 @@
+package com.template.Action;
+
+public class CActionConstant {
+	
+	public static final String CREATE_USER = "CREATE_USER";
+	public static final String UPDATE_USER = "UPDATE_USER";
+	public static final String DELETE_USER = "DELETE_USER";
+	public static final String LOCK_USER = "LOCK_USER";
+	public static final String UNLOCK_USER = "UNLOCK_USER";
+	public static final String RESET_PASSWORD_USER = "RESET_PASSWORD_USER";
+	public static final String CHANGE_PASSWORD_USER = "CHANGE_PASSWORD_USER";
+	
+	
+	
+	public static final String CREATE_ROLE = "CREATE_ROLE";
+	public static final String UPDATE_ROLE= "UPDATE_ROLE";
+	public static final String DELETE_ROLE= "DELETE_ROLE";
+	public static final String UPDATE_ACTION= "UPDATE_ACTION";
+	public static final String CREATE_IND_SOCIAL_STATUS = "CREATE_IND_SOCIAL_STATUS";
+	public static final String UPDATE_IND_SOCIAL_STATUS = "UPDATE_IND_SOCIAL_STATUS";
+	public static final String DELETE_IND_SOCIAL_STATUS = "DELETE_IND_SOCIAL_STATUS";
+
+	
+	public static final String CREATE_IND_SIGNATURE_TYPE = "CREATE_IND_SIGNATURE_TYPE";
+	public static final String UPDATE_IND_SIGNATURE_TYPE = "UPDATE_IND_SIGNATURE_TYPE";
+
+	public static final String DELETE_IND_SIGNATURE_TYPE = "DELETE_IND_SIGNATURE_TYPE";
+
+	
+
+	public static final String UPDATE_OPERATION= "UPDATE_OPERATION";
+	public static final String CREATE_SUBPOENA_REQUEST_DETAILS= "CREATE_SUBPOENA_REQUEST_DETAILS";
+	
+	public static final String UPDATE_SUBPOENA_REQUEST_DETAILS= "UPDATE_SUBPOENA_REQUEST_DETAILS";
+	public static final String DELETE_SUBPOENA_REQUEST_DETAILS= "DELETE_SUBPOENA_REQUEST_DETAILS";
+	public static final String ACTIVATE_SUBPOENA_REQUEST_DETAILS= "ACTIVATE_SUBPOENA_REQUEST_DETAILS";
+	public static final String DEACTIVATE_SUBPOENA_REQUEST_DETAILS= "DEACTIVATE_SUBPOENA_REQUEST_DETAILS";
+	
+	
+	public static final String CREATE_IND_HOLIDAY= "CREATE_IND_HOLIDAY";
+	public static final String UPDATE_IND_HOLIDAY= "UPDATE_IND_HOLIDAY";
+	public static final String DELETE_IND_HOLIDAY= "DELETE_IND_HOLIDAY";
+	public static final String ACTIVATE_IND_HOLIDAY= "ACTIVATE_IND_HOLIDAY";
+	public static final String DEACTIVATE_IND_HOLIDAY= "DEACTIVATE_IND_HOLIDAY";
+
+
+	public static final String CREATE_HOLIDAY= "CREATE_HOLIDAY";
+	public static final String UPDATE_HOLIDAY= "UPDATE_HOLIDAY";
+	public static final String DELETE_HOLIDAY= "DELETE_HOLIDAY";
+	public static final String ACTIVATE_HOLIDAY= "ACTIVATE_HOLIDAY";
+	public static final String DEACTIVATE_HOLIDAY= "DEACTIVATE_HOLIDAY";
+	
+	
+	
+	public static final String CREATE_BRANCH_HOLIDAY= "CREATE_BRANCH_HOLIDAY";
+	public static final String DELETE_BRANCH_HOLIDAY= "DELETE_BRANCH_HOLIDAY";
+	
+	public static final String CREATE_ACCOUNT_TYPE = "CREATE_ACCOUNT_TYPE";
+	public static final String UPDATE_ACCOUNT_TYPE = "UPDATE_ACCOUNT_TYPE";
+	public static final String CREATE_ACCOUNT_TYPE_CURRENCY = "CREATE_ACCOUNT_TYPE_CURRENCY";
+	public static final String UPDATE_ACCOUNT_TYPE_CURRENCY = "UPDATE_ACCOUNT_TYPE_CURRENCY";
+	public static final String CREATE_ACCOUNT_TYPE_NATURE = "CREATE_ACCOUNT_TYPE_NATURE";
+	public static final String ACTIVATE_ACCOUNT_TYPE = "ACTIVATE_ACCOUNT_TYPE";
+	
+	
+	public static final String CREATE_INTEREST= "CREATE_INTEREST";
+	public static final String UPDATE_INTEREST= "UPDATE_INTEREST";
+	public static final String DELETE_INTEREST= "DELETE_INTEREST";
+
+	
+	
+	public static final String CREATE_IND_SECTOR_TYPE= "CREATE_IND_SECTOR_TYPE";
+	public static final String UPDATE_IND_SECTOR_TYPE= "UPDATE_IND_SECTOR_TYPE";
+	public static final String DELETE_IND_SECTOR_TYPE= "DELETE_IND_SECTOR_TYPE";
+	
+	public static final String CREATE_IND_RELATIONSHIP_TYPE= "CREATE_IND_RELATIONSHIP_TYPE";
+	public static final String UPDATE_IND_RELATIONSHIP_TYPE= "UPDATE_IND_RELATIONSHIP_TYPE";
+	public static final String DELETE_IND_RELATIONSHIP_TYPE= "DELETE_IND_RELATIONSHIP_TYPE";
+	
+	
+	public static final String CREATE_IND_REGION= "CREATE_IND_REGION";
+	public static final String UPDATE_IND_REGION= "UPDATE_IND_REGION";
+	public static final String DELETE_IND_REGION= "DELETE_IND_REGION";
+	
+	
+	public static final String CREATE_IND_POSITION = "CREATE_IND_POSITION";
+	public static final String UPDATE_IND_POSITION= "UPDATE_IND_POSITION";
+	public static final String DELETE_IND_POSITION= "DELETE_IND_POSITION";
+	
+	
+	public static final String CREATE_Ind_Non_Cust_Status= "CREATE_Ind_Non_Cust_Status";
+	public static final String UPDATE_Ind_Non_Cust_Status= "UPDATE_Ind_Non_Cust_Status";
+	public static final String DELETE_Ind_Non_Cust_Status= "DELETE_Ind_Non_Cust_Status";
+	
+	public static final String CREATE_IND_NON_CUST_DOCUMENT= "CREATE_IND_NON_CUST_DOCUMENT";
+	public static final String UPDATE_IND_NON_CUST_DOCUMENT= "UPDATE_IND_NON_CUST_DOCUMENT";
+	public static final String DELETE_Ind_Non_Cust_DOCUMENT= "DELETE_Ind_Non_Cust_DOCUMENT";
+
+	public static final String IND_NON_CUST_DOCUMENT_IS_NOT_EXIST= "IND_NON_CUST_DOCUMENT_IS_NOT_EXIST";
+	
+	
+	
+	
+	public static final String CREATE_IND_NATIONALITY= "CREATE_IND_NATIONALITY";
+	public static final String UPDATE_IND_NATIONALITY= "UPDATE_IND_NATIONALITY";
+	public static final String DELETE_IND_NATIONALITY = "DELETE_IND_NATIONALITY";
+
+	public static final String IND_NATIONALITY_IS_NOT_EXIST= "IND_NATIONALITY_IS_NOT_EXIST";
+	
+	
+
+	public static final String CREATE_IndMemberRole= "CREATE_IndMemberRole";
+	public static final String UPDATE_IndMemberRole= "UPDATE_IndMemberRole";
+	public static final String IndMemberRole_IS_NOT_EXIST= "IndMemberRole_IS_NOT_EXIST";
+	
+	
+	public static final String CREATE_IndLegal_Status= "CREATE_IndLegalStatus";
+	public static final String UPDATE_IndLegalStatus= "UPDATE_IndLegalStatus";
+	public static final String DELETE_IndLegalStatus = "DELETE_IndLegalStatus";
+
+	public static final String IndLegalStatus_IS_NOT_EXIST= "IndLegalStatus_IS_NOT_EXIST";
+	
+	public static final String CREATE_CURRENCY_SEGMENT= "CREATE_CURRENCY_SEGMENT";
+	public static final String UPDATE_CURRENCY_SEGMENT= "UPDATE_CURRENCY_SEGMENT";
+	public static final String DELETE_CURRENCY_SEGMENT= "DELETE_CURRENCY_SEGMENT";
+
+	public static final String CREATE_USER_ACTION = "CREATE_USER_ACTION";
+	public static final String DELETE_USER_ACTION = "DELETE_USER_ACTION";
+	
+	
+	
+	
+	public static final String CREATE_IND_INCOME_TYPE= "CREATE_IND_INCOME_TYPE";
+	public static final String UPDATE_IND_INCOME_TYPE= "UPDATE_IND_INCOME_TYPE";
+	public static final String IND_INCOME_TYPE_IS_NOT_EXIST= "IND_INCOME_TYPE_IS_NOT_EXIST";
+	public static final String DELETE_IND_INCOME_TYPE= "DELETE_IND_INCOME_TYPE";
+
+	
+	
+
+	public static final String CREATE_Ind_ID_Type= "CREATE_Ind_ID_Type";
+	public static final String UPDATE_Ind_ID_Type= "UPDATE_Ind_ID_Type";
+	public static final String Ind_ID_Type_IS_NOT_EXIST= "Ind_ID_Type_IS_NOT_EXIST";
+	public static final String DELETE_Ind_ID_Type= "DELETE_Ind_ID_Type";
+
+	
+	
+
+	public static final String CREATE_IND_GENDER= "CREATE_IND_GENDER";
+	public static final String UPDATE_IND_GENDER= "UPDATE_IND_GENDER";
+	public static final String IND_GENDER_IS_NOT_EXIST= "IND_GENDER_IS_NOT_EXIST";
+	public static final String DELETE_IND_GENDER= "DELETE_IND_GENDER";
+
+	
+	public static final String CREATE_Ind_File_Type= "CREATE_Ind_File_Type";
+	public static final String UPDATE_Ind_File_Type= "UPDATE_Ind_File_Type";
+	public static final String Ind_File_Type_IS_NOT_EXIST= "Ind_File_Type_IS_NOT_EXIST";
+	public static final String DELETE_Ind_File_Type= "DELETE_Ind_File_Type";
+
+	
+	public static final String CREATE_Ind_Family_Member_Type= "CREATE_Ind_Family_Member_Type";
+	public static final String UPDATE_Ind_Family_Member_Type= "UPDATE_Ind_Family_Member_Type";
+	public static final String Ind_Family_Member_Type_IS_NOT_EXIST= "Ind_Family_Member_Type_IS_NOT_EXIST";
+	public static final String DELETE_Family_Member_Type= "DELETE_Family_Member_Type";
+	
+	
+	public static final String CREATE_Ind_Economic_Sector= "CREATE_Ind_Economic_Sector";
+	public static final String UPDATE_Ind_Economic_Sector= "UPDATE_Ind_Economic_Sector";
+	public static final String UPDATE_Ind_Economic_Sector_IS_NOT_EXIST= "UPDATE_Ind_Economic_Sector_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Economic_Sector = "DELETE_Ind_Economic_Sector";
+
+	public static final String CREATE_Ind_Econmic_Activity= "CREATE_Ind_Econmic_Activity";
+	public static final String UPDATE_Ind_Econmic_Activity= "UPDATE_Ind_Econmic_Activity";
+	public static final String UPDATE_Ind_Econmic_Activity_IS_NOT_EXIST= "UPDATE_Ind_Econmic_Activity_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Econmic_Activity = "DELETE_Ind_Econmic_Activity";
+
+	
+	public static final String CREATE_Ind_Customer_Type= "CREATE_Ind_Customer_Type";
+	public static final String UPDATE_Ind_Customer_Type= "UPDATE_Ind_Customer_Type";
+	public static final String UPDATE_Ind_Customer_Type_IS_NOT_EXIST= "UPDATE_Ind_Customer_Type_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Customer_Type = "DELETE_Ind_Customer_Type";
+
+	
+	public static final String CREATE_Ind_Customer_Nature= "CREATE_Ind_Customer_Nature";
+	public static final String UPDATE_Ind_Customer_Nature= "UPDATE_Ind_Customer_Nature";
+	public static final String UPDATE_Ind_Customer_Nature_IS_NOT_EXIST= "UPDATE_Ind_Customer_Nature_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Customer_Nature= "DELETE_Ind_Customer_Nature";
+
+	
+	public static final String CREATE_Ind_Customer_Nature_Key= "CREATE_Ind_Customer_Nature_Key";
+	public static final String UPDATE_Ind_Customer_Nature_Key= "UPDATE_Ind_Customer_Nature_Key";
+	public static final String UPDATE_Ind_Customer_Nature_Key_IS_NOT_EXIST= "UPDATE_Ind_Customer_Nature_Key_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Customer_Nature_Key= "DELETE_Ind_Customer_Nature_Key";
+	
+	
+	public static final String CREATE_Ind_Customer_Member_Type= "CREATE_Ind_Customer_Member_Type";
+	public static final String UPDATE_Ind_Customer_Member_Type= "UPDATE_Ind_Customer_Member_Type";
+	public static final String UPDATE_Ind_Customer_Member_Type_IS_NOT_EXIST= "UPDATE_Ind_Customer_Member_Type_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Customer_Member_Type= "DELETE_Ind_Customer_Member_Type";
+
+	
+	
+	
+	public static final String CREATE_Ind_Customer_Document= "CREATE_Ind_Customer_Document";
+	public static final String UPDATE_Ind_Customer_Document= "UPDATE_Ind_Customer_Document";
+	public static final String UPDATE_Ind_Customer_Document_IS_NOT_EXIST= "UPDATE_Ind_Customer_Document_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Customer_Document = "DELETE_Ind_Customer_Document";
+
+	
+	
+	public static final String CREATE_Ind_Country= "CREATE_Ind_Country";
+	public static final String UPDATE_Ind_Country= "UPDATE_Ind_Country";
+	public static final String UPDATE_Ind_Country_IS_NOT_EXIST= "UPDATE_Ind_Country_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Country = "DELETE_Ind_Country";
+
+	
+	
+	public static final String CREATE_Ind_Company_Type= "CREATE_Ind_Company_Type";
+	public static final String UPDATE_Ind_Company_Type= "UPDATE_Ind_Company_Type";
+	public static final String UPDATE_Ind_Company_Type_IS_NOT_EXIST= "UPDATE_Ind_Company_Type_IS_NOT_EXIST";
+	
+	
+	public static final String CREATE_Ind_Commission_Type= "CREATE_Ind_Commission_Type";
+	public static final String UPDATE_Ind_Commission_Type= "UPDATE_Ind_Commission_Type";
+	public static final String UPDATE_Ind_Commission_Type_IS_NOT_EXIST= "UPDATE_Ind_Commission_Type_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Commission_Type= "DELETE_Ind_Commission_Type";
+
+	
+	
+	
+	public static final String CREATE_Ind_City= "CREATE_Ind_City";
+	public static final String UPDATE_Ind_City= "UPDATE_Ind_City";
+	public static final String UPDATE_Ind_City_IS_NOT_EXIST= "UPDATE_Ind_CityIS_NOT_EXIST";
+	public static final String DELETE_Ind_City= "DELETE_Ind_City";
+
+	
+	
+
+	public static final String CREATE_Ind_Customer_Situation= "CREATE_Ind_Customer_Situation";
+	public static final String UPDATE_Ind_Customer_Situation= "UPDATE_Ind_Customer_Situation";
+	public static final String UPDATE_Ind_Customer_Situation_IS_NOT_EXIST= "UPDATE_Ind_Customer_Situation_IS_NOT_EXIST";
+	
+	
+	
+	
+	public static final String CREATE_Branch= "CREATE_Branch";
+	public static final String UPDATE_Branch= "UPDATE_Branch";
+	public static final String UPDATE_Branch_IS_NOT_EXIST= "UPDATE_Branch_IS_NOT_EXIST";
+	
+	public static final String CREATE_Ind_Certificate_Type= "CREATE_Ind_Certificate_Type";
+	public static final String UPDATE_Ind_Certificate_Type= "UPDATE_Ind_Certificate_Type";
+	public static final String UPDATE_Ind_Certificate_Type_IS_NOT_EXIST= "UPDATE_Ind_Certificate_Type_IS_NOT_EXIST";
+	public static final String DELETE_Ind_Certificate_Type= "DELETE_Ind_Certificate_Type";
+
+
+	public static final String CREATE_Ind_Black_list= "CREATE_Ind_Black_list";
+	public static final String UPDATE_Ind_Black_list= "UPDATE_Ind_Black_list";
+	public static final String UPDATE_Ind_Black_list_IS_NOT_EXIST= "UPDATE_Ind_Black_list_IS_NOT_EXIST";
+	
+	
+	
+	public static final String CREATE_Ind_Address_Type= "CREATE_Ind_Address_Type";
+	public static final String UPDATE_Ind_Address_Type= "UPDATE_Ind_Address_Type";
+	public static final String UPDATE_Ind_Address_Type_IS_NOT_EXIST= "UPDATE_Ind_Address_Type_IS_NOT_EXIST";
+	
+	
+	public static final String CREATE_Customer_Stage= "CREATE_Customer_Stage";
+	public static final String UPDATE_Customer_Stage= "UPDATE_Customer_Stage";
+	public static final String UPDATE_Customer_Stage_IS_NOT_EXIST= "UPDATE_Customer_Stage_IS_NOT_EXIST";
+	
+	public static final String CREATE_Action_Customer_Nature= "CREATE_Ind_Action_Customer_Nature";
+	public static final String UPDATE_Action_Customer_Naturee= "UPDATE_Ind_Action_Customer_Naturee";
+	public static final String UPDATE_Action_Customer_Nature_IS_NOT_EXIST= "UPDATE_Ind_Action_Customer_Nature_IS_NOT_EXIST";
+	
+	
+	
+	
+	public static final String CREATE_Acc_Ind_Warning_Sign= "CREATE_Acc_Ind_Warning_Sign";
+	public static final String UPDATE_Acc_Ind_Warning_Sign= "UPDATE_Acc_Ind_Warning_Sign";
+	public static final String UPDATE_Acc_Ind_Warning_Sign_IS_NOT_EXIST= "UPDATE_Acc_Ind_Warning_Sign_IS_NOT_EXIST";
+	
+	
+	
+	
+	
+	public static final String CREATE_Acc_Ind_Reservation_Resoan= "CREATE_Acc_Ind_Reservation_Resoan";
+	public static final String UPDATE_Acc_Ind_Reservation_Resoan= "UPDATE_Acc_Ind_Reservation_Resoan";
+	public static final String UPDATE_Acc_Ind_Reservation_Resoan_IS_NOT_EXIST= "UPDATE_Acc_Ind_Reservation_Resoan_IS_NOT_EXIST";
+	
+	
+	public static final String CREATE_Acc_Ind_Pass_Book_Status= "CREATE_Acc_Ind_Pass_Book_Status";
+	public static final String UPDATE_Acc_Ind_Pass_Book_Status= "UPDATE_Acc_Ind_Pass_Book_Status";
+	public static final String UPDATE_Acc_Ind_Pass_Book_Status_IS_NOT_EXIST= "UPDATE_Acc_Ind_Pass_Book_Status_IS_NOT_EXIST";
+	
+	
+	
+	public static final String CREATE_Acc_Ind_Interest_Type= "CREATE_Acc_Ind_Interest_Type";
+	public static final String UPDATE_Acc_Ind_Interest_Type= "UPDATE_Acc_Ind_Interest_Type";
+	public static final String UPDATE_Acc_Ind_Interest_Types_IS_NOT_EXIST= "UPDATE_Acc_Ind_Interest_Types_IS_NOT_EXIST";
+	
+	
+	
+	public static final String CREATE_Acc_Ind_Date_Unit= "CREATE_Acc_Ind_Date_Unit";
+	public static final String UPDATE_Acc_Ind_Date_Unit= "UPDATE_Acc_Ind_Date_Unit";
+	public static final String UPDATE_Acc_Ind_Date_Unit_IS_NOT_EXIST= "UPDATE_Acc_Ind_Date_Unit_IS_NOT_EXIST";
+	
+	
+	
+
+	public static final String CREATE_Acc_Ind_Customer_Acc_Status= "CREATE_Acc_Ind_Date_Unit";
+	public static final String UPDATE_Acc_Ind_Customer_Acc_Status= "UPDATE_Acc_Ind_Date_Unit";
+	public static final String UPDATE_Acc_Ind_Customer_Acc_Statust_IS_NOT_EXIST= "UPDATE_Acc_Ind_Date_Unit_IS_NOT_EXIST";
+	
+	
+
+	public static final String CREATE_Acc_Ind_Account_Type_Categories= "CREATE_Acc_Ind_Account_Type_Categories";
+	public static final String UPDATE_Acc_Ind_Account_Type_Categories= "UPDATE_Acc_Ind_Account_Type_Categories";
+	public static final String UPDATE_Acc_Ind_Account_Type_Categories_IS_NOT_EXIST= "UPDATE_Acc_Ind_Account_Type_Categories_IS_NOT_EXIST";
+	
+	
+	
+	
+	public static final String CREATE_ROLE_ACTION = "CREATE_ROLE_ACTION";
+	public static final String DELETE_ROLE_ACTION = "DELETE_ROLE_ACTION";
+	
+	public static final String CREATE_USER_ROLE= "CREATE_USER_ROLE";
+	public static final String DELETE_USER_ROLE= "DELETE_USER_ROLE";
+
+	public static final String CREATE_INTEREST_RATE= "CREATE_INTEREST_RATE";
+	public static final String UPDATE_INTEREST_RATE= "UPDATE_INTEREST_RATE";
+	public static final String DELETE_INTEREST_RATE= "DELETE_INTEREST_RATE";
+	
+	public static final String CREATE_INTEREST_RATE_SEGMENT= "CREATE_INTEREST_RATE_SEGMENT";
+	public static final String UPDATE_INTEREST_RATE_SEGMENT= "UPDATE_INTEREST_RATE_SEGMENT";
+	public static final String DELETE_INTEREST_RATE_SEGMENT= "DELETE_INTEREST_RATE_SEGMENT";
+
+	
+	public static final String CREATE_COMMISSION= "CREATE_COMMISSION";
+	public static final String UPDATE_COMMISSION= "UPDATE_COMMISSION";
+	public static final String DELETE_COMMISSION= "DELETE_COMMISSION";
+	public static final String ACTION_COMMISSION_ADD= "ACTION_COMMISSION_ADD";
+	
+	public static final String DELETE_Ind_Company_Type= "DELETE_Ind_Company_Type";
+	public static final String ACTION_Ind_Company_Type= "ACTION_Ind_Company_Type";
+	
+
+	public static final String CREATE_Ind_Category= "CREATE_Ind_Category";
+	public static final String UPDATE_Ind_Category= "UPDATE_Ind_Category";
+	public static final String DELETE_Ind_Category= "DELETE_Ind_Category";
+
+	public static final String UPDATE_ACCOUNT_TYPE_NATURE = "UPDATE_ACCOUNT_TYPE_NATURE";
+	public static final String DEACTIVATE_ACCOUNT_TYPE = "DEACTIVATE_ACCOUNT_TYPE";
+	
+	
+	public static final String CREATE_PERIOD= "CREATE_PERIOD";
+	public static final String UPDATE_PERIOD= "UPDATE_PERIOD";
+	public static final String DELETE_PERIOD= "DELETE_PERIOD";
+	
+	public static final String CREATE_IND_DATE_UNIT= "CREATE_IND_DATE_UNIT";
+	public static final String CREATE_Ind_Branch_Type= "CREATE_Ind_Branch_Type";
+	public static final String UPDATE_Ind_Branch_Type= "UPDATE_Ind_Branch_Type";
+	public static final String DELETE_Ind_Branch_Type= "DELETE_Ind_Branch_Type";
+	public static final String UPDATE_IND_DATE_UNIT= "UPDATE_IND_DATE_UNIT";
+	public static final String DELETE_IND_DATE_UNIT= "DELETE_IND_DATE_UNIT";
+	public static final String ADD_ACCOUNT_TYPE_CURRENCY= "ADD_ACCOUNT_TYPE_CURRENCY";
+
+	public static final String CREATE_Ind_Address= "CREATE_Ind_Address";
+	public static final String UPDATE_Ind_Address= "UPDATE_Ind_Address";
+	public static final String DELETE_Ind_Address= "DELETE_Ind_Address";
+
+	public static final String CREATE_Customer_Situation= "CREATE_Customer_Situation";
+	public static final String UPDATE_Customer_Situation= "UPDATE_Customer_Situation";
+	public static final String DELETE_Customer_Situation= "DELETE_Customer_Situation";
+
+	public static final String CREATE_Customer_NAture= "CREATE_Customer_NAture";
+	public static final String UPDATE_Customer_NAture= "UPDATE_Customer_NAture";
+	public static final String DELETE_Customer_NAture= "DELETE_Customer_NAture";
+
+	public static final String CREATE_Acc_Ind_Reservation= "CREATE_Acc_Ind_Reservation";
+	public static final String UPDATE_Acc_Ind_Reservation= "UPDATE_Acc_Ind_Reservation";
+	public static final String DELETE_Acc_Ind_Reservation= "DELETE_Acc_Ind_Reservation";
+
+
+	public static final String DELETE_Acc_Ind_Pass_Book_Status= "DELETE_Acc_Ind_Reservation";
+
+	public static final String CREATE_Acc_Ind_Cust_Acc_Status= "CREATE_Acc_Ind_Cust_Acc_Status";
+	public static final String UPDATE_Acc_Ind_Cust_Acc_Status= "UPDATE_Acc_Ind_Cust_Acc_Status";
+	public static final String DELETE_Acc_Ind_Cust_Acc_Status= "DELETE_Acc_Ind_Cust_Acc_Status";
+
+
+	
+	
+	public static final String CREATE_IND_FISCAL_YEAR_STATUS= "CREATE_IND_FISCAL_YEAR_STATUS";
+	public static final String UPDATE_IND_FISCAL_YEAR_STATUS= "UPDATE_IND_FISCAL_YEAR_STATUS";
+	public static final String DELETE_IND_FISCAL_YEAR_STATUS= "DELETE_IND_FISCAL_YEAR_STATUS";
+
+	public static final String ADD_ACCOUNT_TYPE_NATURE= "ADD_ACCOUNT_TYPE_NATURE";
+	
+	
+	public static final String CREATE_IND_JOURNAL_STATUS= "CREATE_IND_JOURNAL_STATUS";
+	public static final String UPDATE_IND_JOURNAL_STATUS= "UPDATE_IND_JOURNAL_STATUS";
+	public static final String DELETE_IND_JOURNAL_STATUS= "DELETE_IND_JOURNAL_STATUS";
+	public static final String CREATE_IND_GL_CLASS= "CREATE_IND_GL_CLASS";
+	public static final String UPDATE_IND_GL_CLASSS= "UPDATE_IND_GL_CLASS";
+	public static final String DELETE_IND_GL_CLASS= "DELETE_IND_GL_CLASS";
+
+	
+	
+	
+	public static final String CREATE_IND_JOURNAL_TYPE= "CREATE_IND_JOURNAL_TYPE";
+	public static final String UPDATE_IND_JOURNAL_TYPE= "UPDATE_IND_JOURNAL_TYPE";
+	public static final String DELETE_IND_JOURNAL_TYPE= "DELETE_IND_JOURNAL_TYPE";
+
+	public static final String CREATE_TAX= "CREATE_TAX";
+	public static final String UPDATE_TAX= "UPDATE_TAX";
+	public static final String DELETE_TAX= "DELETE_TAX";
+
+	
+	public static final String CREATE_ATM= "CREATE_ATM";
+	public static final String UPDATE_ATM= "UPDATE_ATM";
+	public static final String DELETE_ATM= "DELETE_ATM";
+
+	
+	public static final String CREATE_CREDIT_CARD= "CREATE_CREDIT_CARD";
+	public static final String UPDATE_CREDIT_CARD= "UPDATE_CREDIT_CARD";
+	public static final String DELETE_CREDIT_CARD= "DELETE_CREDIT_CARD";
+
+	public static final String CREATE_POS= "CREATE_POS";
+	public static final String UPDATE_POS= "UPDATE_POS";
+	public static final String DELETE_POS= "DELETE_POS";
+}
+
+
+
+

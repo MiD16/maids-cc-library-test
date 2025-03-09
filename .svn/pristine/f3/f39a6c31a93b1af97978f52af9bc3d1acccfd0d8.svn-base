@@ -1,0 +1,24 @@
+package com.Shared.Enum;
+
+public enum ESuccessMessage
+{
+	ADDED_SUCCESSFULLY("تم الإضافة بنجاح", ""),
+	No_Taxes("لا يوجد ضرائب", "");
+	
+	private final String arMessage;
+	private final String enMessage;
+	
+	ESuccessMessage(String arMessage, String enMessage)
+	{
+		this.arMessage = arMessage;
+		this.enMessage = enMessage;
+	}
+	
+    public String getArMessage() {
+        return arMessage;
+    }
+    
+    public String getEnMessage() {
+        return enMessage;
+    }
+}

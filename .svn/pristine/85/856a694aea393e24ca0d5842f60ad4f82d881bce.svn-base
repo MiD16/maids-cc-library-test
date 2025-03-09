@@ -1,0 +1,854 @@
+
+	package com.template.Service.Basic;
+
+	import java.sql.Types;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
+	import java.util.List;
+	import java.util.Map;
+
+import javax.annotation.Generated;
+import javax.transaction.Transactional;
+	import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+	import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+	import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+	import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+	import org.springframework.security.core.context.SecurityContextHolder;
+	import org.springframework.security.core.userdetails.UserDetails;
+	import org.springframework.security.core.userdetails.UserDetailsService;
+	import org.springframework.security.core.userdetails.UsernameNotFoundException;
+	import org.springframework.security.crypto.password.PasswordEncoder;
+	import org.springframework.stereotype.Service;
+	import com.Base.Class.CActionValidationParameters;
+	import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CError;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionParameters;
+import com.Base.Class.CResponse;
+import com.Base.Component.CTokenUtility;
+import com.Base.Constant.CAuthorizationKeyConstant;
+import com.Shared.Enum.EError;
+import com.Shared.Enum.EParameter;
+import com.template.Action.CActionConstant;
+	import com.template.Class.SearchCustomer;
+	import com.template.Class.UserInformation;
+import com.template.Enum.ActionEnum;
+import com.template.Enum.ConfigurationEnum;
+import com.template.Enum.EErrorCode;
+	import com.template.Enum.EKeyCode;
+	import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.Configuration.AllConfiguration;
+import com.template.Repository.Basic.RoleRep;
+	import com.template.Repository.Basic.UsersRep;
+import com.template.Service.Basic.SystemLog.ModifyLogService;
+import com.template.Service.Table.Configuration.HomeConfigurationServices;
+
+	@Service
+	public class UserService implements UserDetailsService {
+		@Autowired 
+		HomeConfigurationServices homeConfigurationServices;
+	
+		@Autowired
+		private UsersRep userRep;
+		@Autowired
+		private ModifyLogService modifyLogService;
+		@Autowired
+		private UserRoleService userRoleService;
+
+		@Autowired
+		private UserActionService userActionService;
+
+		@Autowired
+		RoleRep roleRep;
+
+		@Autowired
+		CActionHandler actionHandler;
+
+		@Lazy
+		@Autowired
+		PasswordEncoder passwordEncoder;
+
+		@Autowired
+		private JdbcTemplate jdbcTemplate;
+
+		@Autowired
+		CTokenUtility tokenUtility;
+		
+		public String generateAutnToken(User user) 
+		{
+			String jwtToken;
+
+			try {
+					UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				 
+					jwtToken = tokenUtility.generateToken(userInformation);
+
+			} catch (Exception e) 
+			{
+				throw e;
+			}
+			return jwtToken;
+		}
+		
+		public List<User> findAll() {
+			List<User> userList = userRep.findAll();
+			return userList;
+		}
+		
+		public Page<SearchCustomer> getSearchNonCustIndiv(SearchCustomer searchCustomer, Pageable pageRequest) {
+
+			RowMapper<SearchCustomer> rowMapper = BeanPropertyRowMapper.newInstance(SearchCustomer.class);
+			
+			SqlParameterSource parameters = new MapSqlParameterSource()
+					.addValue("I_NATIONALITY", searchCustomer.getNationalNumber())
+					.addValue("I_FIRST_NAME_A", searchCustomer.getFirstNameA())
+					.addValue("I_FATHER_NAME_A", searchCustomer.getFatherNameA())
+					.addValue("I_LAST_NAME_A", searchCustomer.getLastNameA())
+					.addValue("I_MOTHER_NAME_A", searchCustomer.getMotherNameA())
+					.addValue("I_FIRST_NAME_B", searchCustomer.getFirstNameB())
+					.addValue("I_FATHER_NAME_B", searchCustomer.getFatherNameB())
+					.addValue("I_LAST_NAME_B", searchCustomer.getLastNameB())
+					.addValue("I_MOTHER_NAME_B", searchCustomer.getMotherNameB());
+
+			SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("SEARCH_NON_CUSTOMER")
+					.declareParameters(new SqlParameter("I_NATIONALITY", Types.VARCHAR),
+							new SqlParameter("I_FIRST_NAME_A", Types.VARCHAR), 
+							new SqlParameter("I_FATHER_NAME_A", Types.VARCHAR),
+							new SqlParameter("I_LAST_NAME_A", Types.VARCHAR), 
+							new SqlParameter("I_MOTHER_NAME_A", Types.VARCHAR),
+							new SqlParameter("I_FIRST_NAME_B", Types.VARCHAR), 
+							new SqlParameter("I_FATHER_NAME_B", Types.VARCHAR),
+							new SqlParameter("I_LAST_NAME_B", Types.VARCHAR), 
+							new SqlParameter("I_MOTHER_NAME_B", Types.VARCHAR))
+					.returningResultSet("return", rowMapper);
+
+			Map<String, Object> result = call.execute(parameters);
+			List<SearchCustomer> lastResult = (List<SearchCustomer>) result.get("return");
+			
+			//System.err.println("lastRR: " + lastResult);
+			
+			// pagination
+			final int start = (int) pageRequest.getOffset();
+			final int end = Math.min((start + pageRequest.getPageSize()), lastResult.size());
+			final Page<SearchCustomer> page = new PageImpl<>(lastResult.subList(start, end), pageRequest,
+					lastResult.size());
+
+			return page;
+		}
+
+		public List<SearchCustomer> getSearchNonCustIndiv(SearchCustomer searchCustomer) {
+			SqlParameterSource parameters = new MapSqlParameterSource()
+					.addValue("I_NATIONALITY", searchCustomer.getNationalNumber())
+					.addValue("I_FIRST_NAME_A", searchCustomer.getFirstNameA())
+					.addValue("I_FATHER_NAME_A", searchCustomer.getFatherNameA())
+					.addValue("I_LAST_NAME_A", searchCustomer.getLastNameA())
+					.addValue("I_MOTHER_NAME_A", searchCustomer.getMotherNameA())
+					.addValue("I_FIRST_NAME_B", searchCustomer.getFirstNameB())
+					.addValue("I_FATHER_NAME_B", searchCustomer.getFatherNameB())
+					.addValue("I_LAST_NAME_B", searchCustomer.getLastNameB())
+					.addValue("I_MOTHER_NAME_B", searchCustomer.getMotherNameB())
+					.addValue("I_CIF", searchCustomer.getCif());
+
+			SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("SEARCH_NON_CUSTOMER_MEM")
+					.declareParameters(new SqlParameter("I_NATIONALITY", Types.VARCHAR),
+							new SqlParameter("I_FIRST_NAME_A", Types.VARCHAR), 
+							new SqlParameter("I_FATHER_NAME_A", Types.VARCHAR),
+							new SqlParameter("I_LAST_NAME_A", Types.VARCHAR), 
+							new SqlParameter("I_MOTHER_NAME_A", Types.VARCHAR),
+							new SqlParameter("I_FIRST_NAME_B", Types.VARCHAR), 
+							new SqlParameter("I_FATHER_NAME_B", Types.VARCHAR),
+							new SqlParameter("I_LAST_NAME_B", Types.VARCHAR), 
+							new SqlParameter("I_MOTHER_NAME_B", Types.VARCHAR),
+							new SqlParameter("I_CIF", Types.VARCHAR));
+
+			Map<String, Object> result = call.execute(parameters);
+			List<SearchCustomer> indCustDocuments = (List<SearchCustomer>) result.get("return");
+			System.err.println(indCustDocuments);
+			return indCustDocuments;
+		}
+
+		public CResponse getAllUsers() {
+
+			CResponse response = null;
+			response = new CResponse();
+			response.setReturnedObject(userRep.getAllUsers());
+			return response;
+
+		}
+
+		public CResponse getAllUsersAsPage(PageRequest pageRequest) {
+			CResponse response = null;
+			response = new CResponse();
+			response.setReturnedObject(userRep.getAllUserAsPage(pageRequest));
+			return response;
+		}
+
+		public CResponse getUserByID(int id) {
+			CResponse response = null;
+			response = new CResponse();
+			response.setReturnedObject(userRep.findById(id).get());
+			return response;
+		}
+
+		public CResponse getUserByUserName(String username) {
+			CResponse response = null;
+			response = new CResponse();
+			response.setReturnedObject(userRep.findUserByUserName(username));
+			return response;
+		}
+		public CResponse save(User user) {
+			CResponse response = null;
+			response = new CResponse();
+			response.setReturnedObject(userRep.save(user));
+			return response;
+		}
+		
+		public CResponse getNumberWithUserName(String name) {
+			CResponse response = null;
+			response = new CResponse();
+			response.setReturnedObject(userRep.getNumberWithUserName(name));
+			return response;
+
+		}
+
+		public CResponse getUserByEmail(String email) {
+			CResponse response = null;
+			response = new CResponse();
+			response.setReturnedObject(userRep.findByEmail(email));
+			return response;
+
+		}
+
+		public CResponse lockUser(User user) throws Exception {
+			CResponse response = null;
+			response = new CResponse();
+			response = ValidatelockUser(user);
+			if (!response.isSuccess()) {
+				return response;
+			}
+			user.setLockUser(1);
+			user.setLastUpdateDate(new Date());
+			user.setLastUpdateBy(getAuthenticatedUser().getID());
+			userRep.save(user);
+			response.setSuccessMessage("تم قفل المستخدم بنجاح");
+			return response;
+		}
+
+		public CResponse ValidatelockUser(User user) throws Exception {
+			CResponse response = null;
+			CActionValidationParameters actionValidationParameters = null;
+			CActionValidationResult actionValidationResult = null;
+			try {
+				do {
+					response = new CResponse();
+					if (user == null) {
+						response.setSuccess(false);
+						response.setErrorMessage("Null Object");
+						response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+						break;
+					}
+
+					// validation
+					actionValidationParameters = new CActionValidationParameters();
+					actionValidationParameters.addParameter(EKeyCode.USER.toString(), user);
+					actionValidationResult = actionHandler.validate(CActionConstant.LOCK_USER, actionValidationParameters);
+					if (!actionValidationResult.isValid()) {
+						response.setSuccess(false);
+						response.setErrorMessage(actionValidationResult.getErrorMessage());
+						break;
+					}
+
+				}
+
+				while (false);
+
+			} catch (Exception e) {
+
+				throw e;
+			}
+
+			return response;
+		}
+
+		public CResponse unLockUser(User user) throws Exception {
+			CResponse response = null;
+			response = new CResponse();
+			response = ValidateunLockUser(user);
+			if (!response.isSuccess()) {
+				return response;
+			}
+
+			user.setLockUser(0);
+			user.setLastUpdateDate(new Date());
+			user.setLastUpdateBy(getAuthenticatedUser().getID());
+			userRep.save(user);
+			response.setSuccessMessage("تم  تفعيل المستخدم بنجاح");
+			return response;
+		}
+
+		public CResponse ValidateunLockUser(User user) throws Exception {
+			CResponse response = null;
+			CActionValidationParameters actionValidationParameters = null;
+			CActionValidationResult actionValidationResult = null;
+			try {
+				do {
+					response = new CResponse();
+					if (user == null) {
+						response.setSuccess(false);
+						response.setErrorMessage("Null Object");
+						response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+						break;
+					}
+					actionValidationParameters = new CActionValidationParameters();
+					actionValidationParameters.addParameter(EKeyCode.USER.toString(), user);
+					actionValidationResult = actionHandler.validate(CActionConstant.UNLOCK_USER,
+							actionValidationParameters);
+					if (!actionValidationResult.isValid()) {
+						response.setSuccess(false);
+						response.setErrorMessage(actionValidationResult.getErrorMessage());
+						break;
+					}
+
+				}
+
+				while (false);
+
+			} catch (Exception e) {
+
+				throw e;
+			}
+
+			return response;
+		}
+
+		public CResponse deleteuser(int  id) throws Exception {
+			CResponse response = null;
+			response = new CResponse();
+			User 	user = userRep.findById(id).get();
+			response = Validatedeleteuser(user);
+			if (!response.isSuccess()) {
+				return response;
+			}
+			user.setIsDeleted(1);
+			user.setDeletedDate(new Date());
+			user.setDeletedBy(getAuthenticatedUser().getID());
+			userRep.save(user);
+			response.setSuccessMessage("تم حذف المستخدم بنجاح");
+
+			return response;
+		}
+
+		public CResponse Validatedeleteuser(User user) throws Exception {
+			CResponse response = null;
+			CActionValidationParameters actionValidationParameters = null;
+			CActionValidationResult actionValidationResult = null;
+
+			try {
+				do {
+					response = new CResponse();
+					if (user == null) {
+						response.setSuccess(false);
+						response.setErrorMessage("Null Object");
+						response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+						break;
+					}
+
+					actionValidationParameters = new CActionValidationParameters();
+					actionValidationParameters.addParameter(EKeyCode.USER.toString(), user);
+					actionValidationResult = actionHandler.validate(CActionConstant.DELETE_USER,
+							actionValidationParameters);
+					if (!actionValidationResult.isValid()) {
+						response.setSuccess(false);
+						response.setErrorMessage(actionValidationResult.getErrorMessage());
+						break;
+					}
+
+				}
+
+				while (false);
+
+			} catch (Exception e) {
+
+				throw e;
+			}
+
+			return response;
+		}
+
+		public CResponse resetpassword(User user) throws Exception {
+			CResponse response = null;
+			response = new CResponse();
+			response = Validateresetpassword(user);
+			if (!response.isSuccess()) {
+				return response;
+			}
+			user.setPassword(passwordEncoder.encode("Password"));
+			user.setRequiredResetPassword(1);
+			user.setLastUpdateDate(new Date());
+			user.setLastUpdateBy(getAuthenticatedUser().getID());
+			user.setPwd_exp_date(generatetPwd_exp_date());
+			userRep.save(user);
+			response.setSuccessMessage("تم تهيئة كلمة مرور  المستخدم بنجاح");
+			return response;
+		}
+
+		public CResponse Validateresetpassword(User user) throws Exception {
+			CResponse response = null;
+			CActionValidationParameters actionValidationParameters = null;
+			CActionValidationResult actionValidationResult = null;
+			try {
+				do {
+					response = new CResponse();
+					if (user == null) {
+						response.setSuccess(false);
+						response.setErrorMessage("Null Object");
+						response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+						break;
+					}
+
+					actionValidationParameters = new CActionValidationParameters();
+					actionValidationParameters.addParameter(EKeyCode.USER.toString(), user);
+					actionValidationResult = actionHandler.validate(CActionConstant.RESET_PASSWORD_USER,
+							actionValidationParameters);
+					if (!actionValidationResult.isValid()) {
+						response.setSuccess(false);
+						response.setErrorMessage(actionValidationResult.getErrorMessage());
+						break;
+					}
+
+				}
+
+				while (false);
+
+			} catch (Exception e) {
+
+				throw e;
+			}
+
+			return response;
+		}
+
+		public CResponse createUser(User user) throws Exception {
+			CResponse response = null;
+			response = new CResponse();
+			response = ValidatecreateUser(user);
+			if (!response.isSuccess()) {
+				return response;
+			}
+			user.setIsDeleted(0);
+			user.setPassword(passwordEncoder.encode("Password"));
+			user.setInsertBy(getAuthenticatedUser().getID());// Note
+			user.setInsertDate(new Date());
+			userRep.save(user);
+			response.setSuccessMessage("تم إضافة المستخدم بنجاح");
+			return response;
+		}
+
+		public CResponse ValidatecreateUser(User user) throws Exception {
+			CResponse response = null;
+			CActionValidationParameters actionValidationParameters = null;
+			CActionValidationResult actionValidationResult = null;
+			try {
+				do {
+					response = new CResponse();
+					if (user == null) {
+						response.setSuccess(false);
+						response.setErrorMessage("Null Object");
+						response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+						break;
+					}
+					actionValidationParameters = new CActionValidationParameters();
+					actionValidationParameters.addParameter(EKeyCode.USER.toString(), user);
+					actionValidationResult = actionHandler.validate(CActionConstant.CREATE_USER,actionValidationParameters);
+					if (!actionValidationResult.isValid()) {
+						response.setSuccess(false);
+						response.setErrorMessage(actionValidationResult.getErrorMessage());
+						break;
+					}
+
+				} while (false);
+			} catch (Exception e) {
+				throw e;
+			}
+
+			return response;
+		}
+
+		public CResponse updateUser(User user) throws Exception {
+			CResponse response = null;
+			response = new CResponse();
+			response = ValidateupdateUser(user);
+			if (!response.isSuccess()) {
+				return response;
+			}
+	
+			User useroldUser=userRep.findById(user.getID()).get();
+	
+			user.setLastUpdateBy(getAuthenticatedUser().getID());
+			user.setLastUpdateDate(new Date());
+			modifyLogService.saveSystemLogAndModifyLog(useroldUser, user, ActionEnum.update_user.toString());
+			userRep.save(user);
+			response.setSuccessMessage("تم تعديل بيانات المستخدم بنجاح");
+			return response;
+		}
+
+		public CResponse ValidateupdateUser(User user) throws Exception {
+			CResponse response = null;
+			CActionValidationParameters actionValidationParameters = null;
+			CActionValidationResult actionValidationResult = null;
+			try {
+				do {
+					response = new CResponse();
+
+					if (user == null) {
+						response.setSuccess(false);
+						response.setErrorMessage("Null Object");
+						response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+						break;
+					}
+					actionValidationParameters = new CActionValidationParameters();
+					actionValidationParameters.addParameter(EKeyCode.USER.toString(), user);
+					actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_USER,actionValidationParameters);
+
+					if (!actionValidationResult.isValid()) {
+
+						response.setSuccess(false);
+						response.setErrorMessage(actionValidationResult.getErrorMessage());
+						break;
+					}
+
+					response.setSuccessMessage("تم تعديل بيانات المستخدم بنجاح");
+				}
+
+				while (false);
+
+			} catch (Exception e) {
+
+				throw e;
+			}
+
+			return response;
+		}
+		public CResponse changePassword(User user, String oldPassword, String newPassword, String confirmPassword)
+				throws Exception {
+			CResponse response = null;
+			response = new CResponse();
+			response = ValidatechangePassword(user, oldPassword, newPassword, confirmPassword);
+			if (!response.isSuccess()) {
+				return response;
+			}
+			
+	
+			User useroldUser=userRep.findById(user.getID()).get();
+			user.setLastUpdateDate(new Date());
+			user.setLastUpdateBy(getAuthenticatedUser().getID());
+			user.setPassword(passwordEncoder.encode(newPassword));
+			user.setPwd_exp_date(generatetPwd_exp_date());
+			System.err.println("kkkk"+user.getPwd_exp_date());
+			modifyLogService.saveSystemLogAndModifyLog(useroldUser, user, ActionEnum.change_password.toString());
+		
+			userRep.save(user);
+			response.setSuccessMessage("تم  تعديل كلمة مرور  المستخدم بنجاح");
+			return response;
+		}
+		public CResponse ValidatechangePassword(User user, String oldPassword, String newPassword, String confirmPassword)
+				throws Exception {
+			CResponse response = null;
+			CActionValidationParameters actionValidationParameters = null;
+			CActionValidationResult actionValidationResult = null;
+			try {
+				do {
+					response = new CResponse();
+					if (user == null) {
+						response.setSuccess(false);
+						response.setErrorMessage("Null Object");
+						response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+						break;
+					}
+
+					// validation
+					actionValidationParameters = new CActionValidationParameters();
+					actionValidationParameters.addParameter(EKeyCode.USER.toString(), user);
+					actionValidationParameters.addParameter(EKeyCode.OLDPASSWORD.toString(), oldPassword);
+					actionValidationParameters.addParameter(EKeyCode.NEWPASSWORD.toString(), newPassword);
+					actionValidationParameters.addParameter(EKeyCode.CONFIRMPASSWORD.toString(), confirmPassword);
+					actionValidationResult = actionHandler.validate(CActionConstant.CHANGE_PASSWORD_USER,
+							actionValidationParameters);
+					if (!actionValidationResult.isValid()) {
+						response.setSuccess(false);
+						response.setErrorMessage(actionValidationResult.getErrorMessage());
+						break;
+					}
+
+				}
+
+				while (false);
+
+			} catch (Exception e) {
+
+				throw e;
+			}
+
+			return response;
+		}
+		@Transactional
+		@Override
+		public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+			UserInformation userInformation = null;
+			User user = null;
+			user = userRep.findUserByUserName(username);
+			if (user == null)
+				throw new NoDataFoundException("No User Found");
+			if (user.getLockUser() == 1)
+				throw new NoDataFoundException("No User Found");
+
+			try {
+				userInformation = new UserInformation(user, userRoleService, userActionService);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return userInformation;
+		}
+
+		public User getAuthenticatedUser() throws Exception {
+			User user = null;
+
+			try {
+				UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+						.getPrincipal();
+				CResponse response = new CResponse();
+				response = getUserByID(userInformation.getUser_id());
+				user = (User) response.getReturnedObject();
+
+			} catch (Exception e) {
+				throw e;
+			}
+
+			return user;
+		}
+		public boolean check_user_is_un_locked(User  user ) {
+			CResponse response=null;
+			User latestUser = null;
+			response = new CResponse();
+			response= getUserByID(user.getID());
+			latestUser=(User) response.getReturnedObject();
+		
+			
+			if(latestUser.getLockUser() == 0)
+			{
+				return true;
+			}
+		
+			return false;
+		}
+		
+		public boolean check_user_is_deleted(User  user ) {
+			CResponse response=null;
+			User latestUser = null;
+			response = new CResponse();
+			response= getUserByID(user.getID());
+			latestUser=(User) response.getReturnedObject();
+			if(latestUser.getIsDeleted() == 1)
+			{
+				return true;
+			}
+		
+			return false;
+		}
+
+		public boolean check_user_is_exist(User  user ) {
+			User userByUserName = null;
+			CResponse response=null;
+			response = new CResponse();
+			response= getUserByUserName(user.getUsername());
+			userByUserName=(User) response.getReturnedObject();
+			
+		
+			if(userByUserName != null && (user.getID() == 0 || userByUserName.getID() != user.getID()))
+			{
+			return true;			}
+		
+			return false;
+		}
+		public boolean check_user_is_locked(User  user ) {
+			CResponse response=null;
+			User latestUser = null;
+			response = new CResponse();
+			response= getUserByID(user.getID());
+			latestUser=(User) response.getReturnedObject();
+		
+			
+			if(latestUser.getLockUser() ==1)
+			{
+				return true;
+			}
+		
+			return false;
+		}
+		
+		public boolean checkUserCanWithdraw(int user,int amount ) {
+			CResponse response=null;
+			User latestUser = null;
+			response = new CResponse();
+			response= getUserByID(user);
+			latestUser=(User) response.getReturnedObject();
+			if(latestUser.getLimit_cash()>=amount)
+			{
+			return true;		
+			}
+				return false;
+			}
+		
+		public boolean check_user_can_withdraw(String user,int amount ) {
+			CResponse response=null;
+			User latestUser = null;
+			response = new CResponse();
+			response= getUserByUserName(user);
+			latestUser=(User) response.getReturnedObject();
+			if(latestUser.getLimit_cash()>=amount)
+			{
+			return true;		
+			}
+				return false;
+			}
+		public Date generatetPwd_exp_date() {
+			
+			Date date=new Date();
+			LocalDate today = LocalDate.now();
+			AllConfiguration conf_password=homeConfigurationServices.findByName(ConfigurationEnum.password_validity.toString());
+			if(conf_password.getPeriod_id().getDateUnitId().getId()==1)
+			{//day
+				date=LocalDateToDate(today.plusDays(conf_password.getPeriod_id().getAccPeriodValue()));
+	
+		
+			}
+			else if(conf_password.getPeriod_id().getDateUnitId().getId()==2)
+			{//month
+				date=LocalDateToDate(today.plusMonths(conf_password.getPeriod_id().getAccPeriodValue()));
+				
+			}
+			else if(conf_password.getPeriod_id().getDateUnitId().getId()==3){
+				//year
+				date=LocalDateToDate(today.plusYears(conf_password.getPeriod_id().getAccPeriodValue()));
+				
+			}
+			return date;
+		}
+		public Date generatetExpiry_date() {
+			
+			Date date=new Date();
+			LocalDate today = LocalDate.now();
+			AllConfiguration conf_user=homeConfigurationServices.findByName(ConfigurationEnum.user_validity.toString());
+			
+			
+			if(conf_user.getPeriod_id().getDateUnitId().getId()==1)
+			{//day
+				
+						date=LocalDateToDate(today.plusDays(conf_user.getPeriod_id().getAccPeriodValue()));
+		
+			}
+			else if(conf_user.getPeriod_id().getDateUnitId().getId()==2)
+			{//month
+				date=LocalDateToDate(today.plusMonths(conf_user.getPeriod_id().getAccPeriodValue()));
+					
+			}
+			else if(conf_user.getPeriod_id().getDateUnitId().getId()==3){
+				//year
+				date=LocalDateToDate(today.plusYears(conf_user.getPeriod_id().getAccPeriodValue()));		
+						
+			}
+			return date;
+		}
+
+	    public static Date LocalDateToDate(LocalDate localDate) {
+	        ZoneId zoneId = ZoneId.systemDefault();
+	        ZonedDateTime zdt = localDate.atStartOfDay(zoneId);
+	        Instant instant = zdt.toInstant();
+	        return Date.from(instant);
+	    }
+	    
+	    public CResponse authneticateUser(CActionParameters actionParams) throws Exception
+		{
+			UserInformation userInformation = null;
+			User user = null;
+			CResponse response = null;
+			String userName = null;
+			String password = null;
+			String token = null;
+			String authType = null;
+		
+			do
+			{
+				response = new CResponse();
+				
+				authType = actionParams.getStringParameter(EParameter.AUTH_TYPE.toString());
+				userName = actionParams.getStringParameter(EParameter.USER_NAME.toString());
+				password = actionParams.getStringParameter(EParameter.PASSWORD.toString());
+				
+				if(authType == CAuthorizationKeyConstant.BASIC)
+				{
+					user = userRep.findUserByUserName(userName);
+					
+					if(user == null || !passwordEncoder.matches(password, user.getPassword()))
+					{
+						response.setSuccess(false);
+						response.addError(new CError().setError(EError.INVALID_CREDENTIALS));
+						break;
+					}
+					
+					if(user.getLockUser() == 1)
+					{
+						response.setSuccess(false);
+						response.addError(new CError().setError(EError.USER_IS_LOCKED));
+						break;	
+					}
+					userInformation = new UserInformation(user, userRoleService, userActionService);
+					
+					response.setReturnedObject(userInformation);
+				}	
+			}
+			while(false);
+			
+			return response;
+		}
+//		public int check_user_is_not_valid_password(User user,String oldPassword,String newPassword,String confirmPassword ) {
+//		
+//			//if return 1
+//			//actionValidationResult.setErrorMessage("كلمة المرور  القديمة غير صحيحة");
+//			//if return 2
+//			//actionValidationResult.setErrorMessage("كلمة المرور  الجديدة وتأكيدها  غير متطابقتين ");
+//			//if return 3
+//			//actionValidationResult.setErrorMessage("كلمة المرور  الجديدة وتأكيدها  غير متطابقتين ");
+//			if (!passwordEncoder.matches(oldPassword, user.getPassword()))
+//			{
+//				
+//				return 1;
+//			}
+//			else if (!newPassword.equals(confirmPassword))
+//			{
+//				
+//				return 2;
+//			}
+//			else 
+//			{
+//	
+//				return 3;
+//			}
+//			
+//		}
+	}

@@ -1,0 +1,258 @@
+package com.template.Model.Basic;
+
+
+import java.sql.Timestamp;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Table.AllIndexes.Branch;
+import com.template.Model.Table.AllIndexes.IndPosition;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Builder
+@Table(name = "M_USER")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class User {
+
+	@Id
+	@Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int ID;
+	@NotBlank(message = "Name is mandatory")
+	@Column(name = "user_name")
+	private String username;
+
+	@Column(name = "password")
+	private String password;
+
+//	@Column(name = "first_name")
+//	private String first_name;
+//	
+//	@Column(name = "father_name")
+//	private String father_name;
+//
+//	@Column(name = "last_name")
+//	private String last_name;
+	@Transient
+	private String full_name;
+	
+	@Column(name = "mobile")
+	private String mobile;
+
+
+	
+	@Column(name = "LOCK_USER")
+	private int lockUser;
+
+//	@Email(message = "Please provide a valid email address")
+	@Column(name = "email")
+	private String email;
+	
+
+	
+	@Column(name = "otp")
+	private String otp;
+	
+
+	
+	
+	
+	@Column(name = "FAULT_COUNT")
+	private int fualtCount;
+	
+	@Column(name = "FAULT_DATE")
+	private Timestamp fualtDate;
+	
+
+	@Column(name = "REQUIRED_RESET_PASSWORD")
+	private int requiredResetPassword;
+	
+	@NotBlank(message = "Name is mandatory")
+	@Column(name = "first_name_a")
+	private String first_name_a;
+
+	@Column(name = "first_name_b")
+	private String first_name_b;
+
+	@Column(name = "last_name_a")
+	private String last_name_a;
+
+	@Column(name = "last_name_b")
+	private String last_name_b;
+	
+	@Column(name = "father_name_a")
+	private String father_name_a;
+
+	@Column(name = "father_name_b")
+	private String father_name_b;
+	
+	@Column(name = "customer_cif")
+	private String customer_cif;
+	
+	@Column(name = "employement_date") 
+	private Date employement_date ;
+	
+	@Column(name = "end_date") 
+	private Date end_date;
+	
+	
+	@Column(name = "account_access_flag")
+	private Integer account_access_flag;
+	
+	
+	@Column(name = "specific_device_flag")
+	private Integer specific_device_flag;
+	
+	@Column(name = "ip_terminal")
+	private String ip_terminal;
+	
+	@Column(name = "from_ip_terminal")
+	private String from_ip_terminal;
+	
+	@Column(name = "to_ip_terminal")
+	private String to_ip_terminal;
+	
+	@ManyToOne
+	@JsonIgnore 
+	@JoinColumn(name="upper_level_id")
+	private User upper_level_id;
+	
+	@ManyToOne
+	@JsonIgnore 
+	@JoinColumn(name="alt_upper_level_id")
+	private User alt_upper_level_id;
+	
+	@Column(name = "manager_flag")
+	private Integer manager_flag;
+	@Column(name = "confidentiality_degree")
+	private Integer confidentiality_degree;
+	
+
+	@Column(name = "level_id")
+	private Integer level_id;
+	
+	@Column(name = "quit_flag")
+	private Integer quit_flag;
+	@Column(name = "vacation_flag")
+	private Integer vacation_flag;
+	@Column(name = "limit_cash")
+	private Integer limit_cash;
+	@Column(name = "limit_non_cash")
+	private Integer  limit_non_cash;
+	@Column(name = "account_debit_limit")
+	private Integer account_debit_limit;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "pwd_exp_date") 
+	private Date pwd_exp_date;
+	@Column(name = "from_time") 
+	private String from_time;
+	
+	 
+	@Column(name = "to_time") 
+	private String to_time;
+	
+
+	
+	@Column(name = "is_enabled")
+	private Integer is_enabled ;
+	
+	@Column(name = "expiry_date") 
+	private Date expiry_date ;
+	
+	
+	@Column(name = "teller_account_Id")
+	private Integer teller_account_Id ;
+	
+	
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+
+	@Column(name="IS_DELETED")
+	private Integer isDeleted;
+
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@LastModifiedDate
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+	@Column(name = "note")
+	private String note;
+	
+	
+	@ManyToOne( optional = true)
+    @JoinColumn(name = "branch_id",unique=false, referencedColumnName = "ID")
+
+	private Branch branch;
+
+	
+	@ManyToOne( optional = true)
+    @JoinColumn(name = "position_id", referencedColumnName = "id")
+
+	private IndPosition position_id;
+	
+	
+	
+	public String getfullname() {
+		return first_name_a+" "+last_name_a;
+	}
+
+	  @PrePersist
+	  void createdAt() {
+	    this.insertDate = this.lastUpdateDate = new Date();
+	    this.isDeleted = 0;
+	  }
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	  }
+
+}

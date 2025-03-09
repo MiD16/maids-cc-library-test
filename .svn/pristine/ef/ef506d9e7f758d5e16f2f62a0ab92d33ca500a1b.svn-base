@@ -1,0 +1,40 @@
+package com.template.Action.IndNationality;
+
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.CREATE_IND_NATIONALITY)
+
+public class CAIndNationalityCreate extends CAction {
+	
+	public CAIndNationalityCreate(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		//addBusinessnRule(CBusinessRuleConstant.IND_SOCIAL_STATUS_IS_VALID);
+		addBusinessnRule(CBusinessRuleConstant.IND_NATIONALITY_IS_NOT_EXIST);
+	}
+	
+	
+	
+	
+	
+	
+	
+}
+
+
+
+

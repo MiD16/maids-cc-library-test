@@ -1,0 +1,15 @@
+package com.template.Repository.Basic.SystemLog;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import com.template.Model.Basic.SystemLog.ModifyLog;
+
+@Repository
+public interface ModifyLogRepository extends JpaRepository<ModifyLog,Long>{
+	
+	@Query("Select a From ModifyLog a order by a.id desc")
+	public Page<ModifyLog> getAll(PageRequest pageRequest);
+}

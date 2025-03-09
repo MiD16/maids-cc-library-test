@@ -1,0 +1,28 @@
+package com.template.Action.AccIndPassBookStatus;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+
+@Component(CActionConstant.CREATE_Acc_Ind_Pass_Book_Status)
+@Lazy
+public class CAAccIndPassBookStatusCreate extends CAction 
+{
+	public CAAccIndPassBookStatusCreate(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		//addBusinessnRule(CBusinessRuleConstant.IND_SOCIAL_STATUS_IS_VALID);
+		addBusinessnRule(CBusinessRuleConstant.Acc_Ind_Pass_Book_Status_IS_NOT_EXIST);
+	}}

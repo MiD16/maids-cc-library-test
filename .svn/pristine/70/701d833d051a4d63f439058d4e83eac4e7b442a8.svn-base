@@ -1,0 +1,30 @@
+package com.template.Action.UserRole;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.CREATE_USER_ROLE)
+@Lazy
+public class CACreateUserRole extends CAction 
+{
+	public CACreateUserRole(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		
+		addBusinessnRule(CBusinessRuleConstant.ROLE_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.USER_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.USER_IS_NOT_LOCK);
+	}
+}

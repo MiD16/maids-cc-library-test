@@ -1,0 +1,358 @@
+package com.template.Service.Table.Interest;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Interests.AccInterest;
+import com.template.Model.Table.Interests.AccInterestRate;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Model.Table.Products.AccPeriod;
+import com.template.Repository.Table.Interest.InterestRateRepository;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+import com.template.Service.Table.Product.AccCurrencyService;
+import com.template.Service.Table.Product.AccPeriodService;
+
+
+@Service
+public class InterestRateService {
+
+
+	@Autowired
+	InterestRateRepository interestRateRepository;
+	
+	@Autowired
+	AccIndInterestTypeService accIndInterestTypeService;
+	
+	@Autowired
+	AccCurrencyService accCurrencyService;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	AccInterestService interestService;
+	
+	@Autowired
+	AccPeriodService periodService;
+	
+	@Autowired
+	CActionHandler actionHandler;
+
+	//find all not deleted
+	public CResponse findAllInterestRate(PageRequest pageRequest) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(interestRateRepository.getAll(pageRequest));
+		return response;
+	}
+
+	//find object by id
+	public CResponse findById(Long id) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(interestRateRepository.findById(id).get());
+		return response;
+	}
+
+	//create interest rate
+	public CResponse saveCreate(AccInterestRate interestRate, String path) throws Exception {
+		CResponse response = null;
+		CResponse responseInterest = null;
+		CResponse responsePeriod = null;
+		AccInterest interest=null;
+		AccPeriod period=null;
+		AccCurrency currency=null;
+		//get interest from database
+		responseInterest= interestService.findById(interestRate.getInterest().getId());
+		interest=(AccInterest)responseInterest.getReturnedObject();
+		//get period from database
+		responsePeriod = periodService.findById(interestRate.getPeriod().getId());
+		period = (AccPeriod) responsePeriod.getReturnedObject();
+		//get currency from database
+		currency = accCurrencyService.findById(interestRate.getCurrency().getId());
+		// call validate for create object
+		response = validateInterestRateCreate(interestRate,interest,period ,currency, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//set user that created interest rate
+		interestRate.setInsertBy(userService.getAuthenticatedUser().getID());
+		interestRateRepository.save(interestRate);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+	
+	public CResponse saveUpdate(AccInterestRate interestRate, String path) throws Exception {
+		CResponse response = null;
+		CResponse responseInterest = null;
+		CResponse responsePeriod = null;
+		AccInterest interest=null;
+		AccPeriod period=null;
+		AccCurrency currency=null;
+		//get interest from database
+		responseInterest= interestService.findById(interestRate.getInterest().getId());
+		interest=(AccInterest)responseInterest.getReturnedObject();
+		//get period from database
+		responsePeriod = periodService.findById(interestRate.getPeriod().getId());
+		period = (AccPeriod) responsePeriod.getReturnedObject();
+		//get currency from database
+		currency = accCurrencyService.findById(interestRate.getCurrency().getId());
+		// call validate for update object
+		response = validateInterestRateUpdate(interestRate,interest,period ,currency, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//to get insert date from object in database
+		AccInterestRate tem = interestRateRepository.findById(interestRate.getId()).get();
+		interestRate.setInsertDate(tem.getInsertDate());
+		interestRate.setInsertBy(tem.getInsertBy());
+		//set user that updated interest rate
+		interestRate.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		interestRateRepository.save(interestRate);
+		response.setSuccessMessage("تم التعديل بنجاح");
+		return response;
+	}
+	
+	public CResponse delete(Long id) throws Exception {
+		//get interest rate from database
+		AccInterestRate interestRate= interestRateRepository.findById(id).get();
+		CResponse response=null;
+		// call validate for delete object
+		response = validateInterestRateDelete(interestRate);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//soft delete
+		interestRate.setIsDeleted(1);
+		//set deleted date
+		interestRate.setDeletedDate(new Date());
+		//set user that deleted 
+		interestRate.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(interestRateRepository.save(interestRate));
+		return response;
+	}
+	
+	
+	// validate if can create Interest Rate
+	public CResponse validateInterestRateCreate(AccInterestRate interestRate ,AccInterest interest, AccPeriod period,AccCurrency currency,String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The Interest Rate exists
+				if (interestRate == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_RATE_NOT_FOUND.toString());
+					response.setErrorMessage("نسبة الفائدة غير موجود");
+					break;
+				}
+				// check if The interest exists
+				if (interest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_NOT_FOUND.toString());
+					response.setErrorMessage("الفائدة غير موجودة");
+					break;
+				}
+				
+				// check if The currency  exists
+				if (currency == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_NOT_FOUND.toString());
+					response.setErrorMessage("العملة غير موجودة");
+					break;
+				}
+				// check if The period  exists
+				if (period == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.PERIOD_NOT_FOUND.toString());
+					response.setErrorMessage("الفترة  غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.INTEREST_RATE.toString(), interestRate);
+				parameters.addParameter(EKeyCode.PERIOD.toString(), period);
+				parameters.addParameter(EKeyCode.INTEREST.toString(), interest);
+				parameters.addParameter(EKeyCode.CURRENCY.toString(), currency);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_INTEREST_RATE, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	
+	// validate if can update Interest Rate
+	public CResponse validateInterestRateUpdate(AccInterestRate interestRate ,AccInterest interest, AccPeriod period,AccCurrency currency,String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The Interest Rate exists
+				if (interestRate == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_RATE_NOT_FOUND.toString());
+					response.setErrorMessage("نسبة الفائدة غير موجود");
+					break;
+				}
+				// check if The interest exists
+				if (interest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_NOT_FOUND.toString());
+					response.setErrorMessage("الفائدة غير موجودة");
+					break;
+				}
+				
+				// check if The currency  exists
+				if (currency == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_NOT_FOUND.toString());
+					response.setErrorMessage("العملة غير موجودة");
+					break;
+				}
+				// check if The period  exists
+				if (period == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.PERIOD_NOT_FOUND.toString());
+					response.setErrorMessage("الفترة  غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.INTEREST_RATE.toString(), interestRate);
+				parameters.addParameter(EKeyCode.PERIOD.toString(), period);
+				parameters.addParameter(EKeyCode.INTEREST.toString(), interest);
+				parameters.addParameter(EKeyCode.CURRENCY.toString(), currency);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_INTEREST_RATE, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	// validate if can delete Interest Rate
+	public CResponse validateInterestRateDelete(AccInterestRate interestRate)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The Interest Rate exists
+				if (interestRate == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_RATE_NOT_FOUND.toString());
+					response.setErrorMessage("نسبة الفائدة غير موجود");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.INTEREST_RATE.toString(), interestRate);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_INTEREST_RATE, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	//check if Interest Rate is deleted
+	//return true if deleted
+	//return false if not deleted
+	public boolean checkInterestRateIsDeleted(long id) {
+		AccInterestRate interestRate = interestRateRepository.findById(id).get();
+		if (interestRate.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	
+	//check if Interest Rate is exist
+	//return id if exist
+	//return null if not exist
+	public Long checkInterestRateIsExist(AccInterestRate interestRate) {
+		AccInterestRate interestRateFromDB= interestRateRepository.getInterestRate(
+				interestRate.getInterest().getId(),interestRate.getApplicationDate() );		
+		if (interestRateFromDB!= null) {
+			if (interestRate.getId() == null
+					|| (interestRate.getId() != null && !interestRate.getId().equals(interestRateFromDB.getId()) )) {
+				return interestRateFromDB.getId();
+			}
+		}
+		return null;
+	}
+	
+	//check if Interest Rate is conflicted
+	//return id if conflicted
+	//return null if not conflicted
+	public Boolean checkInterestRateIsConflicted(AccInterestRate interestRate) {
+		List<AccInterestRate> interestRatesList=null;
+		if(interestRate.getId()==null)
+		 interestRatesList=interestRateRepository.getInterestRateByInterest(interestRate.getInterest().getId(),-1);
+		else
+			 interestRatesList=interestRateRepository.getInterestRateByInterest(interestRate.getInterest().getId(),interestRate.getId());
+
+		for(int i=0 ; i<interestRatesList.size();i++)
+		{
+		Date applicationDate=interestRatesList.get(i).getApplicationDate();	
+		AccPeriod period=interestRatesList.get(i).getPeriod();
+		
+		 Calendar endCalendar = Calendar.getInstance();
+		 endCalendar.setTime(applicationDate);
+	        
+	        if(period.getDateUnitId().getNameB().equalsIgnoreCase("day"))
+	        	endCalendar.add(Calendar.DATE, period.getAccPeriodValue());
+	        else  if(period.getDateUnitId().getNameB().equalsIgnoreCase("month"))
+	        	endCalendar.add(Calendar.MONTH, period.getAccPeriodValue());
+	        else {
+	        	endCalendar.add(Calendar.YEAR, period.getAccPeriodValue());
+
+			}
+	        Calendar startCalendar = Calendar.getInstance();
+	        startCalendar.setTime(interestRate.getApplicationDate());
+	        if(startCalendar.before(endCalendar) )
+	        	return true;
+	      
+		}
+		
+		return false;
+	}
+	
+	public Date removeTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+}

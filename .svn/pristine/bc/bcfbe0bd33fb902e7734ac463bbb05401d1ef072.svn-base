@@ -1,0 +1,26 @@
+package com.template.Action.IndEconomicActivity;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+
+@Component(CActionConstant.DELETE_Ind_Econmic_Activity)
+@Lazy
+public class CAIndEconomicActivityDelete extends CAction {
+	public CAIndEconomicActivityDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.Ind_Econmic_Activity_IS_NOT_DELETED);
+	}
+}
+ 

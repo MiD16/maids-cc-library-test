@@ -1,0 +1,18 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.IndTable;
+
+@Repository
+public interface IndTableRepository  extends JpaRepository<IndTable,Long>{
+	
+	@Query("Select a from IndTable a where a.isDeleted=0")
+	public List<IndTable> getAll();
+	
+	@Query("Select a from IndTable a where a.isDeleted=1")
+	public List<IndTable> getAllDeleted();
+}

@@ -1,0 +1,22 @@
+//package com.template.Class.Index;
+//
+//import java.util.List;
+//
+//import com.template.Model.Table.Address;
+//import com.template.Model.Table.Family;
+//import com.template.Model.Table.NationalityDetail;
+//import com.template.Model.Table.NonCustIndividual;
+//
+//import lombok.AccessLevel;
+//import lombok.Getter;
+//import lombok.NoArgsConstructor;
+//import lombok.Setter;
+//import lombok.ToString;
+//
+//@Getter(AccessLevel.PUBLIC)
+//@Setter(AccessLevel.PUBLIC)
+//@NoArgsConstructor
+//@ToString
+//public class NonCustIndividualWapper {
+//	NonCustIndividualForm nonCustIndividualForm;
+//}

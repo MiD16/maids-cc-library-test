@@ -1,0 +1,172 @@
+package com.template.RestController;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.Base.Class.CResponse;
+import com.template.Class.SearchCustomer;
+import com.template.Class.UserInformation;
+import com.template.Model.Basic.Notification;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Repository.Basic.NotificationsRep;
+
+import com.template.Service.Basic.NotificationsService;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.SubpoenaRequest.SubpoenaRequestDetailsService;
+
+
+@RestController
+@RequestMapping("/api2")
+public class RestControler {
+	@Autowired
+	public NotificationsRep notificationsRep;
+	@Autowired
+	private NotificationsService notificationsService;
+
+//	@Autowired
+//	public LogService logActionService;
+
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	SubpoenaRequestServices subpoenaRequestServices;
+
+	@GetMapping("/searchResultCustomerNonIndiv")
+	public List<SearchCustomer> searchResultCustomerNonIndivi(SearchCustomer searchCustomer) {
+		
+		List<SearchCustomer> search = userService.getSearchNonCustIndiv(searchCustomer);
+
+		return search;
+
+	}
+	
+	@GetMapping("/checkUserCanWithdraw/{userId}/{amount}")
+	public CResponse  checkUserCanWithdraw( @PathVariable Long userId,@PathVariable Long amount ) {
+		System.err.println("user valid: " + userId);
+	boolean search = true;// userService.checkUserCanWithdraw(userId,amount);
+	Map<String, Object> responseMap = new HashMap<>();
+    responseMap.put("message", "Operation successful");
+    responseMap.put("status", search);
+    
+    CResponse response = new CResponse();
+    
+    response.setSuccess(search);
+    
+    if(search)
+    	response.setSuccessMessage("صلاحية اليوزر محققة");
+    else {
+		response.setErrorMessage("صلاحية اليوزر غير محققة");	
+		}
+       return response;
+	}
+	
+	@GetMapping("/check_user_can_withdraw/{userId}/{amount}")
+	public Map<String, Object>  check_user_can_withdraw( @PathVariable String username,@PathVariable int amount ) {
+	boolean search = userService.check_user_can_withdraw(username,amount);
+	Map<String, Object> response = new HashMap<>();
+    response.put("message", "Operation successful");
+    response.put("status", search);
+       return response;
+	}
+	
+
+	@GetMapping("/get/subpoena_request")
+	public List<SubpoenaRequest> getSubpoenaRequestByIndex( @RequestParam(value = "indexId", required = true) long id) {
+	    return subpoenaRequestServices.findByIndexSubpoenaId(id);
+	}
+	
+
+	@PreAuthorize("hasPermission('notifi', 'index')")
+
+	@GetMapping("/changeStatusall") // Seen Notifications
+	public boolean changeStatusAll(Authentication auth) {
+		UserInformation userInformation = (UserInformation) auth.getPrincipal();
+		notificationsService.changeStatusAll(userInformation.getUser_id());
+		return true;
+	}
+
+	@PreAuthorize("hasPermission('notifi', 'index')")
+
+	@GetMapping("/changeStatus") // Seen Notifications
+	public Notification changeStatus(Authentication auth, @RequestParam(value = "id", required = true) int id) {
+		UserInformation userInformation = (UserInformation) auth.getPrincipal();
+
+		return notificationsService.changeStatus(userInformation.getUser_id(), id);
+	}
+
+	@PreAuthorize("hasPermission('notifi', 'index')")
+
+	@GetMapping("/getnotifinum") // Seen Notifications
+	public int getnotifinum(Authentication auth) {
+
+		return notificationsRep.getNumberNewNotificationsByUserId(((UserInformation) auth.getPrincipal()).getUser_id());
+	}
+
+
+
+
+
+	@PreAuthorize("hasPermission('notifi', 'index')")
+	@GetMapping(value = "/newnotifi", produces = "application/json")
+	public @ResponseBody List<Notification> getnewnotifi() {
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		CResponse response=null;
+		response = new CResponse();
+		response= userService.getUserByID(userInformation.getUser_id());
+		User user=(User) response.getReturnedObject();
+		  return notificationsService.getTopCertNotif(user.getID());
+	}
+	
+	
+	@GetMapping("/test")
+	public String test() {
+		return "";
+	}
+
+
+
+
+
+
+
+
+	
+	SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+
+	@GetMapping("/my/logout")
+	public String performLogout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+	    // .. perform logout
+	    this.logoutHandler.logout(request, response, authentication);
+	    return "redirect:/home";
+	}
+
+
+	
+	
+	
+	
+	
+}

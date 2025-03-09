@@ -1,0 +1,53 @@
+package com.template.BusinessRule.IndInterestType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Holiday.Holidays;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.Holiday.HolidaysService;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+import com.template.Service.Table.SubpoenaRequest.SubpoenaRequestDetailsService;
+
+@Component(CBusinessRuleConstant.IND_INTEREST_TYPE_IS_NOT_DELETED)
+@Lazy
+public class CBRIndInterestTypeIsNotDeleted implements IBusinessRule {
+
+	@Autowired
+	AccIndInterestTypeService indInterestTypeService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccIndInterestType indInterestType= null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				indInterestType = (AccIndInterestType) parameters.getParameter(EKeyCode.IND_INTEREST_TYPE.toString());
+				if (indInterestTypeService.checkIndInterestTypeIsDeleted(indInterestType.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("نوع الفائدة محذوف");
+					actionValidationResult.setErrorCode(EErrorCode.IND_INTEREST_TYPE_IS_DELETED.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

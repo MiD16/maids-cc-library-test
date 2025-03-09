@@ -1,0 +1,26 @@
+package com.template.Action.IndHoliday;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.ACTIVATE_IND_HOLIDAY)
+@Lazy
+public class CAIndHolidayActivate extends CAction {
+	public CAIndHolidayActivate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.IND_HOLIDAY_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.IND_HOLIDAY_IS_NOT_ACTIVATE);
+		
+	}
+}

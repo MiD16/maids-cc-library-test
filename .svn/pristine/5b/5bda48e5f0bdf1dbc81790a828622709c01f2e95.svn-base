@@ -1,0 +1,19 @@
+package com.template.Action.DateUnit;
+import javax.annotation.PostConstruct;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.DELETE_IND_DATE_UNIT)
+@Lazy
+public class CADateUnitDelete extends CAction {
+	public CADateUnitDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.IND_DATE_UNIT_IS_NOT_DELETED);
+	}
+}

@@ -1,0 +1,33 @@
+
+
+
+
+
+
+
+
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.*;
+
+
+@Repository
+public interface IndSectorTypeRepository  extends JpaRepository <IndSectorType, Long>{
+
+	@Query("Select a from IndSectorType a where a.isDeleted != 1")
+	public List<IndSectorType> getAll();
+	
+	@Query("Select a From IndSectorType a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<IndSectorType> getAllDeleted();
+	
+
+	@Query("Select a from  IndSectorType a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public IndSectorType findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+}

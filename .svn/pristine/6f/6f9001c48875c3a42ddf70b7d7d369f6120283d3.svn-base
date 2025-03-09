@@ -1,0 +1,32 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.IndAccountRelation;
+import com.template.Model.Table.AllIndexes.IndexCreditCardStatus;
+@Repository
+public interface IndexCreditCardStatusRepository extends JpaRepository <IndexCreditCardStatus, Long> {
+	
+	
+	@Query("Select a from IndexCreditCardStatus a where a.isDeleted = 0  order by a.placeOrder desc")
+	public List<IndexCreditCardStatus> getAll();
+
+	@Query("Select a From IndexCreditCardStatus a WHERE a.isDeleted = 1 order by a.placeOrder desc")
+	public List<IndexCreditCardStatus> getAllDeleted();
+
+	@Query("Select a from  IndexCreditCardStatus a where a.nameA=:nameA and a.isDeleted=0 ")
+	public IndexCreditCardStatus findByNameA(@Param("nameA") String nameA);
+
+	@Query("Select a from  IndexCreditCardStatus a where a.nameB=:nameB and a.isDeleted=0 ")
+	public IndexCreditCardStatus findByNameB(@Param("nameB") String nameB);
+	
+	@Query("Select a from  IndexCreditCardStatus a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public IndexCreditCardStatus findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+
+}

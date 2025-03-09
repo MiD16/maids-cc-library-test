@@ -1,0 +1,87 @@
+package com.template.Model.Table.ElectronicOperation;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Entity
+@Table(name = "OUTWARD_MSG_FILE")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class InwardMsgFile {
+	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "FILE_NAME")
+	private String FileName;
+	
+	@Column(name = "FILE_PATH")
+	private String FilePath;
+	
+	@Column(name = "FILE_STATUS")
+	private Integer FileStatus;
+	
+	@Column(name = "INSERT_BY")
+	private Integer InsertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "INSERT_DATE")
+	private Date InsertDate;
+	
+	
+	@Column(name = "LAST_UPDATE_BY")
+	private Integer LastUpdateBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "LAST_UPDATE_DATE")
+	private Date LastUpdateDate;
+	
+	
+
+	
+	@Column(name = "IS_DELETED")
+	private Integer IsDeleted;
+	
+
+	@Column(name = "DELETED_BY")
+	private Integer DeletedBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DELETED_DATE")
+	private Date DeletedDate;
+	
+
+	
+	
+	
+
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "STATUS_CHANGE_DATE")
+	private Date STATUSCHANGEDATE;
+	
+}
+
+
+
+
+

@@ -1,0 +1,140 @@
+package com.template.Service.Table.AllIndexes;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+import com.template.Repository.Table.AllIndexes.IndSectorTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndSocialStatusRepository;
+
+import java.util.Date;
+import java.util.List;
+
+
+@Service
+public class IndSectorTypeServices {
+
+
+@Autowired
+IndSectorTypeRepository indSectorTypeRepository;
+
+
+
+
+
+@Autowired CActionHandler actionHandler;
+
+public CResponse createIndSectorType(IndSectorType indSectorType) 
+{
+	CResponse response = null;
+	CActionValidationParameters actionValidationParameters = null;
+	CActionValidationResult actionValidationResult = null;
+	
+	do
+	{
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		
+		actionValidationParameters.addParameter(EKeyCode.IND_SECTOR_TYPE.toString(), indSectorType);
+		
+		actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IND_SECTOR_TYPE, actionValidationParameters);
+		
+		if(!actionValidationResult.isValid())
+		{
+			response.setSuccess(false);
+			response.setErrorMessage(actionValidationResult.getErrorMessage());
+			break;
+		}
+		
+		indSectorType.setInsertBy(0);
+		indSectorType.setInsertDate(new Date());
+		indSectorTypeRepository.save(indSectorType);
+		
+		response.setReturnedObject(indSectorType);
+	}
+	while(false);
+	
+	return response;
+}
+
+
+
+public IndSectorType findByNames(String nameA, String nameB) {
+	return indSectorTypeRepository.findByNames(nameA, nameB);
+}
+
+
+
+
+public void updateSocialStatus(IndSectorType indSectorType) 
+{
+	CResponse response = null;
+	CActionValidationParameters actionValidationParameters = null;
+	CActionValidationResult actionValidationResult = null;
+	
+	response = new CResponse();
+	actionValidationParameters = new CActionValidationParameters();
+	actionValidationResult = new CActionValidationResult();
+	
+	if(indSectorType.getId() == null) 
+	{
+		
+		indSectorType.setInsertBy(0);
+	}
+	
+	
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public void update(IndSectorType indFileType) {
+	indSectorTypeRepository.save(indFileType);
+}
+
+public IndSectorType findById(Long id) {
+	return indSectorTypeRepository.getById(id);
+}
+
+public List<IndSectorType> getAll(){
+	List<IndSectorType> all = indSectorTypeRepository.getAll();
+	return all;
+}
+
+public List<IndSectorType> getAllDeleted(){
+	List<IndSectorType> allDeleted = indSectorTypeRepository.getAllDeleted();
+	return allDeleted;
+}
+
+public IndSectorType delete(Long id) {
+	IndSectorType indSectorType = indSectorTypeRepository.findById(id).get();
+	if (indSectorType == null) {
+		throw new NoDataFoundException("indSocialStatus With ID : " + id + " Not Found");
+	}
+	indSectorType.setIsDeleted(1);
+	return indSectorTypeRepository.save(indSectorType);
+}
+
+private static java.sql.Date getCurrentDate() {
+	java.util.Date today = new java.util.Date();
+	return new java.sql.Date(today.getTime());
+}
+}

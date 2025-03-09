@@ -1,0 +1,121 @@
+package com.template.Model.Table.ElectronicOperation;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Table.AllIndexes.IndFileType;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "INWARD_MSG_DETAILS")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class InwardMsgDetails {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "INSERT_BY")
+	private Integer InsertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "INSERT_DATE")
+	private Date InsertDate;
+	
+	
+	@Column(name = "LAST_UPDATE_BY")
+	private Integer LastUpdateBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "LAST_UPDATE_DATE")
+	private Date LastUpdaeDate;
+	
+	
+
+	
+	@Column(name = "IS_DELETED")
+	private Integer IsDeleted;
+	
+
+	@Column(name = "DELETED_BY")
+	private Integer DeletedBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DELETED_DATE")
+	private Date DeletedDate;
+
+	@Column(name = "IS_ENABLED_FLAG")
+	private Integer IsEnabledFlag;
+	
+	
+	
+	
+	
+	
+	@Column(name = "CARD_NUMBER")
+	private Integer CardNumber;
+	
+	
+
+	@Column(name = "CUSTOMER_ACCOUNT_ID")
+	private Integer CustomerAccountId;
+	
+	
+
+	@Column(name = "CUSTOMER_ACCOUNT_NUM")
+	private Integer CustomerAccountNum;
+	
+	
+	
+	
+	@Column(name = "Commision")
+	private Integer Commision;
+
+	
+	@Column(name = "POS_CODE")
+	private Integer POSCODE;
+
+	
+	
+	@Column(name = "ATMCODE")
+	private Integer ATMCODE;
+
+	
+	@Column(name = "AUDITNUMBER")
+	private Integer AuditNumber;
+
+	
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "OPERATION_DATE")
+	private Date OPERATIONDATE;
+	
+	
+	
+	
+	private String note;
+	
+	
+	
+	
+	
+	
+	
+}

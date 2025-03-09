@@ -1,0 +1,13 @@
+package com.template.Repository.Table.Interest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import com.template.Model.Table.Interests.AccInterestRateSegments;
+@Repository
+public interface InterestRateSegmentsRepository extends JpaRepository <AccInterestRateSegments, Long> {
+	
+	@Query("Select a from AccInterestRateSegments a where a.isDeleted = 0")
+	public Page<AccInterestRateSegments> getAll(PageRequest pageRequest);	
+}

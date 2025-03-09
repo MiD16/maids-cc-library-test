@@ -1,0 +1,20 @@
+package com.template.Repository.Table.Product;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.GlTest;
+
+@Repository
+public interface GlTestRepository extends JpaRepository <GlTest, Long> {
+	
+	@Query("Select a from GlTest a ")
+	public List<GlTest> getAll();
+	
+	@Query("Select a From GlTest a  order by a.id desc")
+	public List<GlTest> getAllDeleted();
+
+}

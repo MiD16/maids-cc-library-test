@@ -1,0 +1,28 @@
+package com.template.Action.Role;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.DELETE_ROLE)
+@Lazy
+public class CADeleteRole extends CAction {
+	public CADeleteRole(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+
+	@PostConstruct
+	public void init() {
+		
+		addBusinessnRule(CBusinessRuleConstant.ROLE_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.ROLE_IS_NOT_LINKED_WITH_ROLE_ACTION);
+		addBusinessnRule(CBusinessRuleConstant.ROLE_IS_NOT_LINKED_WITH_USER_ROLE);
+		addBusinessnRule(CBusinessRuleConstant.ROLE_IS_NOT_LINKED_WITH_USER_ACTION);
+	}
+}

@@ -1,0 +1,106 @@
+package com.template.Class;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Date;
+
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class GeneralLedger {
+
+	private Long id;
+
+	private String glNumber;
+	
+	private String description_a;
+
+	private String description_b;
+
+	private Long glClassId;
+
+	private Integer generatedAccountFlag;
+
+	private Integer isClosedGlFlag;
+
+	@Column(name = "DELETED_BY")
+	private Integer deletedBy;
+
+	private Date deletedDate;
+
+	private Integer inBalanceFlag;
+
+	private Integer insertBy;
+
+	private Date insertDate;
+
+	private Integer isDeleted;
+
+	private Integer lastUpdateBy;
+
+	private Date lastUpdateDate;
+
+	private String note;
+
+	private Integer deprecationFlag;
+
+	private Integer glLevel;
+
+	private Integer bab;
+
+	private Integer band;
+
+	private Integer fakara;
+
+	private Integer item;
+
+	@Column(name = "SUB_ITEM")
+	private Integer subItem;
+
+	private Integer glSingle;
+
+	private Integer oldGlNumber;
+
+	private Integer oldGlParentNumber;
+
+	private Integer oldDescA;
+
+	private Long currencyId;
+
+	private Integer inBudgetFlag;
+	
+	private Integer glClossAccount;
+
+	private Integer glParent;
+
+//	@Transient
+//	private String currencyName;
+//	
+//	@Transient
+//	private String glClassName;
+//	
+//	@Transient
+//	private boolean hasRelatedAccounts;
+//	
+//	@PrePersist
+//	void createdAt() {
+//		this.insertDate = this.lastUpdateDate = new Date();
+//		this.isDeleted = 0;
+//
+//	}
+//
+//	@PreUpdate
+//	protected void onUpdate() {
+//		this.lastUpdateDate = new Date();
+//	}
+}

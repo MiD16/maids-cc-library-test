@@ -1,0 +1,55 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndProfession;
+import com.template.Repository.Table.AllIndexes.IndProfessionRepository;
+
+@Service
+public class IndProfessionService {
+
+	@Autowired
+	IndProfessionRepository indProfessionRepository;
+
+	public IndProfession save(IndProfession indProfession) {
+		if (indProfession.getId() == null) {
+			indProfession.setInsertBy(0);
+		} else if (indProfession.getId() != null) {
+			IndProfession temSignatureType = indProfessionRepository.findById(indProfession.getId()).get();
+			indProfession.setInsertDate(temSignatureType.getInsertDate());
+		}
+		indProfessionRepository.save(indProfession);
+		return indProfession;
+	}
+
+	public void update(IndProfession indProfession) {
+		indProfessionRepository.save(indProfession);
+	}
+
+	public IndProfession findById(Long id) {
+		return indProfessionRepository.findById(id).get();
+	}
+
+	public List<IndProfession> getAll() {
+		List<IndProfession> all = indProfessionRepository.getAll();
+		return all;
+	}
+
+	public List<IndProfession> getAllDeleted() {
+		List<IndProfession> allDeleted = indProfessionRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndProfession delete(Long id) {
+		IndProfession indProfession = indProfessionRepository.findById(id).get();
+		if (indProfession == null) {
+			throw new NoDataFoundException("indProfession With ID : " + id + " Not Found");
+		}
+		indProfession.setIsDeleted(1);
+		return indProfessionRepository.save(indProfession);
+	}
+}

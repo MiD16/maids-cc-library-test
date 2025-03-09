@@ -1,0 +1,31 @@
+package com.template.Action.Operation;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.UPDATE_OPERATION)
+@Lazy
+public class CAUpdateOperation extends CAction 
+{
+	public CAUpdateOperation(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+	
+		addBusinessnRule(CBusinessRuleConstant.ACTION_IS_NOT_EXIST);
+		addBusinessnRule(CBusinessRuleConstant.IND_CATIGORY_MODULE_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.IND_CREDIT_DEBIT_CATEGORY_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.ACC_PERIOD_IS_NOT_DELETED);
+	}
+}

@@ -1,0 +1,56 @@
+package com.template.Service.Table.AllIndexes;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndCatigoryModule;
+import com.template.Model.Table.AllIndexes.IndCreditDebitCatigory;
+import com.template.Repository.Table.AllIndexes.IndCreditDebitCatigoryRepository;
+
+
+@Service
+public class IndCreditDebitCatigoryService  {
+
+//	@Autowired
+//	public LogService logActionService;
+	@Autowired
+	private IndCreditDebitCatigoryRepository indCreditDebitCatigoryRepository;
+	
+	public List<IndCreditDebitCatigory> findAll() {
+		List<IndCreditDebitCatigory> indCreditDebitCatigories = indCreditDebitCatigoryRepository.getAll();
+		return indCreditDebitCatigories;
+	}
+	
+	
+	public IndCreditDebitCatigory findById(Long id) {
+		Optional<IndCreditDebitCatigory> inOptional = indCreditDebitCatigoryRepository.findById(id);
+		if(inOptional.isEmpty())
+			throw new NoDataFoundException("No Indix Credit Debit Catigory  with ID : "+id);
+		return inOptional.get();
+	}
+	public IndCreditDebitCatigory save(IndCreditDebitCatigory indCreditDebitCatigory) {
+		return indCreditDebitCatigoryRepository.save(indCreditDebitCatigory);
+	}
+	
+	public IndCreditDebitCatigory delete(Long id) {
+		Optional<IndCreditDebitCatigory> indOptional=indCreditDebitCatigoryRepository.findById(id);
+		if(indOptional.isEmpty())
+		{
+			throw new NoDataFoundException("Indix Credit Debit Catigory With ID : " + id + " Not Found");
+		}
+		
+		indOptional.get().setIsDeleted(1);;
+		return indCreditDebitCatigoryRepository.save(indOptional.get());
+	}
+	public boolean checkIndCreditDebitCatigoryIsDeleted(long id) {
+		IndCreditDebitCatigory indCatigoryModule= indCreditDebitCatigoryRepository.findById(id).get();
+		if (indCatigoryModule.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	
+	}

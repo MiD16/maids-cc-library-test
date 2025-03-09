@@ -1,0 +1,30 @@
+package com.Base.Configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+@Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfig
+{
+	@Autowired CustomPermissionEvaluator customPermissionEvaluator;
+	
+	@Bean
+	BCryptPasswordEncoder bCryptPasswordEncoder() 
+	{
+		return new BCryptPasswordEncoder();
+	}
+	
+	 @Bean
+	 MethodSecurityExpressionHandler methodSecurityExpressionHandler() 
+	 {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setPermissionEvaluator(customPermissionEvaluator);
+        return expressionHandler;
+     }
+}

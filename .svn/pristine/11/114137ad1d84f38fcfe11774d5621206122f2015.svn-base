@@ -1,0 +1,158 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndFiscalYearStatus;
+import com.template.Model.Table.AllIndexes.IndGlClass;
+import com.template.Model.Table.AllIndexes.IndIncomeType;
+import com.template.Model.Table.AllIndexes.IndJournalStatus;
+import com.template.Repository.Table.AllIndexes.IndFiscalYearStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndGlClassRepository;
+import com.template.Repository.Table.AllIndexes.IndIncomeTypeRepository;
+
+
+@Service
+public class IndFiscalYearStatusServices {
+	@Autowired
+	IndFiscalYearStatusRepository indFiscalYearStatusRepository;
+	@Autowired CActionHandler actionHandler;
+	
+	
+
+
+	public CResponse createIndFiscalYearStatus(IndFiscalYearStatus indFiscalYearStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.IND_FISCAL_YEAR_STATUS.toString(), indFiscalYearStatus);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IND_FISCAL_YEAR_STATUS, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indFiscalYearStatus.setInsertBy(0);
+			indFiscalYearStatus.setInsertDate(new Date());
+			indFiscalYearStatusRepository.save(indFiscalYearStatus);
+			
+			response.setReturnedObject(indFiscalYearStatus);
+		}
+		while(false);
+		
+		return response;
+	}
+
+	public IndFiscalYearStatus updateIndFiscalYearStatus(IndFiscalYearStatus indFiscalYearStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(indFiscalYearStatus.getId() == null) 
+		{
+			
+			indFiscalYearStatus.setInsertBy(0);
+		}
+		
+		
+		
+		else if(indFiscalYearStatus.getId() != null)
+		{
+			IndFiscalYearStatus temSocialStatus = indFiscalYearStatusRepository.findById(indFiscalYearStatus.getId()).get();
+			indFiscalYearStatus.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indFiscalYearStatusRepository.save(indFiscalYearStatus);
+		return indFiscalYearStatus;
+	}
+
+
+	public IndFiscalYearStatus save(IndFiscalYearStatus indFiscalYearStatus) {
+		if(indFiscalYearStatus.getId() == null)
+		{
+			indFiscalYearStatus.setInsertBy(0);
+		}else if(indFiscalYearStatus.getId() != null){
+			IndFiscalYearStatus temSignatureType=indFiscalYearStatusRepository.findById(indFiscalYearStatus.getId()).get();
+			indFiscalYearStatus.setInsertDate(temSignatureType.getInsertDate());
+		}
+		indFiscalYearStatusRepository.save(indFiscalYearStatus);
+		return indFiscalYearStatus;
+	}
+	
+	
+	public IndFiscalYearStatus findById(Long id) {
+		return indFiscalYearStatusRepository.getById(id);
+	}
+	
+	public List<IndFiscalYearStatus> getAll(){
+		List<IndFiscalYearStatus> all = indFiscalYearStatusRepository.getAll();
+		return all;
+	}
+	
+	public List<IndFiscalYearStatus> getAllDeleted(){
+		List<IndFiscalYearStatus> allDeleted = indFiscalYearStatusRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	
+	public IndFiscalYearStatus delete(Long id) {
+		IndFiscalYearStatus indFiscalYearStatus = indFiscalYearStatusRepository.findById(id).get();
+		if (indFiscalYearStatus == null) {
+			throw new NoDataFoundException("indAddressType With ID : " + id + " Not Found");
+		}
+		indFiscalYearStatus.setIsDeleted(1);
+		return indFiscalYearStatusRepository.save(indFiscalYearStatus);
+	}
+	
+	public IndFiscalYearStatus findByNames(String nameA, String nameB) {
+		return indFiscalYearStatusRepository.findByNames(nameA, nameB);
+	}
+
+	
+	
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+	
+	
+	
+	public boolean checkIndFiscalYearStatusIsDeleted(long id) {
+		IndFiscalYearStatus indFiscalYearStatus= indFiscalYearStatusRepository.findById(id).get();
+		if (indFiscalYearStatus.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+
+	}
+
+	
+	
+	
+	

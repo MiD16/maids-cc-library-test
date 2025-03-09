@@ -1,0 +1,50 @@
+package com.template.BusinessRule.Role;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.Role;
+import com.template.Service.Basic.UserRoleService;
+
+@Component(CBusinessRuleConstant.ROLE_IS_NOT_LINKED_WITH_USER_ROLE)
+@Lazy
+public class CBRRoleIsNotLinkedWithUserRole implements IBusinessRule {
+
+	@Autowired UserRoleService userRoleService;
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters)
+	{
+		CActionValidationResult actionValidationResult = null;
+		Role role = null;
+		
+		
+		
+		try
+		{
+			do
+			{
+				actionValidationResult = new CActionValidationResult();
+				
+				role = (Role)parameters.getParameter(EKeyCode.ROLE.toString());
+		
+				if(userRoleService.check_role_is_linked_with_user_role(role))
+				{
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("لا يمكن حذف الدور بسبب وجود مستخدمين مرتبطين  به   ");
+					break;
+				}
+			}
+			while(false);
+		}
+		catch(Exception e) {throw new RuntimeException(e.getMessage());}
+		
+		return actionValidationResult;
+	}
+	
+}

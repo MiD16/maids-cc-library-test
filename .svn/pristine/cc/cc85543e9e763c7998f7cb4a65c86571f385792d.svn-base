@@ -1,0 +1,357 @@
+package com.template.Service.Table.Holiday;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.Holiday.BranchHoliday;
+import com.template.Model.Table.Holiday.Holidays;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Repository.Table.Holiday.HolidaysRep;
+import com.template.Service.Basic.UserService;
+
+@Service
+public class HolidaysService {
+
+	@Autowired
+	HolidaysRep holidaysRep;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	BranchHolidayService branchHolidayService;
+
+	@Autowired
+	CActionHandler actionHandler;
+	
+	@Autowired
+	IndHolidaysService indHolidaysService;
+
+	public CResponse findAllHolidaysWithoutIndHolidays(PageRequest pageRequest) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(holidaysRep.findAllHolidaysWithoutIndHolidays(pageRequest));
+		return response;
+	}
+
+	public Page<Holidays> findByIndHolidaysId(PageRequest pageRequest, long indHolidayId) {
+		return holidaysRep.findByIndHolidaysId(indHolidayId, pageRequest);
+	}
+	
+	public Page<Holidays> findAllActivateByIndHolidaysId(PageRequest pageRequest, long indHolidayId) {
+		return holidaysRep.findAllActiveByIndHolidaysId(indHolidayId, pageRequest);
+	}
+
+	public Page<Holidays> findAllDeActiveByIndHolidaysId(PageRequest pageRequest, long indHolidayId) {
+		return holidaysRep.findAllDeActiveByIndHolidaysId(indHolidayId, pageRequest);
+	}
+	
+	public CResponse findById(Long id) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(holidaysRep.findById(id).get());
+		return response;
+	}
+
+	public CResponse save(Holidays holiday,String dayFlag,String startDate,String endDate) throws Exception {
+		
+		CResponse response = null;
+		if (holiday.getId() != null) {
+			//if update : apply business rule
+			response = validateHolidayUpdate(holiday);
+			if (!response.isSuccess()) {
+				return response;
+			}
+		}
+		else {
+			response=new CResponse();
+			//if entry start date and end date
+			if(dayFlag!=null &&Integer.parseInt(dayFlag)==0)
+			{
+				
+				//list of names of the days of the week
+				String[] daysOfWeek = { "Sunday/الأحد", "Monday/الإثنن", "Tuesday/الثلائاء", "Wednesday/الأربعاء",
+						"Thursday/الخميس", "Friday/الجمعة", "Saturday/السبت" };
+		
+		        //to calculate the days between the start and end date
+				//get start date
+		        Calendar startCalendar = Calendar.getInstance();
+		        startCalendar.setTime(new Date( startDate));
+		        
+		        //get end date
+		        Calendar endCalendar = Calendar.getInstance();
+		        endCalendar.setTime(new Date(endDate));
+		        
+		        while (!startCalendar.after(endCalendar)) {
+		    		// Get the date
+		    		Date date =removeTime(startCalendar.getTime());
+		    		int dayOfWeekInt = startCalendar.get(Calendar.DAY_OF_WEEK);
+		    		// Map the integer to the day name
+		    		String dayName = daysOfWeek[dayOfWeekInt - 1]; // Subtract 1 because the array index starts at 0
+		        	Holidays holidaTemp=new Holidays();
+		        	holidaTemp.setHolidayDate(date);
+		        	holidaTemp.setNameA(holiday.getNameA());
+		        	holidaTemp.setNameB(holiday.getNameB());
+		        	holidaTemp.setNote(holiday.getNote());
+		        	holidaTemp.setHolidayDay(dayName);
+		        	holidaTemp.setInsertBy(userService.getAuthenticatedUser().getID());
+		        	holidaysRep.save(holidaTemp);
+		            startCalendar.add(Calendar.DATE, 1); // Increment the day
+		        }
+				
+			}
+			else {
+				holiday.setInsertBy(userService.getAuthenticatedUser().getID());
+				holidaysRep.save(holiday);
+			}
+			response.setSuccessMessage("تم الإضافة بنجاح");
+		}
+		// if update : set old insert date
+		 if(holiday.getId() != null){
+			Holidays tem = holidaysRep.findById(holiday.getId()).get();
+			holiday.setInsertDate(tem.getInsertDate());
+			holiday.setInsertBy(tem.getInsertBy());
+			holiday.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+			response.setSuccessMessage("تم التعديل بنجاح");
+			holidaysRep.save(holiday);
+		}
+	
+	
+		
+		return response;
+	}
+
+	public void saveAll(List<Holidays> holidays) {
+		holidaysRep.saveAll(holidays);
+	}
+
+	public CResponse delete(Long id) throws Exception {
+		Holidays holiday = holidaysRep.findById(id).get();
+		CResponse response = null;
+	
+	
+		response = validateHolidayDelete(holiday);
+		if (!response.isSuccess()) {
+			return response;
+		}
+	
+		if (holiday == null) {
+			throw new NoDataFoundException("holiday With ID : " + id + " Not Found");
+		}
+		// Delete the branches related to the holiday that you want to delete
+		CResponse response2=branchHolidayService.findByHolidayId(null, id);
+		Page<BranchHoliday> branchHolidaysPages = (Page<BranchHoliday>) response2.getReturnedObject();
+		List<BranchHoliday> branchHolidays = branchHolidaysPages.getContent();
+		branchHolidayService.deletedAll(branchHolidays);
+		holiday.setIsDeleted(1);
+		holiday.setDeletedDate(new Date());
+		holiday.setDeletedBy(userService.getAuthenticatedUser().getID());
+		holidaysRep.save(holiday);
+		response.setSuccessMessage("تم الحذف بنجاح");
+		return response;
+	}
+
+	public CResponse changeEnableFlag(Long id,int enable) throws Exception {
+		CResponse response;
+		CResponse responseIndHoliday;
+		IndHolidays indHolidays=null;
+	
+		Holidays holiday = holidaysRep.findById(id).get();
+		if (enable == 1) {
+			
+			if(holiday.getIndHolidays()!=null)
+			{
+				responseIndHoliday = indHolidaysService.findById(holiday.getIndHolidays().getId());
+				indHolidays=(IndHolidays)responseIndHoliday.getReturnedObject();
+			}
+			response=validateHolidayActivate(holiday,indHolidays);
+
+			if(!response.isSuccess())
+				{
+				response.setReturnedObject(holiday);
+				return response;
+				}
+			else 
+				{
+				holiday.setIsEnableFlag(1);
+				response.setSuccessMessage("تم تفعيل يوم  العطلة بنجاح");
+				}
+
+		} else {
+			
+			response=validateHolidayDeActivate(holiday);
+			if(!response.isSuccess())
+				{
+				response.setReturnedObject(holiday);
+				return response;
+				}
+			else 
+				{
+				holiday.setIsEnableFlag(0);
+				response.setSuccessMessage( "تم إلغاء تفعيل يوم العطلة بنجاح");
+				}
+
+		}
+
+		holiday.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		response.setReturnedObject(holidaysRep.save(holiday));
+		return response;
+	}
+
+	public boolean checkHolidayIsDeleted(long id) {
+		Holidays holidays = holidaysRep.findById(id).get();
+		if (holidays.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+
+	public boolean checkHolidayIsPassed(long id) {
+		Holidays holidays = holidaysRep.findById(id).get();
+		System.err.println(holidays);
+		// Get the current date
+		Date currentDate = new Date();
+		System.err.println(currentDate);
+		// Compare the given date with the current date
+		if (holidays.getHolidayDate().equals(currentDate) || holidays.getHolidayDate().after(currentDate)) {
+			return true;
+		} else
+			return false;
+	}
+
+	public CResponse validateHolidayDelete(Holidays holidays) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (holidays == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.HOLIDAY_NOT_FOUND.toString());
+					response.setErrorMessage("يوم العطلة غير موجود");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.HOLIDAY.toString(), holidays);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_HOLIDAY, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	public CResponse validateHolidayUpdate(Holidays holidays) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (holidays == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.HOLIDAY_NOT_FOUND.toString());
+					response.setErrorMessage("يوم العطلة غير موجود");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.HOLIDAY.toString(), holidays);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_HOLIDAY, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	public CResponse validateHolidayActivate(Holidays holidays,IndHolidays indHolidays) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (holidays == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.HOLIDAY_NOT_FOUND.toString());
+					response.setErrorMessage("يوم العطلة غير موجود");
+					break;
+				}
+				
+				if (holidays.getIndHolidays()!=null && indHolidays == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.IND_HOLIDAY_NOT_FOUND.toString());
+					response.setErrorMessage("العطلة الثابتة غير موجود");
+					break;
+				}
+				
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.HOLIDAY.toString(), holidays);
+				if (holidays.getIndHolidays()!=null) 
+				parameters.addParameter(EKeyCode.IND_HOLIDAY.toString(), indHolidays);
+				else {
+					parameters.addParameter(EKeyCode.IND_HOLIDAY.toString(), new IndHolidays());
+				}
+				actionValidationResult = actionHandler.validate(CActionConstant.ACTIVATE_HOLIDAY, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	public CResponse validateHolidayDeActivate(Holidays holidays) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (holidays == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.HOLIDAY_NOT_FOUND.toString());
+					response.setErrorMessage("يوم العطلة غير موجود");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.HOLIDAY.toString(), holidays);
+				actionValidationResult = actionHandler.validate(CActionConstant.DEACTIVATE_HOLIDAY, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	
+	public Date removeTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+}

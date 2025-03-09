@@ -1,0 +1,340 @@
+package com.template.Service.Table.Product;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.ClassesForm.*;
+import com.template.Enum.ActionEnum;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.User;
+import com.template.Model.Basic.SystemLog.SystemLog;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Model.Table.Products.AccPeriod;
+import com.template.Model.Table.Products.AccountType;
+import com.template.Model.Table.Products.AccountTypeCurrency;
+import com.template.Model.Table.Tax.Tax;
+import com.template.Repository.Table.Product.AccountTypeCurrencyRepository;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Basic.SystemLog.ModifyLogService;
+import com.template.Service.Basic.SystemLog.SystemLogService;
+import com.template.Service.Table.Tax.TaxService;
+
+@Service
+public class AccountTypeCurrencyService {
+
+	@Autowired
+	AccountTypeCurrencyRepository accountTypeCurrencyRepository;
+	
+	@Autowired
+	AccCurrencyService accCurrencyService;
+	
+	@Autowired
+	AccPeriodService accPeriodService;
+	
+	@Autowired
+	TaxService accTaxService;
+	
+	@Autowired
+	ModifyLogService modifyLogService;
+	
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	CActionHandler actionHandler;
+	
+	@Autowired
+	SystemLogService systemLogService;
+	
+	@Autowired
+	ActionService actionService;
+
+	public AccountTypeCurrency save(AccountTypeCurrency accountTypeCurrency) {
+		if (accountTypeCurrency.getId() == null) {
+			accountTypeCurrency.setInsertBy(0);
+		} else if (accountTypeCurrency.getId() != null) {
+			AccountTypeCurrency temCompany = accountTypeCurrencyRepository.findById(accountTypeCurrency.getId()).get();
+			accountTypeCurrency.setInsertDate(temCompany.getInsertDate());
+			
+		}
+		accountTypeCurrencyRepository.save(accountTypeCurrency);
+		return accountTypeCurrency;
+	}
+
+	public void update(AccountTypeCurrency accountTypeCurrency) {
+		accountTypeCurrencyRepository.save(accountTypeCurrency);
+	}
+
+	public CResponse getAll() {
+		CResponse response = new CResponse();
+		response.setReturnedObject(accountTypeCurrencyRepository.getAll());
+		return response;
+	}
+
+	public List<AccountTypeCurrency> getAllDeleted() {
+		List<AccountTypeCurrency> allDeleted = accountTypeCurrencyRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public CResponse getAllAccountTypeCurrency(Long id) {
+
+		CResponse response = new CResponse();
+		response.setReturnedObject(accountTypeCurrencyRepository.getAllAccountTypeCurrency(id));
+	
+		return response;
+	}
+
+	public AccountTypeCurrency delete(Long id) {
+		AccountTypeCurrency accountTypeCurrency = accountTypeCurrencyRepository.findById(id).get();
+		if (accountTypeCurrency == null) {
+			throw new NoDataFoundException("accountTypeCurrency With ID : " + id + " Not Found");
+		}
+		accountTypeCurrency.setIsDeleted(1);
+		return accountTypeCurrencyRepository.save(accountTypeCurrency);
+	}
+	
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(accountTypeCurrencyRepository.findById(id).get());
+		return response;
+	}
+	
+
+	public CResponse saveAllToAccountType( AccountTypeForm accountTypeForm,
+			AccountType accountType, String path) throws Exception {
+		
+		CResponse response = null;
+		AccCurrency currency = null;
+		AccPeriod feesPeriodId = null;
+		Tax tax = null;
+		
+		List<AccountTypeCurrency> listToSaveAccountTypeCurr = new ArrayList<>();
+		response = getAllAccountTypeCurrency(accountTypeForm.getAccountType().getId());
+		
+		List<AccountTypeCurrency> accountTypeCurrenciesExistBefor =  (List<AccountTypeCurrency>) response.getReturnedObject();
+		
+		for (int i = 0; i < accountTypeForm.getAccountTypeCurrencies().size(); i++) {
+			
+			//If it is  =  null , it must be added(Save for the first time)
+			if (accountTypeForm.getAccountTypeCurrencies().get(i).getCurrencyId() != null ) {
+				
+				//validate currency is not deleted will not add to the list
+				currency = accCurrencyService.findById(accountTypeForm.getAccountTypeCurrencies().get(i).getCurrencyId().getId());
+				
+				//get tax from database
+				if(accountTypeForm.getAccountTypeCurrencies().get(i).getTaxId() != null) {
+					response = accTaxService.findTaxById(accountTypeForm.getAccountTypeCurrencies().get(i).getTaxId().getID());
+					tax = (Tax) response.getReturnedObject();
+				}
+				//get period from database
+				if(accountTypeForm.getAccountTypeCurrencies().get(i).getFeesPeriodId() != null) {
+					response = accPeriodService.findById(accountTypeForm.getAccountTypeCurrencies().get(i).getFeesPeriodId().getId());
+					feesPeriodId = (AccPeriod) response.getReturnedObject();
+				}
+				if(accountTypeForm.getAccountTypeCurrencies().get(i).getId() == null) {
+					
+					response = validateAccountTyupeCurrencyCreate(accountType ,currency,feesPeriodId,tax);
+					
+					accountTypeForm.getAccountTypeCurrencies().get(i).setInsertBy(userService.getAuthenticatedUser().getID());
+					accountTypeForm.getAccountTypeCurrencies().get(i).setIsDeleted(0);
+					accountTypeForm.getAccountTypeCurrencies().get(i).setInsertDate(new Date());
+					accountTypeForm.getAccountTypeCurrencies().get(i).setAccountTypeId(accountType);
+					//System.err.println("create: "+accountTypeForm.getAccountTypeCurrencies().get(i));
+					listToSaveAccountTypeCurr.add(accountTypeForm.getAccountTypeCurrencies().get(i));
+					if(response.isSuccess()) {
+//						CResponse response1 = actionService.findActionByNameB(ActionEnum.create_account_type_currency.toString());
+//						Action action =  (Action) response1.getReturnedObject();
+//						User user =  userService.getAuthenticatedUser();
+//						systemLogService.save(action, user);
+					}
+				}
+				
+				
+				else if(accountTypeForm.getAccountTypeCurrencies().get(i).getId() != null) {
+					response = validateAccountTyupeCurrencyUpdate(accountType,accountTypeForm.getAccountTypeCurrencies().get(i) ,currency,feesPeriodId,tax,path);
+					accountTypeForm.getAccountTypeCurrencies().get(i).setLastUpdateBy(userService.getAuthenticatedUser().getID());
+					AccountTypeCurrency temCompany = accountTypeCurrencyRepository.findById(accountTypeForm.getAccountTypeCurrencies().get(i).getId()).get();
+					accountTypeForm.getAccountTypeCurrencies().get(i).setInsertBy(temCompany.getInsertBy());
+					accountTypeForm.getAccountTypeCurrencies().get(i).setInsertDate(temCompany.getInsertDate());
+					accountTypeForm.getAccountTypeCurrencies().get(i).setIsDeleted(temCompany.getIsDeleted());
+					accountTypeForm.getAccountTypeCurrencies().get(i).setAccountTypeId(accountType);
+					//System.err.println("edit curr: " + accountTypeForm.getAccountTypeCurrencies().get(i).getCurrencyNameA());
+					listToSaveAccountTypeCurr.add(accountTypeForm.getAccountTypeCurrencies().get(i));
+					if(response.isSuccess()) {
+//						CResponse response1 = actionService.findActionByNameB(ActionEnum.edit_account_type_currency.toString());
+//						Action action =  (Action) response1.getReturnedObject();
+//						User user =  userService.getAuthenticatedUser();
+//						systemLogService.save(action, user);
+					}
+				}
+				
+			}
+		}
+		
+		if (!response.isSuccess()) {
+			response.setSuccess(false);
+			response.setErrorMessage(response.getErrorMessage()+" ");
+		}
+
+		boolean check = true;
+		for (int i = 0; i < accountTypeCurrenciesExistBefor.size(); i++) {
+			check = true;
+			// if check =true ,must be deleted
+			for (int j = 0; j < accountTypeForm.getAccountTypeCurrencies().size(); j++) {
+				if (accountTypeCurrenciesExistBefor.get(i).getId() == accountTypeForm.getAccountTypeCurrencies().get(j).getId()) {
+					check = false;
+					break;
+				}
+
+			}
+
+			if (check == true) {
+				
+				response =  findById(accountTypeCurrenciesExistBefor.get(i).getId());
+				AccountTypeCurrency accountTypeCurr = (AccountTypeCurrency) response.getReturnedObject();
+				accountTypeCurr.setIsDeleted(1);
+				accountTypeCurr.setDeletedDate(new Date());
+				//System.err.println("deleted: " + accountTypeCurr);
+				listToSaveAccountTypeCurr.add(accountTypeCurr);
+				if(response.isSuccess()) {
+//					CResponse response1 = actionService.findActionByNameB(ActionEnum.delete_account_type_currency.toString());
+//					Action action =  (Action) response1.getReturnedObject();
+//					User user =  userService.getAuthenticatedUser();
+//					systemLogService.save(action, user);
+				}
+
+			}
+
+		}
+		//insert system log
+//	    CResponse response1 = actionService.findActionByNameB(ActionEnum.create_account_type_currency.toString());
+//		Action action =  (Action) response1.getReturnedObject();
+//		User user =  userService.getAuthenticatedUser();
+//		SystemLog sys = systemLogService.save(action, user);
+//		modifyLogService.save(accountTypeCurrenciesExistBefor,accountTypeForm.getAccountTypeCurrencies(),sys);
+		accountTypeCurrencyRepository.saveAll(listToSaveAccountTypeCurr);
+		return response;
+	}
+
+	private CResponse validateAccountTyupeCurrencyUpdate(AccountType accountType ,AccountTypeCurrency  accountTypeCurrency, AccCurrency currency,
+			AccPeriod feesPeriodId, Tax tax, String path) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				
+				parameters = new CActionValidationParameters();
+				
+				if (accountType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_IS_NOT_FOUND.toString());
+					response.setErrorMessage("المنتج غير موجود");
+					break;
+				}
+				
+				if (accountTypeCurrency == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_CURRENCY_NOT_FOUND.toString());
+					response.setErrorMessage(" المنتج غير موجود");
+					break;
+				}
+				
+				if (currency == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_NOT_FOUND.toString());
+					response.setErrorMessage("العملة غير موجودة");
+					break;
+				}
+				
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE.toString(), accountType);
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE_CURRENCY.toString(), accountTypeCurrency);
+				parameters.addParameter(EKeyCode.CURRENCY.toString(), currency);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				if(feesPeriodId != null)
+					parameters.addParameter(EKeyCode.PERIOD.toString(), feesPeriodId);
+				
+				if(tax != null)
+					parameters.addParameter(EKeyCode.TAX.toString(), tax);
+				
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_ACCOUNT_TYPE_CURRENCY, parameters);
+				
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+
+	private CResponse validateAccountTyupeCurrencyCreate(AccountType accountType, AccCurrency currency, AccPeriod feesPeriodId, Tax tax) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				
+				parameters = new CActionValidationParameters();
+				if (accountType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_IS_NOT_FOUND.toString());
+					response.setErrorMessage("المنتج غير موجود");
+					break;
+				}
+				
+				if (currency == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_NOT_FOUND.toString());
+					response.setErrorMessage("العملة غير موجودة");
+					break;
+				}
+				
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE.toString(), accountType);
+				parameters.addParameter(EKeyCode.CURRENCY.toString(), currency);
+				if(feesPeriodId != null)
+					parameters.addParameter(EKeyCode.PERIOD.toString(), feesPeriodId);
+				
+				if(tax != null)
+					parameters.addParameter(EKeyCode.TAX.toString(), tax);
+				
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_ACCOUNT_TYPE_CURRENCY, parameters);
+				System.err.println("RRRRRRRRRRRR");
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		
+		return response;
+	}
+	
+	public boolean checkAccountTypeCurrencyIsDeleted(Long id) {
+		AccountTypeCurrency accountTypeCurrency = accountTypeCurrencyRepository.findById(id).get();
+		if(accountTypeCurrency.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+}

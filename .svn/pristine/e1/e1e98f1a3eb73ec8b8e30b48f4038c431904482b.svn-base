@@ -1,0 +1,51 @@
+package com.template.BusinessRule.Commission;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Commission.Commission;
+import com.template.Service.Table.Commission.*;
+
+
+@Component(CBusinessRuleConstant.COMMISSION_IS_NOT_EXIST)
+@Lazy
+public class CBRCommissionIsNotExist implements IBusinessRule {
+	
+	@Autowired
+	CommissionService commissionService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		Commission commission = null;
+		String path = null;
+		Long id=null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				commission = (Commission) parameters.getParameter(EKeyCode.COMMISSION.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				id = commissionService.checkCommissionIsNotExist(commission);
+				if (id != null) {
+						String messageString = "<div style='margin-bottom: 12px'>" + commission.getNameA()+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"+ "</div> <a class='alert-url' href='" +path + "/commission/create?id="
+						+ id + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage(messageString);
+						actionValidationResult.setErrorCode(EErrorCode.COMMISSION_IS_EXISTS.toString());
+					
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

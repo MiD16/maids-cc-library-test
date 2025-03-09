@@ -1,0 +1,205 @@
+package com.template.Service.Table.AllIndexes;
+
+
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndCity;
+import com.template.Model.Table.AllIndexes.IndCountry;
+import com.template.Repository.Table.AllIndexes.IndCityRepository;
+
+@Service
+public class IndCityServices {
+	
+	
+	
+	
+
+
+@Autowired CActionHandler actionHandler;
+
+@Autowired
+IndCityRepository indCityRepository;
+
+
+	public CResponse createIndCity(IndCity indCity) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.Ind_City.toString(), indCity);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_Ind_City, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indCity.setInsertBy(0);
+			indCity.setIsDeleted(0);
+			indCity.setInsertDate(new Date());
+			indCityRepository.save(indCity);
+			
+			response.setReturnedObject(indCity);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+	public IndCity updateIndCity (IndCity indCity) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(indCity.getId() == null) 
+		{
+			
+			indCity.setInsertBy(0);
+		}
+		
+		
+		
+		else if(indCity.getId() != null)
+		{
+			IndCity temSocialStatus = indCityRepository.findById(indCity.getId()).get();
+			indCity.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indCityRepository.save(indCity);
+		return indCity;
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public IndCity findByNames(String nameA, String nameB) {
+		return indCityRepository.findByNames(nameA, nameB);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public IndCity save(IndCity indCity) {
+		if(indCity.getId() == null) {
+			indCity.setInsertBy(0);
+		}
+	else if(indCity.getId() != null){
+			IndCity temCity = indCityRepository.findById(indCity.getId()).get();
+			indCity.setInsertDate(temCity.getInsertDate());
+		}
+		indCityRepository.save(indCity);
+		return indCity;
+	}
+	
+	public void update(IndCity indCity) {
+		indCityRepository.save(indCity);
+	}
+	
+	public IndCity findById(Long id) {
+		return indCityRepository.getById(id);
+	}
+	
+	public List<IndCity> getAll(){
+		List<IndCity> all = indCityRepository.getAll();
+		return all;
+	}
+	
+	public List<IndCity> getAllDeleted(){
+		List<IndCity> allDeleted = indCityRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndCity delete(Long id) {
+		IndCity indCity = indCityRepository.findById(id).get();
+		if (indCity == null) {
+			throw new NoDataFoundException("indCity With ID : " + id + " Not Found");
+		}
+		indCity.setIsDeleted(1);
+		return indCityRepository.save(indCity);
+	}
+
+}

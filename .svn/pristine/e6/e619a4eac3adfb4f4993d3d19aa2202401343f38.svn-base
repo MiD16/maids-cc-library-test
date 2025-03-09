@@ -1,0 +1,96 @@
+package com.template.Model.Basic;
+
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.LastModifiedDate;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Table.AllIndexes.IndCatigoryModule;
+import com.template.Model.Table.AllIndexes.IndCreditDebitCatigory;
+import com.template.Model.Table.Products.AccPeriod;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+@Entity
+@Table(name = "Action")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Action {
+
+	@Id
+	@Column(name="ID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int ID;
+	
+	@Column(name = "action_name_en")
+	private String action_name_en ;
+	
+	@Column(name = "action_name_ar")
+	private String action_name_ar ;
+	
+	@Column(name = "description")
+	private String description;
+	
+	@Column(name = "SUBPOENA_REQ_FLAG")
+	private Integer subpoenaReqFlag;
+	
+	@Column(name = "IS_TRANSACTION_FLAG")
+	private Integer isTransactionFlag;
+	
+	@ManyToOne
+	@JoinColumn(name="CATEGORY_MODULE_ID")
+	private IndCatigoryModule indCatigoryModule;
+	
+	@ManyToOne
+	@JoinColumn(name="IND_CREDIT_DEBIT_ID")
+	private IndCreditDebitCatigory indCreditDebitCatigory;
+
+
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@LastModifiedDate
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	
+	@ManyToOne
+	@JoinColumn(name="PERIOD")
+	private AccPeriod period;
+	
+	
+	@Column(name="AFTER_FLAG")
+	private Integer afterflag;
+	
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	  }
+
+	/*
+	 * @OneToMany(mappedBy="action") private List<ActionCode> actionCommissions;
+	 */
+}

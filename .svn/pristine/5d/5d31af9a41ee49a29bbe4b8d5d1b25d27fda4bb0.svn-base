@@ -1,0 +1,21 @@
+package com.template.Action.InterestRateSegments;
+import javax.annotation.PostConstruct;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.UPDATE_INTEREST_RATE_SEGMENT)
+@Lazy
+public class CAInterestRateSegmentUpdate extends CAction {
+	public CAInterestRateSegmentUpdate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.INTEREST_RATE_SEGMENT_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.INTEREST_RATE_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.CURRENCY_SEGMENT_IS_NOT_DELETED);
+	}
+}

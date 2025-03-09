@@ -1,0 +1,82 @@
+package com.template.Service.Basic.SystemLog;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.template.Model.Basic.SystemLog.Commandar;
+import com.template.Model.Basic.SystemLog.ModifyLog;
+import com.template.Model.Basic.SystemLog.SystemLog;
+import com.template.Repository.Basic.SystemLog.CommandarRepository;
+import com.template.Service.Basic.UserService;
+
+@Service
+public class CommandarService {
+
+	@Autowired
+	UserService userService;
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	SystemLogService systemLogService;
+
+	@Autowired
+	CommandarRepository commandarRepository;
+
+	@Autowired
+	ModifyLogService modifyLogService;
+
+	// create SystemLog
+	public CResponse save(List<Commandar> commandar) throws Exception {
+		CResponse response = new CResponse();
+		List<Commandar> listSave = new ArrayList<Commandar>();
+		// call validate for create object
+		// response = validateInterestCreate(systemLog);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+
+		response = systemLogService.findById((long) 42);
+		SystemLog systemLog = (SystemLog) response.getReturnedObject();
+		for (int i = 0; i < commandar.size(); i++)
+			if (commandar.get(i).getId() == null) {
+				commandar.get(i).setSystemLogId(systemLog);
+				commandar.get(i).setInsertDate(new Date());
+				commandar.get(i).setInsertBy(userService.getAuthenticatedUser());
+				listSave.add(commandar.get(i));
+			}		
+		
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		commandarRepository.saveAll(listSave);
+		return response;
+	}
+
+	// find all not deleted
+	public CResponse getAllCommandar(PageRequest pageRequest) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(commandarRepository.getAll(pageRequest));
+		return response;
+	}
+
+	// get object by id
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(commandarRepository.findById(id).get());
+		return response;
+	}
+
+	public CResponse findBySystemLogId(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(commandarRepository.getCommandarBySystemLogId(id));
+		return response;
+	}
+}

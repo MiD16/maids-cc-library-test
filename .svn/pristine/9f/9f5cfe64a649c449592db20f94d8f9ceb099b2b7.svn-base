@@ -1,0 +1,22 @@
+package com.template.Repository.Basic.SystemLog;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.SystemLog.Commandar;
+import com.template.Model.Basic.SystemLog.SystemLogExtention;
+
+@Repository
+public interface SystemLogExtentionRepository extends JpaRepository<SystemLogExtention,Long>{
+	
+	@Query("Select a From SystemLogExtention a order by a.id desc")
+	public Page<SystemLogExtention> getAll(PageRequest pageRequest);
+	@Query("Select a From SystemLogExtention a where a.systemLogId.id=:id ")
+	public List<SystemLogExtention> getSystemLogExtentionBySystemLogId( @Param("id") Long id);
+}

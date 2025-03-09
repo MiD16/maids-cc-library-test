@@ -1,0 +1,66 @@
+package com.template.Model.Basic.SystemLog;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.AllIndexes.IndKey;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name="SYSTEM_LOG_EXTENTION")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@ToString
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class SystemLogExtention {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@ManyToOne
+	@JoinColumn(name="SYSTEM_LOG_ID")
+	private SystemLog systemLogId;
+	
+	@ManyToOne
+	@JoinColumn(name="IND_KEY_ID")
+	private IndKey indKeyId;
+	
+	@Column(name = "KEY_VALUE")
+	private String value;//?
+
+	@ManyToOne
+	@JoinColumn(name="INSERT_BY")
+	private User insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "INSERT_DATE")
+	private Date insertDate;
+
+	@PrePersist
+	void createdAt() {
+		this.insertDate = new Date();
+	}
+
+}

@@ -1,0 +1,51 @@
+package com.template.BusinessRule.IndHoliday;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+import com.template.Service.Table.SubpoenaRequest.SubpoenaRequestDetailsService;
+
+@Component(CBusinessRuleConstant.IND_HOLIDAY_IS_NOT_EXIST)
+@Lazy
+public class CBRIndHolidayIsNotExist implements IBusinessRule {
+	@Autowired
+	IndHolidaysService indHolidaysService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		IndHolidays indHolidays = null;
+		String path = null;
+		Long id=null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				indHolidays = (IndHolidays) parameters.getParameter(EKeyCode.IND_HOLIDAY.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				id=indHolidaysService.checkIndHolidayIsExist(indHolidays);
+				if (id != null) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indHolidays.getNameA()+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ id + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage(messageString);
+						actionValidationResult.setErrorCode(EErrorCode.IND_HOLIDAY_IS_EXISTS.toString());
+					
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

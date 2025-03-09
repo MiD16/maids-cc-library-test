@@ -1,0 +1,57 @@
+package com.template.Service.Table.AllIndexes;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.AllIndexes.IndCatigoryModule;
+import com.template.Repository.Table.AllIndexes.IndCatigoryModuleRepository;
+
+
+@Service
+public class IndCatigoryModuleService  {
+
+//	@Autowired
+//	public LogService logActionService;
+	@Autowired
+	private IndCatigoryModuleRepository indCatigoryModuleRepository;
+	
+	public List<IndCatigoryModule> findAll() {
+		List<IndCatigoryModule> indCatigoryModules = indCatigoryModuleRepository.getAll();
+		return indCatigoryModules;
+	}
+	
+	
+	public IndCatigoryModule findById(Long id) {
+		Optional<IndCatigoryModule> inOptional = indCatigoryModuleRepository.findById(id);
+		if(inOptional.isEmpty())
+			throw new NoDataFoundException("No Indix Catigory Module with ID : "+id);
+		return inOptional.get();
+	}
+	public IndCatigoryModule save(IndCatigoryModule indCatigoryModule) {
+		return indCatigoryModuleRepository.save(indCatigoryModule);
+	}
+	
+	public IndCatigoryModule delete(Long id) {
+		Optional<IndCatigoryModule> indOptional=indCatigoryModuleRepository.findById(id);
+		if(indOptional.isEmpty())
+		{
+			throw new NoDataFoundException("Indix Catigory ModuleWith ID : " + id + " Not Found");
+		}
+		
+		indOptional.get().setIsDeleted(1);;
+		return indCatigoryModuleRepository.save(indOptional.get());
+	}
+	public boolean checkIndCatigoryModuleIsDeleted(long id) {
+		IndCatigoryModule indCatigoryModule= indCatigoryModuleRepository.findById(id).get();
+		if (indCatigoryModule.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	
+	}

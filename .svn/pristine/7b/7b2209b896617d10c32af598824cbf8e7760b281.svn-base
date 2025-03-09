@@ -1,0 +1,200 @@
+package com.template.Service.Table.ElectricOperation;
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.ElectronicOperation.ATM;
+import com.template.Model.Table.ElectronicOperation.POS;
+import com.template.Repository.Table.ElectronicOperation.ATMRepository;
+import com.template.Repository.Table.ElectronicOperation.POSRepository;
+import com.template.Service.Basic.UserService;
+
+public class POSService{
+	@Autowired
+
+	POSRepository pOSRepository;
+@Autowired
+CActionHandler actionHandler;
+@Autowired
+UserService userService;
+
+
+
+
+
+public Long checkPOSIsExist(POS pos) {
+	POS posByCode= pOSRepository.findByCode(pos.getPosCode());
+	if (posByCode!= null) {
+		if (pos.getId() == null
+				|| (pos.getId() != null && !pos.getId().equals(posByCode.getId()) )) {
+			return posByCode.getId();
+		}
+	}
+	return null;
+}
+
+
+//create POS
+	public CResponse saveCreate(POS pos, String path) throws Exception {
+		CResponse response = null;
+		
+		// call validate for create object
+		response = validatePOSCreate(pos, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		pos.setInsertBy(userService.getAuthenticatedUser().getID());
+		pOSRepository.save(pos);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+
+	public CResponse validatePOSCreate(POS pos, String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The interest exists
+				if (pos == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.POS_NOT_FOUND.toString());
+					response.setErrorMessage("الصراف غير موجودة");
+					break;
+				}
+				
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.POS.toString(), pos);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_POS, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	//update POS
+	public CResponse saveUpdate(POS pos, String path) throws Exception {
+		CResponse response = null;
+	
+		// call validate for update object
+		response = validateInterestUpdate(pos, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//to get insert date from object in database
+		POS tem = pOSRepository.findById(pos.getId()).get();
+		pos.setInsertDate(tem.getInsertDate());
+		pos.setInsertBy(tem.getInsertBy());
+		//set user that updated 
+		pos.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		pOSRepository.save(pos);
+		response.setSuccessMessage("تم التعديل بنجاح");
+		return response;
+	}
+	
+	
+	// validate if can update POS
+	public CResponse validateInterestUpdate(POS pos, String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+
+				// check if The interest exists
+				if (pos == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.POS_NOT_FOUND.toString());
+					response.setErrorMessage("االصراف غير موجودة");
+					break;
+				}
+				
+			
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.ATM.toString(), pos);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_ATM, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	
+	//delete POS
+	public CResponse delete(Long id) throws Exception {
+		POS pos = pOSRepository.findById(id).get();
+		CResponse response=null;
+		// call validate for delete object
+		response = validateInterestDelete(pos);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//soft delete
+		pos.setIsDeleted(1);
+		//set deleted date
+		pos.setDeletedDate(new Date());
+		//set user that deleted 
+		pos.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(pOSRepository.save(pos));
+		return response;
+	}
+	
+	
+	// validate if can delete POS
+	public CResponse validateInterestDelete(POS pos)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The POS exists
+				if (pos == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.POS_NOT_FOUND.toString());
+					response.setErrorMessage("الفائدة غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.POS.toString(), pos);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_POS, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+}	
+	
+	

@@ -1,0 +1,9 @@
+package com.template.Enum;
+
+public enum ActionEnum {
+	customer_dormant,customer_undormant,customer_unsuspend,customer_suspend,customer_unpending,customer_pending,
+	create_account_type, edit_account_type, active_account_type,
+	deactive_account_type, search_account_type, create_account_type_currency, create_account_type_nature, delete_account_type_currency,
+	edit_account_type_currency, delete_account_type_nature, faield_deactive_account_type, update_tax, update_account_type, update_user, change_password;
+
+}

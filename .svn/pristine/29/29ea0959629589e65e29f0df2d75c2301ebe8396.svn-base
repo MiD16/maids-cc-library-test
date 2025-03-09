@@ -1,0 +1,51 @@
+package com.template.BusinessRule.DateUnit;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndDateUnit;
+import com.template.Model.Table.AllIndexes.IndSubpoenaRequest;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Service.Table.AllIndexes.AccIndDateUnitService;
+import com.template.Service.Table.AllIndexes.IndSubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.Product.AccCurrencyService;
+
+@Component(CBusinessRuleConstant.IND_DATE_UNIT_IS_NOT_DELETED)
+@Lazy
+public class CBRDateUnitIsNotDeleted implements IBusinessRule {
+
+	@Autowired
+	AccIndDateUnitService dateUnitService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccIndDateUnit dateUnit = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				dateUnit = (AccIndDateUnit) parameters.getParameter(EKeyCode.Acc_Ind_Date_Unit.toString());
+				if (dateUnitService.checkDateUnitIsDeleted(dateUnit.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("وحدة التاريخ "+dateUnit.getNameA()+"/"+dateUnit.getNameB()+ " محذوفة ");
+					actionValidationResult.setErrorCode(EErrorCode.Acc_Ind_Date_Unit_IS_DELETED.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

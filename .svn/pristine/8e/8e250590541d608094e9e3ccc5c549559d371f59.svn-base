@@ -1,0 +1,28 @@
+package com.template.Action.IndCity;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.CREATE_Ind_City)
+@Lazy
+
+
+public class CAIndCityCreate extends CAction 
+{
+	public CAIndCityCreate(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		//addBusinessnRule(CBusinessRuleConstant.IND_SOCIAL_STATUS_IS_VALID);
+		addBusinessnRule(CBusinessRuleConstant.Ind_City_IS_NOT_EXIST);
+	}}

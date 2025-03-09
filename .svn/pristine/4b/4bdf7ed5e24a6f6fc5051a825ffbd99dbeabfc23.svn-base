@@ -1,0 +1,239 @@
+package com.template.Service.Basic;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import java.sql.Types;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.Commission.ActionClass;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.Action;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Repository.Basic.ActionsRep;
+
+@Service
+public class ActionService {
+
+
+	@Autowired
+	private ActionsRep actionsRep;
+	@Autowired
+	public UserService userService;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	CActionHandler actionHandler;
+
+	public CResponse findAll() {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(actionsRep.findAll());
+		return response;
+
+	}
+
+	public CResponse findAllAsPage(PageRequest pageRequest) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(actionsRep.findAllpage(pageRequest));
+
+		return response;
+
+	}
+
+	public CResponse findActionById(int id) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(actionsRep.findActionById(id));
+
+		return response;
+
+	}
+
+	public CResponse findActionByNameA(String nameA) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(actionsRep.findActionByNameA(nameA));
+
+		return response;
+
+	}
+	
+	public CResponse findActionByNameB(String nameB) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(actionsRep.findActionByNameB(nameB));
+
+		return response;
+
+	}
+
+	
+	public CResponse updateAction(Action action) throws Exception {
+		CResponse response = null;
+		response = new CResponse();
+		response=ValidateupdateAction(action);
+		if (!response.isSuccess()) {
+			return response;
+		}
+		action.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		action.setLastUpdateDate(new Date());
+		actionsRep.save(action);
+		response.setSuccessMessage("تم تعديل بيانات الصلاحية بنجاح");
+		return response;
+	}
+	public CResponse updateOperation(Action action) throws Exception {
+		CResponse response = null;
+		response = new CResponse();
+		
+		response=ValidateupdateOperation(action);
+		if (!response.isSuccess()) {
+			return response;
+		}
+		action.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		action.setLastUpdateDate(new Date());
+		actionsRep.save(action);
+		response.setSuccessMessage("تم تعديل بيانات العملية بنجاح");
+		return response;
+	}
+	public CResponse ValidateupdateAction(Action action) throws Exception {
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		try {
+			do {
+				response = new CResponse();
+				
+				if (action == null) {
+					response.setSuccess(false);
+					response.setErrorMessage("Null Object");
+					response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+					break;
+				}
+
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.ACTION.toString(), action);
+				
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_ACTION,actionValidationParameters);
+
+				if (!actionValidationResult.isValid()) {
+
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+
+			
+			}
+
+			while (false);
+
+		} catch (Exception e) {
+
+			throw e;
+		}
+		return response;
+	}
+	public CResponse ValidateupdateOperation(Action action) throws Exception {
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		try {
+			do {
+				response = new CResponse();
+				
+				if (action == null) {
+					response.setSuccess(false);
+					response.setErrorMessage("Null Object");
+					response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+					break;
+				}
+
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.ACTION.toString(), action);
+				actionValidationParameters.addParameter(EKeyCode.IND_CREDIT_DEBIT_CATIGORY.toString(), action.getIndCreditDebitCatigory());
+				actionValidationParameters.addParameter(EKeyCode.IND_CATEGORY_MODULE.toString(), action.getIndCatigoryModule());
+				actionValidationParameters.addParameter(EKeyCode.ACC_PERIOD.toString(), action.getPeriod());
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_OPERATION,actionValidationParameters);
+
+				if (!actionValidationResult.isValid()) {
+
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+
+			
+			}
+
+			while (false);
+
+		} catch (Exception e) {
+
+			throw e;
+		}
+		return response;
+	}
+	
+	public CResponse searchAction(ActionClass action) {
+		CResponse response = null;
+		Map<String, Object> result=null;
+		List<Action> actions=null;
+		response = new CResponse();
+
+		SqlParameterSource parameters = new MapSqlParameterSource()
+				.addValue("I_ACTION_NAME_AR", action.getAction_name_ar())
+				.addValue("I_ACTION_NAME_EN", action.getAction_name_en()).addValue("I_CODE", action.getCode())
+				.addValue("I_IND_CREDIT_DEBIT_ID", action.getIndCreditDebitCatigory())
+				.addValue("I_CATEGORY_MODULE_ID", action.getIndCatigoryModule())
+				.addValue("I_SUBPOENA_REQ_FLAG", action.getSubpoenaReqFlag())
+				.addValue("I_IS_TRANSACTION_FLAG", action.getIsTransactionFlag());
+
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("SEARCH_ACTION").declareParameters(
+				new SqlParameter("I_ACTION_NAME_AR", Types.VARCHAR),
+				new SqlParameter("I_ACTION_NAME_EN", Types.VARCHAR), new SqlParameter("I_CODE", Types.VARCHAR),
+				new SqlParameter("I_IND_CREDIT_DEBIT_ID", Types.INTEGER),
+				new SqlParameter("I_CATEGORY_MODULE_ID", Types.INTEGER),
+				new SqlParameter("I_SUBPOENA_REQ_FLAG", Types.INTEGER),
+				new SqlParameter("I_IS_TRANSACTION_FLAG", Types.INTEGER));
+
+	    result = call.execute(parameters);
+	    actions = (List<Action>) result.get("return");
+		response.setReturnedObject(actions);
+		return response;
+	}
+	public boolean checkActionIsExist(Action action ) {
+		Action actionByaction_name_ar=null;
+		CResponse	response = new CResponse();
+		response = findActionByNameA(action.getAction_name_ar());
+		actionByaction_name_ar = (Action) response.getReturnedObject();
+		
+		if (actionByaction_name_ar != null
+				&& (action.getID() == 0 || actionByaction_name_ar.getID() != action.getID())) {
+		return true;
+		}
+	
+		return false;
+	}
+
+}

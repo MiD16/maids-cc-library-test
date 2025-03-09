@@ -1,0 +1,20 @@
+package com.template.Repository.View;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.View.RoleActionOpposite;
+import com.template.Model.View.UserRoleOpposite;
+@Repository
+public interface UserRoleOppositeRep  extends JpaRepository<UserRoleOpposite,Integer>{
+	
+	@Query("Select a from UserRoleOpposite a where a.user_id=:id")
+	public List<UserRoleOpposite> getRoleByUserID(@Param("id") int id);
+
+
+	
+}

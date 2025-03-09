@@ -1,0 +1,70 @@
+package com.template.BusinessRule.User;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.User;
+import com.template.Service.Basic.UserService;
+
+@Component(CBusinessRuleConstant.USER_IS_VALIDATE_PASSWORD)
+@Lazy
+public class CBRUserIsValidatePassword implements IBusinessRule {
+
+	@Autowired UserService userService;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	public CActionValidationResult validate(CActionValidationParameters parameters)
+	{
+		CActionValidationResult actionValidationResult = null;
+		User user = null;
+		
+		String oldPassword=null;
+		String newPassword=null;
+		String confirmPassword=null;
+		
+		try
+		{
+			do
+			{
+				actionValidationResult = new CActionValidationResult();
+
+				user = (User)parameters.getParameter(EKeyCode.USER.toString());
+				oldPassword =(String)parameters.getParameter(EKeyCode.OLDPASSWORD.toString());
+				newPassword =(String)parameters.getParameter(EKeyCode.NEWPASSWORD.toString());
+				confirmPassword =(String)parameters.getParameter(EKeyCode.CONFIRMPASSWORD.toString());
+			
+				if (!passwordEncoder.matches(oldPassword, user.getPassword()))
+				{
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("كلمة المرور  القديمة غير صحيحة");
+					break;
+				}
+				if (!newPassword.equals(confirmPassword))
+				{
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("كلمة المرور  الجديدة وتأكيدها  غير متطابقتين ");
+					break;
+				}
+				if (passwordEncoder.matches(newPassword, user.getPassword())) 
+				{
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("كلمة المرور  الجديدة مطابقة لكلمة المرور القديمة");
+					break;
+				}
+			
+			}
+			while(false);
+		}
+		catch(Exception e) {throw new RuntimeException(e.getMessage());}
+		
+		return actionValidationResult;
+	}
+	
+}

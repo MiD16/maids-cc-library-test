@@ -1,0 +1,72 @@
+package com.template.Model.Table.AllIndexes;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Date;
+import java.util.List;
+
+
+/**
+ * The persistent class for the IND_SECTOR_TYPE database table.
+ * 
+ */
+@Entity
+@Table(name="IND_SECTOR_TYPE")
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class IndSectorType  {
+
+	@Id
+	private Long id;
+
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+
+	@Column(name="IS_DELETED")
+	private Integer isDeleted;
+
+	@Column(name="IS_ENABLED_FLAG")
+	private Integer isEnabledFlag;
+
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+
+	@Column(name="NAME_A")
+	private String nameA;
+
+	@Column(name="NAME_B")
+	private String nameB;
+
+	private String note;
+
+	@OneToMany
+	List<IndEconmicActivity> indEconmicActivity;
+	
+	
+
+}

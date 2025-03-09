@@ -1,0 +1,75 @@
+//package com.template.Service.Basic;
+//import java.sql.Date;
+//import java.time.ZoneId;
+//import java.util.List;
+//import java.time.LocalDateTime;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.stereotype.Service;
+//import com.template.Repository.Basic.ActionsRep;
+//import com.template.Class.UserInformation;
+//import com.template.Repository.Basic.UsersRep;
+//import com.template.Repository.Basic.SystemLog.ExceptionLogActionRep;
+//import com.template.Model.Basic.LogAction;
+//import com.template.Model.Basic.User;
+//import com.template.Model.Basic.SystemLog.ExceptionLogAction;
+//import com.template.Repository.Basic.LogActionRep;
+//@Service
+//public class LogService {
+//
+//	@Autowired
+//	private LogActionRep logActionRep;
+//	@Autowired
+//	private ExceptionLogActionRep exceptionLogActionRep;
+//	@Autowired
+//	private UsersRep userRep;
+//	@Autowired
+//	private ActionsRep actionsRep;
+//
+//	public void addLogAction(String action, String param) {
+//		
+////		Authentication auth = null;
+////		LogAction a = null;
+////		auth = SecurityContextHolder.getContext().getAuthentication();
+////		Action actionobj = actionsRep.getActionByname(action);
+////		if (actionobj == null)
+////			throw new NoDataFoundException("Action With name : " + action + " Not Found");
+////	
+////
+////		if (!auth.getPrincipal().toString().equals("anonymousUser")) {
+////
+////			a = new LogAction(userRep.findById(((UserInformation) auth.getPrincipal()).getUser_id()).get(),
+////			
+////					Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()), actionobj, param);
+////			
+////		} else
+////			a = new LogAction(userRep.findByusername("visitor"), Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()),
+////					actionobj, param);
+////		logActionRep.save(a);
+//	}
+//	
+//	
+//	
+//
+//	public void addExLogAction(int action_index, String param,int linenumber,String functionname,String classname) {
+//		Authentication auth = null;
+//		ExceptionLogAction a = null;
+//		auth = SecurityContextHolder.getContext().getAuthentication();
+//		if (!auth.getPrincipal().toString().equals("anonymousUser")) {
+//			a = new ExceptionLogAction(userRep.findById(((UserInformation) auth.getPrincipal()).getUser_id()).get(),
+//					Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()), action_index, param,linenumber,functionname,classname);
+//		} else
+//			a = new ExceptionLogAction(userRep.findUserByUserName("visitor"),
+//					Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()), action_index, param,linenumber,functionname,classname);
+//		exceptionLogActionRep.save(a);
+//
+//	}
+//	
+//	public List<LogAction> getLogActionByActionNameAndUser(User user , String actionName){
+//		List<LogAction> logActionList = logActionRep.getLogActionByActionNameAndUser(user.getID(), actionName);
+//		return logActionList;
+//	}
+//	
+//
+//}

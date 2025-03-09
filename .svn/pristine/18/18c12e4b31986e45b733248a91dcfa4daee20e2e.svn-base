@@ -1,0 +1,152 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.Base.Class.CResponse;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.AccIndAccountTypeCategories;
+import com.template.Repository.Table.AllIndexes.AccIndAccountTypeCategoriesRepository;
+
+@Service
+public class AccIndAccountTypeCategoriesService {
+	
+	@Autowired
+	AccIndAccountTypeCategoriesRepository accIndAccountTypeCategoriesRepository;
+	
+	@Autowired CActionHandler actionHandler;
+
+	
+	
+	public CResponse AccIndAccountTypeCategories(AccIndAccountTypeCategories accIndAccountTypeCategories) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.Acc_Ind_Account_Type_Categories.toString(), accIndAccountTypeCategories);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_Acc_Ind_Account_Type_Categories, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			accIndAccountTypeCategories.setInsertBy(0);
+			accIndAccountTypeCategories.setInsertDate(new Date());
+			accIndAccountTypeCategoriesRepository.save(accIndAccountTypeCategories);
+			
+			response.setReturnedObject(accIndAccountTypeCategories);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+
+	
+	
+	public AccIndAccountTypeCategories updateAccIndAccountTypeCategories(AccIndAccountTypeCategories accIndAccountTypeCategories) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(accIndAccountTypeCategories.getId() == null) 
+		{
+			
+			accIndAccountTypeCategories.setInsertBy(0);
+		}
+		
+		
+		
+		else if(accIndAccountTypeCategories.getId() != null)
+		{
+			AccIndAccountTypeCategories temSocialStatus = accIndAccountTypeCategoriesRepository.findById(accIndAccountTypeCategories.getId()).get();
+			accIndAccountTypeCategories.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		accIndAccountTypeCategoriesRepository.save(accIndAccountTypeCategories);
+		return accIndAccountTypeCategories;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	public AccIndAccountTypeCategories save(AccIndAccountTypeCategories accIndAccountTypeCategories) {
+		if(accIndAccountTypeCategories.getId() == null)
+		{
+			accIndAccountTypeCategories.setInsertBy(0);
+		}else if(accIndAccountTypeCategories.getId() != null){
+			AccIndAccountTypeCategories temCompany=accIndAccountTypeCategoriesRepository.findById(accIndAccountTypeCategories.getId()).get();
+			accIndAccountTypeCategories.setInsertDate(temCompany.getInsertDate());
+		}
+		accIndAccountTypeCategoriesRepository.save(accIndAccountTypeCategories);
+		return accIndAccountTypeCategories;
+	}
+	
+	public void update(AccIndAccountTypeCategories accIndAccountTypeCategories) {
+		accIndAccountTypeCategoriesRepository.save(accIndAccountTypeCategories);
+	}
+	
+	//get object by id
+		public CResponse findById(Long id) {
+			CResponse response = new CResponse();
+			response.setReturnedObject(accIndAccountTypeCategoriesRepository.findById(id).get());
+			return response;
+		}
+	
+	public CResponse getAll(){
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(accIndAccountTypeCategoriesRepository.getAll());
+		return response;
+	}
+	
+	public List<AccIndAccountTypeCategories> getAllDeleted(){
+		List<AccIndAccountTypeCategories> allDeleted = accIndAccountTypeCategoriesRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public AccIndAccountTypeCategories delete(Long id) {
+		AccIndAccountTypeCategories accIndAccountTypeCategories = accIndAccountTypeCategoriesRepository.findById(id).get();
+		if (accIndAccountTypeCategories == null) {
+			throw new NoDataFoundException("accIndAccountTypeCategories With ID : " + id + " Not Found");
+		}
+		accIndAccountTypeCategories.setIsDeleted(1);
+		return accIndAccountTypeCategoriesRepository.save(accIndAccountTypeCategories);
+	}
+
+	public boolean checkAccountTypeCategoryIsDeleted(Long id) {
+		AccIndAccountTypeCategories accIndAccountTypeCategories = accIndAccountTypeCategoriesRepository.findById(id).get();
+		if(accIndAccountTypeCategories.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	
+}

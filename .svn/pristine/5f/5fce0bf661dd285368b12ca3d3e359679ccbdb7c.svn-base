@@ -1,0 +1,49 @@
+package com.template.Model.View;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Immutable;
+
+import com.template.Class.RoleActionOppositeId;
+import com.template.Class.UserActionOppositeId;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Immutable
+@Table(name = "USER_ACTION_OPPOSITE_VIEW")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+@IdClass(UserActionOppositeId.class)
+public class UserActionOpposite {
+	
+	@Id
+	@Column(name = "Action_ID")
+	public int  action_id;
+	@Id
+	@Column(name = "User_ID")
+	private int user_id;
+	
+	@Column(name = "action_name_en")
+	private String action_name_en;	
+	
+	
+	@Column(name = "action_name_ar")
+	private String action_name_ar;	
+
+	@Column(name = "description")
+	private String description;
+
+}

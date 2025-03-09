@@ -1,0 +1,153 @@
+package com.template.RestController;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.Base.Class.CResponse;
+import com.Base.Helper.APIResponseHelper;
+import com.template.API.Response.Index.CGetIndexResponse;
+import com.template.Service.Table.AllIndexes.BranchServices;
+import com.template.Service.Table.AllIndexes.IndexService;
+import com.template.Service.Table.Tax.TaxService;
+
+@RestController
+@RequestMapping("/api/indexes")
+public class IndexRestController {
+	@Autowired
+	BranchServices branchServices;
+	@Autowired
+	TaxService taxService;
+
+	@Autowired
+	IndexService indexService;
+
+	@GetMapping("/get-ind-currency")
+	public CGetIndexResponse get_Ind_Currency() {
+		CGetIndexResponse apiResponse = null;
+		try {
+			do {
+				apiResponse = new CGetIndexResponse();
+				CResponse response = null;
+				response = indexService.get_Ind_Currency_Cresponse();	
+				if(response.isSuccess())
+				{
+						apiResponse.setStatus(HttpStatus.OK);
+						apiResponse.setSuccessMessage(response.getSuccessMessage());
+						apiResponse.setData(response.getReturnedObject());
+					break;
+				}
+				apiResponse.setStatus(HttpStatus.BAD_REQUEST);
+				apiResponse.setErrors(APIResponseHelper.parseErrors(response.getErrors()));
+			} while (false);
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		return apiResponse;
+	}
+
+	@GetMapping("/get-ind-class-by-id")
+	public CGetIndexResponse get_Ind_Class_By_Id(@RequestParam long id,@RequestParam String tableName) {
+		CGetIndexResponse apiResponse = null;
+
+		try {
+			do {
+				apiResponse = new CGetIndexResponse();
+				CResponse response = null;
+				response = indexService.get_Ind_Class_By_Id_Cresponse(id, tableName);	
+
+				if(response.isSuccess())
+				{
+					apiResponse.setStatus(HttpStatus.OK);
+					apiResponse.setSuccessMessage(response.getSuccessMessage());
+					apiResponse.setData(response.getReturnedObject());
+					break;
+				}
+				apiResponse.setStatus(HttpStatus.BAD_REQUEST);
+				apiResponse.setErrors(APIResponseHelper.parseErrors(response.getErrors()));
+			} while (false);
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		return apiResponse;
+	}
+
+	@GetMapping("/get-ind-class-by-name")
+	public CGetIndexResponse get_Ind_Class_By_Name(@RequestParam String name,@RequestParam String tableName) {
+		CGetIndexResponse apiResponse = null;
+		try {
+			do {
+				apiResponse = new CGetIndexResponse();
+				CResponse response = null;
+				response = indexService.get_Ind_Class_By_Name_Cresponse(name, tableName);	
+				if(response.isSuccess())
+				{
+					apiResponse.setStatus(HttpStatus.OK);
+					apiResponse.setSuccessMessage(response.getSuccessMessage());
+					apiResponse.setData(response.getReturnedObject());
+					break;
+				}
+				apiResponse.setStatus(HttpStatus.BAD_REQUEST);
+				apiResponse.setErrors(APIResponseHelper.parseErrors(response.getErrors()));
+			} while (false);
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		return apiResponse;
+	}
+
+	@GetMapping("/get-indexes")
+	public CGetIndexResponse getIndexes(@RequestParam String tableName) {
+		CGetIndexResponse apiResponse = null;
+		try {
+			do {
+				apiResponse = new CGetIndexResponse();
+				CResponse response = null;
+				response = indexService.getIndexesCresponse(tableName);	
+				if(response.isSuccess())
+				{
+					apiResponse.setStatus(HttpStatus.OK);
+					apiResponse.setSuccessMessage(response.getSuccessMessage());
+					apiResponse.setData(response.getReturnedObject());
+					break;
+				}
+				apiResponse.setStatus(HttpStatus.BAD_REQUEST);
+				apiResponse.setErrors(APIResponseHelper.parseErrors(response.getErrors()));
+
+			} while (false);
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		return apiResponse;
+	}
+
+	@GetMapping("/check-index-is-deleted")
+	public CGetIndexResponse checkIndexIsDeleted(@RequestParam long id,@RequestParam String tableName) {
+		CGetIndexResponse apiResponse = null;
+		boolean cards;
+		try {
+			do {
+				apiResponse = new CGetIndexResponse();
+				CResponse response = null;
+				response = indexService.checkIndexIsDeletedCresponse(id, tableName);	
+				if(response.isSuccess())
+				{
+//					cards = (boolean) response.getReturnedObject();
+					apiResponse.setStatus(HttpStatus.OK);
+					apiResponse.setSuccessMessage(response.getSuccessMessage());
+					apiResponse.setData(response.getReturnedObject());
+					break;
+				}
+				apiResponse.setStatus(HttpStatus.BAD_REQUEST);
+				apiResponse.setErrors(APIResponseHelper.parseErrors(response.getErrors()));
+			} while (false);
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		return apiResponse;
+	}
+
+}

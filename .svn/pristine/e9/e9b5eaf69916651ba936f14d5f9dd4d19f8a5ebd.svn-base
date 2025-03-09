@@ -1,0 +1,25 @@
+package com.template.Class.ClassesForm;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.template.Model.Table.Products.AccountType;
+import com.template.Model.Table.Products.AccountTypeCurrency;
+import com.template.Model.Table.Products.AccountTypeNature;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+
+public class AccountTypeForm {
+	
+	private AccountType accountType = new AccountType();
+	private List<AccountTypeCurrency> accountTypeCurrencies = new ArrayList<AccountTypeCurrency>();
+	//private List<AccountTypeTax> accountTypeTaxs = new ArrayList<AccountTypeTax>();
+	private List<AccountTypeNature> accountTypeNatures = new ArrayList<AccountTypeNature>();
+
+}

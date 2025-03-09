@@ -1,0 +1,6 @@
+package com.Base.Constant;
+
+public class CDefaultConstant 
+{
+	public static final String LANGUAGE = "AR";
+}

@@ -1,0 +1,25 @@
+package com.template.Repository.Table.Configuration;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.Configuration.AllConfiguration;
+
+@Repository
+public interface HomeConfigurationRepository extends JpaRepository <AllConfiguration, Long> {
+	
+	@Query("Select a from AllConfiguration a where a.isDeleted = 0")
+	public List<AllConfiguration> getAll();
+	
+	@Query("Select a From AllConfiguration a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<AllConfiguration> getAllDeleted();
+	
+	@Query("Select a from AllConfiguration a where a.nameB =:name")
+	public AllConfiguration getByName(@Param("name") String name);
+
+}
+

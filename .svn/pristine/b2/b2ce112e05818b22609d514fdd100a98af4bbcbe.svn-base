@@ -1,0 +1,270 @@
+package com.template.Service.Basic;
+
+import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.Role;
+import com.template.Repository.Basic.RoleRep;
+
+@Service
+public class RoleService {
+
+
+	@Autowired
+	public UserRoleService userRoleService;
+	@Autowired
+	public UserService userService;
+	@Autowired
+	public UserActionService userActionService;
+	@Autowired
+	public CActionHandler actionHandler;
+	@Autowired
+	private RoleRep roleRep;
+
+	public CResponse findAll() {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(roleRep.findAll());
+		return response;
+	}
+
+	public CResponse findAllAsPage(PageRequest pageRequest) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(roleRep.findAllpage(pageRequest));
+		return response;
+	}
+
+	public CResponse findRoleById(int id) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(roleRep.findRoleById(id));
+		return response;
+	}
+
+	public CResponse findRoleByRoleNameEnglish(String nameEnglish) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(roleRep.findRoleByRoleNameEnglish(nameEnglish));
+		return response;
+	}
+
+	public CResponse findRoleByRoleNameArabic(String nameArabic) {
+
+		CResponse response = null;
+		response = new CResponse();
+		response.setReturnedObject(roleRep.findRoleByRoleNameArabic(nameArabic));
+		return response;
+	}
+
+	public CResponse createRole(Role role) throws Exception {
+		CResponse response = null;
+	
+		response = new CResponse();
+		response = ValidatecreateRole(role);
+		if (!response.isSuccess()) {
+			return response;
+		}
+		role.setIsdeleted(0);
+		role.setInsertBy(userService.getAuthenticatedUser().getID());
+		role.setInsertDate(new Date());
+		roleRep.save(role);
+		response.setSuccessMessage("تم إضافة الدور بنجاح");
+		return response;
+	}
+
+	public CResponse ValidatecreateRole(Role role) throws Exception {
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+
+		try {
+			do {
+				response = new CResponse();
+				if (role == null) {
+					response.setSuccess(false);
+					response.setErrorMessage("Null Object");
+					response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+					break;
+				}
+
+				// validation
+
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.ROLE.toString(), role);
+				
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_ROLE,
+						actionValidationParameters);
+
+				if (!actionValidationResult.isValid()) {
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw e;
+		}
+
+		return response;
+	}
+
+	public CResponse updateRole(Role role) throws Exception {
+		CResponse response = null;
+
+		response = new CResponse();
+		response = ValidateupdateRole(role);
+		if (!response.isSuccess()) {
+			return response;
+		}
+		role.setIsdeleted(0);
+		role.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		role.setLastUpdateDate(new Date());
+		roleRep.save(role);
+		response.setSuccessMessage("تم تعديل بيانات الدور بنجاح");
+		return response;
+	}
+
+	public CResponse ValidateupdateRole(Role role) throws Exception {
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+
+		try {
+			do {
+				response = new CResponse();
+
+				if (role == null) {
+					response.setSuccess(false);
+					response.setErrorMessage("Null Object");
+					response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+					break;
+				}
+
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.ROLE.toString(), role);
+					actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_ROLE,
+						actionValidationParameters);
+
+				if (!actionValidationResult.isValid()) {
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+
+			}
+
+			while (false);
+
+		} catch (Exception e) {
+
+			throw e;
+		}
+
+		return response;
+	}
+
+	public CResponse deleteRole(int  id) throws Exception {
+		CResponse response = null;
+		response = new CResponse();
+		Role role = roleRep.findById(id).get();
+		response = ValidatedeleteRole(role);
+		if (!response.isSuccess()) {
+			return response;
+		}
+		role.setIsdeleted(1);
+		role.setDeletedBy(userService.getAuthenticatedUser().getID());
+		role.setDeletedDate(new Date());
+		roleRep.save(role);
+		response.setSuccessMessage("تم حذف بيانات الدور بنجاح");
+
+		return response;
+	}
+
+	public CResponse ValidatedeleteRole(Role role) throws Exception {
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+
+		try {
+			do {
+				response = new CResponse();
+
+				if (role == null) {
+					response.setSuccess(false);
+					response.setErrorMessage("Null Object");
+					response.setErrorCode(EErrorCode.NULL_OBJECT.toString());
+					break;
+				}
+
+				// validation
+
+				actionValidationParameters = new CActionValidationParameters();
+				actionValidationParameters.addParameter(EKeyCode.ROLE.toString(), role);
+		
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_ROLE,
+						actionValidationParameters);
+				;
+
+				if (!actionValidationResult.isValid()) {
+					response.setSuccess(false);
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+					break;
+				}
+
+			}
+
+			while (false);
+
+		} catch (Exception e) {
+
+			throw e;
+		}
+
+		return response;
+	}
+
+	public boolean checkRoleIsExist(Role role) {
+		Role roleByrole_name_b = null;
+		Role roleByrole_name_a = null;
+		CResponse response = new CResponse();
+		response = findRoleByRoleNameEnglish(role.getRole_name_b());
+		roleByrole_name_b = (Role) response.getReturnedObject();
+		response = findRoleByRoleNameArabic(role.getRole_name_a());
+		roleByrole_name_a = (Role) response.getReturnedObject();
+
+		if ((roleByrole_name_b != null && (role.getID() == 0 || roleByrole_name_b.getID() != role.getID()))
+				|| (roleByrole_name_a != null && (role.getID() == 0 || roleByrole_name_a.getID() != role.getID()))) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean checkRoleIsDeleted(Role role) {
+		Role latestRole = null;
+		CResponse response = new CResponse();
+		response = findRoleById(role.getID());
+		latestRole = (Role) response.getReturnedObject();
+
+		if (latestRole.getIsdeleted() == 1) {
+			return true;
+		}
+		return false;
+
+	}
+}

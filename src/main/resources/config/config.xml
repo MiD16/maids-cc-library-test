@@ -1,0 +1,12 @@
+<items>
+    <item name="url" value="http://localhost:8070/e_tendering/"
+         />
+     <item name="register_msg" value="رابط للحصول على واجهة استكمال باقي المعلومات المطلوبة للتسجيل"
+         /> 
+     <item name="register_info_msg" value="رابط لرفع صورة مصدقة عن طلب التسجيل على المنصة  "
+         /> 
+      <item name="email_title" value="تجربة التسجيل على المنصة السورية للمشتريات "
+         />     
+                         
+</items>
+

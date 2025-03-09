@@ -1,0 +1,197 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.AccIndPassBookStatus;
+import com.template.Model.Table.AllIndexes.AccIndReservationResoan;
+import com.template.Repository.Table.AllIndexes.AccIndPassBookStatusRepository;
+
+@Service
+public class AccIndPassBookStatusServices {
+
+	@Autowired
+	AccIndPassBookStatusRepository accIndPassBookStatusRepository;
+	
+	
+	
+	
+	@Autowired CActionHandler actionHandler;
+
+	
+	
+	
+
+
+	
+	public CResponse createAccIndPassBookStatus( AccIndPassBookStatus accIndPassBookStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.Acc_Ind_Pass_Book_Status.toString(), accIndPassBookStatus);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_Acc_Ind_Pass_Book_Status, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			accIndPassBookStatus.setInsertBy(0);
+			accIndPassBookStatus.setIsDeleted(0);
+			accIndPassBookStatus.setInsertDate(new Date());
+			accIndPassBookStatusRepository.save(accIndPassBookStatus);
+			
+			response.setReturnedObject(accIndPassBookStatus);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+	public  AccIndPassBookStatus updateAccIndPassBookStatus ( AccIndPassBookStatus accIndPassBookStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(accIndPassBookStatus.getId() == null) 
+		{
+			
+			accIndPassBookStatus.setInsertBy(0);
+		}
+		
+		
+		
+		else if(accIndPassBookStatus.getId() != null)
+		{
+			AccIndPassBookStatus temSocialStatus = accIndPassBookStatusRepository.findById(accIndPassBookStatus.getId()).get();
+			accIndPassBookStatus.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		accIndPassBookStatusRepository.save(accIndPassBookStatus);
+		return accIndPassBookStatus;
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public  AccIndPassBookStatus findByNames(String nameA, String nameB) {
+		return accIndPassBookStatusRepository.findByNames(nameA, nameB);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	public AccIndPassBookStatus save(AccIndPassBookStatus accIndPassBookStatus) {
+		if(accIndPassBookStatus.getId() == null)
+		{
+			accIndPassBookStatus.setInsertBy(0);
+			accIndPassBookStatus.setIsDeleted(0);
+		}else if(accIndPassBookStatus.getId() != null){
+			AccIndPassBookStatus temSpass=accIndPassBookStatusRepository.findById(accIndPassBookStatus.getId()).get();
+			accIndPassBookStatus.setInsertDate(temSpass.getInsertDate());
+		}
+		accIndPassBookStatusRepository.save(accIndPassBookStatus);
+		return accIndPassBookStatus;
+	}
+	
+	public void update(AccIndPassBookStatus accIndPassBookStatus) {
+		accIndPassBookStatusRepository.save(accIndPassBookStatus);
+	}
+	
+	public AccIndPassBookStatus findById(Long id) {
+		return accIndPassBookStatusRepository.getById(id);
+	}
+	
+	public List<AccIndPassBookStatus> getAll(){
+		List<AccIndPassBookStatus> all = accIndPassBookStatusRepository.getAll();
+		return all;
+	}
+	
+	public List<AccIndPassBookStatus> getAllDeleted(){
+		List<AccIndPassBookStatus> allDeleted = accIndPassBookStatusRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public AccIndPassBookStatus delete(Long id) {
+		AccIndPassBookStatus accIndPassBookStatus = accIndPassBookStatusRepository.findById(id).get();
+		if (accIndPassBookStatus == null) {
+			throw new NoDataFoundException("indCity With ID : " + id + " Not Found");
+		}
+		accIndPassBookStatus.setIsDeleted(1);
+		return accIndPassBookStatusRepository.save(accIndPassBookStatus);
+	}
+	
+	
+}

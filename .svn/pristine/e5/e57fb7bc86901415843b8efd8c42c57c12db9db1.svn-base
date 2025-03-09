@@ -1,0 +1,70 @@
+package com.template.BusinessRule.IndNationality;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndNationality;
+import com.template.Model.Table.AllIndexes.IndPosition;
+import com.template.Model.Table.AllIndexes.IndRegion;
+import com.template.Model.Table.AllIndexes.IndSocialStatus;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Service.Table.AllIndexes.IndNationalityServices;
+import com.template.Service.Table.AllIndexes.IndPositionServices;
+import com.template.Service.Table.AllIndexes.IndRegionServices;
+import com.template.Service.Table.AllIndexes.IndSocialStatusServices;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+
+
+
+
+@Component(CBusinessRuleConstant.IND_NATIONALITY_IS_NOT_EXIST)
+@Lazy
+
+public class CBRIndNationalityIsNotExist implements IBusinessRule{
+	@Autowired
+	IndNationalityServices indNationalityServices;
+	
+	
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult indNationalityValidationResult = null;
+		IndNationality indNationality = null;
+		IndNationality indNationalityName = null;
+		long indNationalityDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				indNationalityValidationResult = new CActionValidationResult();
+				
+				indNationality = (IndNationality) parameters.getParameter(EKeyCode.IND_NATIONALITY.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				indNationalityName = indNationalityServices.findByNames(indNationality.getNameA(), indNationality.getNameB());
+				
+				if (indNationality != null) {
+			
+					if (indNationality.getId() == null || (indNationality.getId() != null && indNationality.getId()!=indNationality.getId())) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indNationalityName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ indNationalityName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						indNationalityValidationResult.setValid(false);
+						indNationalityValidationResult.setErrorMessage(messageString);
+						indNationalityValidationResult.setErrorCode(EErrorCode.IND_NATIONALITY_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return indNationalityValidationResult;
+	}}

@@ -1,0 +1,88 @@
+
+    import com.example.drools.Outcomes.Outcome;
+    import com.example.drools.Models.CustomerAccount;
+    import com.example.drools.Models.CustomerMember;
+    import com.example.drools.Models.Customer;
+
+    import java.util.List;
+    
+    /*
+    rule "Check High Risk Account"
+    when
+        $account: CustomerAccount(getRiskyAmount() > 500000) 
+        $outcome: Outcome(getCustomerId() == $account.getCustomerID()) 
+    then
+        $outcome.setResult("IsHighRisk", true); 
+    end
+
+    rule "Check Low Risk Account"
+    when
+        $account: CustomerAccount(getRiskyAmount() <= 500000) 
+        $outcome: Outcome(getCustomerId() == $account.getCustomerID()) 
+    then
+        $outcome.setResult("IsHighRisk", false); 
+    end
+
+    rule "Reserved Amount Validation"
+    when
+        $account: CustomerAccount(getReservedAmount() > 10000)
+        $outcome: Outcome(getCustomerId() == $account.getCustomerID()) 
+    then
+        System.out.println(":p");
+        $outcome.setResult("customerIsValid", true);
+    end
+
+    // Rule 2: If creditHistoryAmount > 1000000, set customerIsValid to true
+    rule "Credit History Validation"
+    when
+        $customer: CustomerAccount(getCreditHistoryAmount() > 1000000)
+        $outcome: Outcome(getCustomerId() == $customer.getCustomerID()) 
+    then
+        System.out.println(":P");
+        $outcome.setResult("customerIsValid", true);
+    end
+
+    // Rule 3: If depositForbiddenFlag == 0 and withdrawForbiddenFlag == 0, set accountActive to true
+    rule "Account Active Check"
+    when
+        $account: CustomerAccount(getDepositForbiddenFlag() == 0, getWithdrawForbiddenFlag() == 0)
+        $outcome: Outcome(getCustomerId() == $account.getCustomerID()) 
+    then
+        $outcome.setResult("isAccountActive", true);
+    end
+
+    // Rule 3: If depositForbiddenFlag == 0 and withdrawForbiddenFlag == 0, set accountActive to true
+    rule "Account Active Check Negation"
+    when
+        $account: CustomerAccount(getDepositForbiddenFlag() != 0, getWithdrawForbiddenFlag() != 0)
+        $outcome: Outcome(getCustomerId() == $account.getCustomerID()) 
+    then
+        $outcome.setResult("isAccountActive", false);
+    end
+
+    // Rule 4: If vipFlag == 1, set customerIsVIP to true
+    rule "VIP Customer Check"
+    when
+        $customer: Customer(getVipFlag() == 1)
+        $outcome: Outcome(getCustomerId() == $customer.getId()) 
+    then
+        $outcome.setResult("IsCustomerVIP", true);
+    end
+    */
+
+    rule "Find Adult Members"
+    when
+        $member: CustomerMember(getAge() >= 18)
+        $outcome: Outcome() 
+    then
+        $outcome.appendResult("Adult Customers", $member);
+    end
+
+    rule "Find Minor Members"
+    when
+        $member: CustomerMember(getAge() < 18)
+        $outcome: Outcome() 
+    then
+        $outcome.appendResult("Minor Customers", $member);
+    end
+

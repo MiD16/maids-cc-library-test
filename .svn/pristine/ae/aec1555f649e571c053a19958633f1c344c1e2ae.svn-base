@@ -1,0 +1,61 @@
+package com.template.Service.Table.Product;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.Products.AccDuration;
+import com.template.Repository.Table.Product.AccDurationRepository;
+
+@Service
+public class AccDurationService {
+	
+	@Autowired
+	AccDurationRepository accDurationRepository;
+	
+	public AccDuration save(AccDuration accDuration) {
+		if(accDuration.getId() == null)
+		{
+			accDuration.setInsertBy(0);
+		}else if(accDuration.getId() != null){
+			AccDuration temCompany=accDurationRepository.findById(accDuration.getId()).get();
+			accDuration.setInsertDate(temCompany.getInsertDate());
+		}
+		accDurationRepository.save(accDuration);
+		return accDuration;
+	}
+	
+	public void update(AccDuration accDuration) {
+		accDurationRepository.save(accDuration);
+	}
+	
+	public AccDuration findById(Long id) {
+		return accDurationRepository.getById(id);
+	}
+	
+	public List<AccDuration> getAll(){
+		List<AccDuration> all = accDurationRepository.getAll();
+		return all;
+	}
+	
+	public List<AccDuration> getAllDeleted(){
+		List<AccDuration> allDeleted = accDurationRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public AccDuration delete(Long id) {
+		AccDuration accDuration = accDurationRepository.findById(id).get();
+		if (accDuration == null) {
+			throw new NoDataFoundException("accDuration With ID : " + id + " Not Found");
+		}
+		accDuration.setIsDeleted(1);
+		return accDurationRepository.save(accDuration);
+	}
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+}

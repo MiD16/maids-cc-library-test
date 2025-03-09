@@ -1,0 +1,168 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+import com.template.Repository.Table.AllIndexes.AccIndCustAccStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndCountryRepository;
+
+
+@Service
+public class AccIndCustAccStatusServices {
+	
+
+
+	@Autowired
+	AccIndCustAccStatusRepository accIndCustAccStatusRepository;
+	/////////////////////////
+	
+	@Autowired CActionHandler actionHandler;
+
+	public CResponse createSocialStatus(AccIndCustAccStatus accIndCustAccStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.Acc_Ind_Customer_Acc_Status.toString(), accIndCustAccStatus);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_Acc_Ind_Customer_Acc_Status, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			accIndCustAccStatus.setInsertBy(0);
+			accIndCustAccStatus.setInsertDate(new Date());
+			accIndCustAccStatusRepository.save(accIndCustAccStatus);
+			
+			response.setReturnedObject(accIndCustAccStatus);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+
+	
+	
+
+	
+	
+	public AccIndCustAccStatus updateSocialStatus(AccIndCustAccStatus accIndCustAccStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(accIndCustAccStatus.getId() == null) 
+		{
+			
+			accIndCustAccStatus.setInsertBy(0);
+		}
+		
+		
+		
+		else if(accIndCustAccStatus.getId() != null)
+		{
+			AccIndCustAccStatus temSocialStatus = accIndCustAccStatusRepository.findById(accIndCustAccStatus.getId()).get();
+			accIndCustAccStatus.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		accIndCustAccStatusRepository.save(accIndCustAccStatus);
+		return accIndCustAccStatus;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public AccIndCustAccStatus save(AccIndCustAccStatus accIndCustAccStatus) {
+		if(accIndCustAccStatus.getId() == null)
+		{
+			accIndCustAccStatus.setInsertBy(0);
+			accIndCustAccStatus.setInsertDate(getCurrentDate());
+			accIndCustAccStatus.setIsDeleted(0);
+		}else if(accIndCustAccStatus.getId() != null){
+			System.err.println(2121);
+			accIndCustAccStatus.setInsertDate(getCurrentDate());
+			accIndCustAccStatus.setLastUpdateDate(getCurrentDate());
+			accIndCustAccStatus.setLastUpdateBy(1);
+		}
+		accIndCustAccStatusRepository.save(accIndCustAccStatus);
+		return accIndCustAccStatus;
+	}
+	
+	public void update(AccIndCustAccStatus accIndCustAccStatus) {
+		accIndCustAccStatusRepository.save(accIndCustAccStatus);
+	}
+	
+	public AccIndCustAccStatus findById(Long id) {
+		return accIndCustAccStatusRepository.getById(id);
+	}
+	
+	public List<AccIndCustAccStatus> getAll(){
+		List<AccIndCustAccStatus> all = accIndCustAccStatusRepository.getAll();
+		return all;
+	}
+	
+	public List<AccIndCustAccStatus> getAllDeleted(){
+		List<AccIndCustAccStatus> allDeleted = accIndCustAccStatusRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	
+	public AccIndCustAccStatus delete(Long id) {
+		AccIndCustAccStatus accIndCustAccStatus = accIndCustAccStatusRepository.findById(id).get();
+		if (accIndCustAccStatus == null) {
+			throw new NoDataFoundException("indAddressType With ID : " + id + " Not Found");
+		}
+		accIndCustAccStatus.setIsDeleted(1);
+		return accIndCustAccStatusRepository.save(accIndCustAccStatus);
+	}
+	
+	
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+}

@@ -1,0 +1,122 @@
+package com.template.Service.Table.AllIndexes;
+
+
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndSocialStatus;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Repository.Table.AllIndexes.IndSocialStatusRepository;
+
+@Service
+public class IndSocialStatusServices {
+	
+	@Autowired
+	IndSocialStatusRepository indSocialStatusRepository;
+	
+	@Autowired CActionHandler actionHandler;
+	
+	public CResponse createSocialStatus(IndSocialStatus indSocialStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.IND_SOCIAL_STATUS.toString(), indSocialStatus);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IND_SOCIAL_STATUS, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indSocialStatus.setInsertBy(0);
+			indSocialStatus.setInsertDate(new Date());
+			indSocialStatusRepository.save(indSocialStatus);
+			
+			response.setReturnedObject(indSocialStatus);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+	public IndSocialStatus updateSocialStatus(IndSocialStatus indSocialStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(indSocialStatus.getId() == null) 
+		{
+			
+			indSocialStatus.setInsertBy(0);
+		}
+		
+		
+		
+		else if(indSocialStatus.getId() != null)
+		{
+				IndSocialStatus temSocialStatus = indSocialStatusRepository.findById(indSocialStatus.getId()).get();
+				indSocialStatus.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indSocialStatusRepository.save(indSocialStatus);
+		return indSocialStatus;
+	}
+	
+	public void update(IndSocialStatus indSocialStatus) {
+		indSocialStatusRepository.save(indSocialStatus);
+	}
+	
+	public IndSocialStatus findByNames(String nameA, String nameB) {
+		return indSocialStatusRepository.findByNames(nameA, nameB);
+	}
+	
+	
+	
+	
+	public IndSocialStatus findById(Long id) {
+		return indSocialStatusRepository.getById(id);
+	}
+	
+	public List<IndSocialStatus> getAll(){
+		List<IndSocialStatus> all = indSocialStatusRepository.getAll();
+		return all;
+	}
+	
+	public List<IndSocialStatus> getAllDeleted(){
+		List<IndSocialStatus> allDeleted = indSocialStatusRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndSocialStatus delete(Long id) {
+		IndSocialStatus indSocialStatus = indSocialStatusRepository.findById(id).get();
+		if (indSocialStatus == null) {
+			throw new NoDataFoundException("indSocialStatus With ID : " + id + " Not Found");
+		}
+		indSocialStatus.setIsDeleted(1);
+		return indSocialStatusRepository.save(indSocialStatus);
+	}
+
+}

@@ -1,0 +1,69 @@
+package com.template.BusinessRule.AccIndWarningSign;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndWarningSign;
+import com.template.Model.Table.AllIndexes.IndPosition;
+import com.template.Service.Table.AllIndexes.AccIndWarningSignServices;
+import com.template.Service.Table.AllIndexes.IndPositionServices;
+
+
+
+
+
+
+
+
+@Component(CBusinessRuleConstant.Acc_Ind_Warning_Sign_IS_NOT_EXIST)
+@Lazy
+
+public class CBRAccIndWarningSignIsNotExist  implements IBusinessRule{
+	@Autowired
+	AccIndWarningSignServices accIndWarningSignServices;
+	
+	
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult accIndWarningSignValidationResult = null;
+		AccIndWarningSign accIndWarningSign = null;
+		AccIndWarningSign accIndWarningSignName = null;
+		long accIndWarningSignDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				accIndWarningSignValidationResult = new CActionValidationResult();
+				
+				accIndWarningSign = (AccIndWarningSign) parameters.getParameter(EKeyCode.Acc_Ind_Warning_Sign.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				accIndWarningSignName = accIndWarningSignServices.findByNames(accIndWarningSign.getNameA(), accIndWarningSign.getNameB());
+				
+				if (accIndWarningSign != null) {
+			
+					if (accIndWarningSign.getId() == null || accIndWarningSign.getId()!=accIndWarningSign.getId()) {
+						String messageString = "<div style='margin-bottom: 12px'>" + accIndWarningSignName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ accIndWarningSignName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						accIndWarningSignValidationResult.setValid(false);
+						accIndWarningSignValidationResult.setErrorMessage(messageString);
+						accIndWarningSignValidationResult.setErrorCode(EErrorCode.Acc_Ind_Warning_Sign_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return accIndWarningSignValidationResult;
+	}}

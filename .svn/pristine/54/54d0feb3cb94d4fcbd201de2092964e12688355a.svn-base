@@ -1,0 +1,448 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+import com.template.Repository.Table.AllIndexes.AccIndAccountTypeCategoriesRepository;
+import com.template.Repository.Table.AllIndexes.AccIndDateUnitRepository;
+import com.template.Repository.Table.AllIndexes.AccIndInterestTypeRepository;
+import com.template.Repository.Table.AllIndexes.AccIndCustAccStatusRepository;
+import com.template.Repository.Table.AllIndexes.AccIndPassBookStatusRepository;
+import com.template.Repository.Table.AllIndexes.AccIndReservationResoanRepository;
+import com.template.Repository.Table.AllIndexes.AccIndWarningSignRepository;
+import com.template.Repository.Table.AllIndexes.BranchRepository;
+import com.template.Repository.Table.AllIndexes.CustomerSituationRepository;
+import com.template.Repository.Table.AllIndexes.CustomerStageRepository;
+import com.template.Repository.Table.AllIndexes.HomeIndexRepository;
+import com.template.Repository.Table.AllIndexes.IndAddressTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndCityRepository;
+
+
+import com.template.Repository.Table.AllIndexes.IndCustomerNatureRepository;
+
+import com.template.Repository.Table.AllIndexes.IndCountryRepository;
+import com.template.Repository.Table.AllIndexes.IndNationalityRepository;
+import com.template.Repository.Table.AllIndexes.IndRegionRepository;
+import com.template.Repository.Table.AllIndexes.IndSignatureTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndSocialStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndSubpoenaRequestRepository;
+import com.template.Repository.Table.AllIndexes.IndTableRepository;
+import com.template.Repository.Table.AllIndexes.IndBlacklistDocStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndBranchTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndCertificateTypeRepositry;
+import com.template.Repository.Table.AllIndexes.IndCityRepositry;
+import com.template.Repository.Table.AllIndexes.IndCommisionTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndCompanyTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndCountryRepository;
+import com.template.Repository.Table.AllIndexes.IndCustDocumentRepository;
+import com.template.Repository.Table.AllIndexes.IndCustomerMemberTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndCustomerNatureKeyRepository;
+import com.template.Repository.Table.AllIndexes.IndCustomerNatureRepository;
+import com.template.Repository.Table.AllIndexes.IndCustomerTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndEconmicActivityRepository;
+import com.template.Repository.Table.AllIndexes.IndEconmicSectorRepository;
+import com.template.Repository.Table.AllIndexes.IndFamilyMemberTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndFileTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndFiscalYearStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndGenderRepository;
+import com.template.Repository.Table.AllIndexes.IndGlClassRepository;
+import com.template.Repository.Table.AllIndexes.IndIdTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndIncomeTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndJournalStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndJournalTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndKeyRepository;
+import com.template.Repository.Table.AllIndexes.IndKinshipRoleRepository;
+import com.template.Repository.Table.AllIndexes.IndLegalStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndNonCustDocumentRepository;
+import com.template.Repository.Table.AllIndexes.IndNonCustStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndPositionRepository;
+import com.template.Repository.Table.AllIndexes.IndProfessionRepository;
+import com.template.Repository.Table.AllIndexes.SubpoenaRequestRepository;
+
+@Service
+public class HomeIndexServices {
+
+	@Autowired
+	HomeIndexRepository homeIndexRepository;
+
+	@Autowired
+	IndSocialStatusRepository indSocialStatusRepository;
+
+	@Autowired
+	IndAddressTypeRepository indAddressTypeRepository;
+
+	@Autowired
+	IndSignatureTypeRepository indSignatureTypeRepository;
+
+	@Autowired
+	IndBlacklistDocStatusRepository IndBlacklistDocStatusRepository;
+
+	@Autowired
+	IndCommisionTypeRepository indCommisionTypeRepository;
+
+	@Autowired
+	IndCompanyTypeRepository indCompanyTypeRepository;
+
+	@Autowired
+	IndCountryRepository indCountryRepository;
+
+	@Autowired
+	IndCustDocumentRepository indCustDocumentRepository;
+
+	@Autowired
+	IndCustomerMemberTypeRepository indCustomerMemberTypeRepository;
+	@Autowired
+	IndCustomerTypeRepository indCustomerTypeRepository;
+
+	@Autowired
+	IndCustomerNatureKeyRepository indCustomerNatureKeyRepository;
+
+	@Autowired
+	IndCustomerNatureRepository indCustomerNatureRepository;
+
+	@Autowired
+	IndEconmicActivityRepository indEconmicActivityRepository;
+
+	@Autowired
+	IndFamilyMemberTypeRepository indFamilyMemberTypeRepository;
+
+	@Autowired
+	IndEconmicSectorRepository indEconmicSectorRepository;
+	@Autowired
+	IndFileTypeRepository indFileTypeRepository;
+	@Autowired
+	IndGenderRepository indGenderRepository;
+	@Autowired
+	IndIdTypeRepository indIdTypeRepository;
+
+	@Autowired
+	IndIncomeTypeRepository indIncomeTypeRepository;
+
+	@Autowired
+	IndKinshipRoleRepository indKinshipRoleRepository;
+
+	@Autowired
+	IndLegalStatusRepository indLegalStatusRepository;
+	@Autowired
+	IndNonCustStatusRepository indNonCustStatusRepository;
+
+	@Autowired
+	IndNonCustDocumentRepository indNonCustDocumentRepository;
+
+	@Autowired
+	AccIndAccountTypeCategoriesRepository accIndAccountTypeCategoryRepository;
+	@Autowired
+	AccIndCustAccStatusRepository accIndCustAccStatusRepository;
+	@Autowired
+	AccIndDateUnitRepository accIndDateUnitRepository;
+
+	@Autowired
+	AccIndInterestTypeRepository accIndInterestTypeRepository;
+
+	@Autowired
+	IndNationalityRepository indNationalityRepository;
+
+	@Autowired
+	IndRegionRepository indRegionRepository;
+
+	@Autowired
+	CustomerSituationRepository customerSituationRepository;
+
+	@Autowired
+	CustomerStageRepository customerStageRepository;
+
+	@Autowired
+	AccIndPassBookStatusRepository accIndPassBookStatusRepository;
+	 @Autowired
+	 AccIndReservationResoanRepository accIndReservationResoanRepository;
+	 
+	 
+	 @Autowired
+	 AccIndWarningSignRepository accIndWarningSignResoanRepository;
+	 
+	 @Autowired
+	 IndSubpoenaRequestRepository  indSubpoenaRequestRepository;
+
+	 @Autowired
+	 SubpoenaRequestRepository	subpoenaRequestRepository;
+	 @Autowired
+	 IndBranchTypeRepository	indBranchTypeRepository;
+	 @Autowired
+	 BranchRepository bRANCHRepository;
+	 @Autowired
+	 IndCertificateTypeRepositry indCertificateTypeRepository;
+	 
+	 @Autowired
+	 IndCityRepository indCityRepository;
+	 @Autowired
+	 IndPositionRepository			indPositionindexRepository;
+	 
+		@Autowired
+		IndJournalStatusRepository indJournalStatusRepository;
+		@Autowired
+		IndJournalTypeRepository	indJournalTypeRepository;
+		@Autowired
+		IndFiscalYearStatusRepository		indFiscalYearStatusRepository;
+		@Autowired
+		IndGlClassRepository  indGlClassRepository;
+	 
+	 
+	 
+	 @Autowired
+	 IndKeyRepository indKeyRepository;
+	 
+	 @Autowired
+	 IndProfessionRepository indProfessionRepository;
+	 
+	public Allindex save(Allindex homeIndex) {
+		homeIndexRepository.save(homeIndex);
+		return homeIndex;
+	}
+
+	public void update(Allindex homeIndex) {
+		homeIndexRepository.save(homeIndex);
+	}
+
+	public Allindex findById(Long id) {
+		return homeIndexRepository.getById(id);
+	}
+
+	public List<Allindex> getAll() {
+		List<Allindex> all = homeIndexRepository.getAll();
+		return all;
+	}
+
+	public List<Allindex> getAllDeleted() {
+		List<Allindex> allDeleted = homeIndexRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public Allindex delete(Long id) {
+		Allindex homeIndex = homeIndexRepository.findById(id).get();
+		if (homeIndex == null) {
+			throw new NoDataFoundException("homeIndex With ID : " + id + " Not Found");
+		}
+		homeIndex.setIsDeleted(1);
+		return homeIndexRepository.save(homeIndex);
+	}
+
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+
+	public List<IndSocialStatus> indSocialStatusIndex() {
+		return indSocialStatusRepository.getAll();
+	}
+
+	public List<IndSignatureType> indSignatureTypeIndex() {
+		return indSignatureTypeRepository.getAll();
+	}
+
+	public List<IndAddressType> indAddressTypeIndex() {
+		return indAddressTypeRepository.getAll();
+	}
+
+	public List<IndNationality> indNationalityIndex() {
+		return indNationalityRepository.getAll();
+	}
+
+	public List<IndCountry> indCountryIndex() {
+		return indCountryRepository.getAll();
+	}
+
+	public List<IndCity> indCityIndex() {
+		return indCityRepository.getAll();
+	}
+
+	public List<IndRegion> indRegionIndex() {
+		return indRegionRepository.getAll();
+	}
+
+	public List<IndBlacklistDocStatus> indBlackListDocStatusIndex() {
+		return IndBlacklistDocStatusRepository.getAll();
+	}
+
+	public List<IndCommissionType> IndCommisionTypeindex() {
+		return indCommisionTypeRepository.getAll();
+	}
+
+	public List<IndCompanyType> IndCompanyTypeindex() {
+		return indCompanyTypeRepository.getAll();
+	}
+
+	public List<IndCountry> IndCountryindex() {
+		return indCountryRepository.getAll();
+	}
+
+	public List<IndCustDocument> IndCustDocumentindex() {
+		return indCustDocumentRepository.getAll();
+	}
+
+	public List<IndCustomerMemberType> IndCustomerMemberTypeindex() {
+		return indCustomerMemberTypeRepository.getAll();
+	}
+
+	public List<IndCustomerType> IndCustomerTypeindex() {
+		return indCustomerTypeRepository.getAll();
+	}
+
+	public List<IndCustomerNatureKey> IndCustomerNatureKeyTypeindex() {
+		return indCustomerNatureKeyRepository.getAll();
+	}
+
+	public List<IndCustomerNature> IndCustomerNatureindex() {
+		return indCustomerNatureRepository.getAll();
+	}
+
+	public List<IndEconmicActivity> IndEconmicActivityindex() {
+		return indEconmicActivityRepository.getAll();
+	}
+
+	public List<IndFamilyMemberType> IndFamilyMemberTypeindex() {
+		return indFamilyMemberTypeRepository.getAll();
+	}
+
+	public List<IndEconmicSector> IndEconmicSectorindex() {
+		return indEconmicSectorRepository.getAll();
+	}
+
+	public List<IndFileType> IndFileTypeindex() {
+		return indFileTypeRepository.getAll();
+	}
+
+	public List<IndGender> IndGenderindex() {
+		return indGenderRepository.getAll();
+	}
+
+	public List<IndIdType> IndIdTypeindex() {
+		return indIdTypeRepository.getAll();
+	}
+
+	public List<IndIncomeType> IndIncomeTypeindex() {
+		return indIncomeTypeRepository.getAll();
+	}
+
+	public List<IndKinshipRole> IndKinshipRoleindex() {
+		return indKinshipRoleRepository.getAll();
+	}
+
+	public List<IndLegalStatus> IndLegalStatusindex() {
+		return indLegalStatusRepository.getAll();
+	}
+
+	public List<IndNonCustStatus> IndNonCustStatusindex() {
+		return indNonCustStatusRepository.getAll();
+	}
+
+	public List<IndNonCustDocument> IndNonCustDocumentindex() {
+		return indNonCustDocumentRepository.getAll();
+	}
+
+	public List<AccIndAccountTypeCategories> AccIndAccountTypeCategoryindex() {
+		return accIndAccountTypeCategoryRepository.getAll();
+	}
+
+	public List<AccIndCustAccStatus> AccIndCustAccStatusindex() {
+		return accIndCustAccStatusRepository.getAll();
+	}
+
+	public List<AccIndDateUnit> AccIndDateUnitindex() {
+		Page<AccIndDateUnit> dateUnits=accIndDateUnitRepository.getAll(null);
+		return dateUnits.getContent();
+	}
+
+	public List<AccIndInterestType> AccIndInterestTypeindex() {
+		return accIndInterestTypeRepository.getAll();
+	}
+
+	public List<CustomerSituation> CustomerSituationindex() {
+		return customerSituationRepository.getAll();
+	}
+
+	public List<CustomerStage> CustomerStageindex() {
+		return customerStageRepository.getAll();
+	}
+
+	public List<AccIndPassBookStatus> AccIndPassBookStatusindex() {
+		return accIndPassBookStatusRepository.getAll();
+	}
+
+	
+	  public List<AccIndReservationResoan>AccIndReservationResoanindex() { 
+	return  accIndReservationResoanRepository.getAll(); }
+	  
+
+	  public List< AccIndWarningSign> AccIndWarningSignindex() { 
+	return   accIndWarningSignResoanRepository.getAll(); }
+	  
+	  public List< IndSubpoenaRequest> IndSubpoenaRequestindex() { 
+			return   indSubpoenaRequestRepository.getAll(); }
+	  
+	  
+	  public List< SubpoenaRequest> SubpoenaRequestRequestindex() { 
+			return  subpoenaRequestRepository.getAll(); }
+	  
+	  
+	  public List< IndBranchType> IndBranchTypeindex() { 
+			return  indBranchTypeRepository.getAll(); }
+
+	  public List<Branch> BRANCHindex() { 
+			return  bRANCHRepository.getAll(); 
+	}
+	  
+	  
+	  public List< IndCertificateType> IndCertificateTypeindex() { 
+			return  indCertificateTypeRepository.getAll(); }
+	  
+	  public List< IndPosition> IndPositionindex() { 
+			return  indPositionindexRepository.getAll(); }
+
+	public List<IndKey> indKeyIndex() {
+		return indKeyRepository.getAll();
+		
+	}
+	
+
+	public List<IndProfession> indProfessionIndex() {
+		return indProfessionRepository.getAll();
+		
+	}
+	  
+
+	 
+		  public List< IndJournalStatus> IndJournalStatusindex() { 
+				return  indJournalStatusRepository.getAll(); }
+		  
+		  public List< IndJournalType> IndJournalTypeindex() { 
+				return  indJournalTypeRepository.getAll(); }
+		  
+		  public List< IndFiscalYearStatus> IndFiscalYearStatusindex() { 
+				return  indFiscalYearStatusRepository.getAll(); }
+		  
+		  public List< IndGlClass> IndGlClassindex() { 
+				return  indGlClassRepository.getAll(); }
+		  
+		  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+}

@@ -1,0 +1,24 @@
+package com.template.Action.IndCompanyType;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.DELETE_Ind_Company_Type)
+@Lazy
+public class CAIndCompanyTypeDelete extends CAction {
+	public CAIndCompanyTypeDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.Ind_Company_Type_IS_NOT_DELETE);
+	}
+}
+  

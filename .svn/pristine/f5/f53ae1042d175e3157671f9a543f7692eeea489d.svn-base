@@ -1,0 +1,59 @@
+package com.template.API.Response.DTO.Mapper;
+
+import com.template.API.Response.DTO.CIndexDTO;
+import com.template.API.Response.DTO.CUserDTO;
+import com.template.Class.Index.IndCurrency;
+import com.template.Class.Index.IndexClass;
+import com.template.Model.Basic.User;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+public class CIndexMapper {
+	public static CIndexDTO parse(IndCurrency indCurrency)
+	{
+		CIndexDTO indexDTO = null;
+		
+		do 
+		{
+			if(indCurrency == null) break;
+			
+			indexDTO = new CIndexDTO();	
+			
+			indexDTO.setId(indCurrency.getId());
+			indexDTO.setNameA(indCurrency.getNameA());
+			indexDTO.setNameB(indCurrency.getNameB());
+			indexDTO.setIsDeleted(indCurrency.getIsDeleted());
+		} 
+		while (false);
+		
+		return indexDTO;	
+	}
+	
+	
+	
+	public static CIndexDTO parse(IndexClass indCurrency)
+	{
+		CIndexDTO indexDTO = null;
+		
+		do 
+		{
+			if(indCurrency == null) break;
+			
+			indexDTO = new CIndexDTO();	
+			
+			indexDTO.setId(indCurrency.getId());
+			indexDTO.setNameA(indCurrency.getNameA());
+			indexDTO.setNameB(indCurrency.getNameB());
+			indexDTO.setIsDeleted(indCurrency.getIsDeleted());
+		} 
+		while (false);
+		
+		return indexDTO;	
+	}
+}

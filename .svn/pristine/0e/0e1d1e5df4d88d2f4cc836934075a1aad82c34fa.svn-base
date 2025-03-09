@@ -1,0 +1,81 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CResponse;
+import com.template.Model.Table.AllIndexes.IndTable;
+import com.template.Repository.Table.AllIndexes.IndTableRepository;
+import com.template.Service.Basic.UserService;
+
+@Service
+public class IndTableService {
+	
+	@Autowired
+	IndTableRepository indTableRepository;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	UserService userService;
+
+	// find all not deleted
+	public CResponse getAll() {
+		CResponse response = new CResponse();
+		response.setReturnedObject(indTableRepository.getAll());
+		return response;
+	}
+
+	// create Interest
+	public CResponse save(IndTable indTable) throws Exception {
+		CResponse response = new CResponse() ;
+		// call validate for create object
+		// response = validateInterestCreate(indTable);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		indTable.setInsertBy(userService.getAuthenticatedUser().getID());
+		indTableRepository.save(indTable);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+
+	// get object by id
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(indTableRepository.findById(id).get());
+		return response;
+	}
+
+	// get all deleted
+	public List<IndTable> getAllDeleted() {
+		List<IndTable> allDeleted = indTableRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	// delete interest
+	public CResponse delete(Long id) throws Exception {
+		IndTable indTable = indTableRepository.findById(id).get();
+		CResponse response = null;
+		// call validate for delete object
+		//response = validateInterestDelete(indTable);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		// soft delete
+		indTable.setIsDeleted(1);
+		// set deleted date
+		indTable.setDeletedDate(new Date());
+		// set user that deleted
+		indTable.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(indTableRepository.save(indTable));
+		return response;
+	}
+
+}

@@ -1,0 +1,69 @@
+package com.template.BusinessRule.AccIndReservation;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndReservationResoan;
+import com.template.Model.Table.AllIndexes.AccIndWarningSign;
+import com.template.Service.Table.AllIndexes.AccIndReservationResoanServices;
+import com.template.Service.Table.AllIndexes.AccIndWarningSignServices;
+
+
+
+@Component(CBusinessRuleConstant.Acc_Ind_Reservation_Resoan_IS_NOT_EXIST)
+@Lazy
+public class CBRAccIndReservationIsNotDeleted implements IBusinessRule{
+	@Autowired
+	AccIndReservationResoanServices accIndReservationResoanServices;
+	
+	
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult accIndReservationResoanValidationResult = null;
+		AccIndReservationResoan accIndReservationResoan = null;
+		AccIndReservationResoan accIndReservationResoanName = null;
+		long accIndReservationResoanDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				accIndReservationResoanValidationResult = new CActionValidationResult();
+				
+				accIndReservationResoan = (AccIndReservationResoan) parameters.getParameter(EKeyCode.Acc_Ind_Reservation_Resoan.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				accIndReservationResoanName = accIndReservationResoanServices.findByNames(accIndReservationResoan.getNameA(), accIndReservationResoan.getNameB());
+				
+				if (accIndReservationResoan != null) {
+			
+					if (accIndReservationResoan.getId() == null || accIndReservationResoan.getId()!=accIndReservationResoan.getId()) {
+						String messageString = "<div style='margin-bottom: 12px'>" + accIndReservationResoanName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ accIndReservationResoanName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						accIndReservationResoanValidationResult.setValid(false);
+						accIndReservationResoanValidationResult.setErrorMessage(messageString);
+						accIndReservationResoanValidationResult.setErrorCode(EErrorCode.Acc_Ind_Reservation_Resoan_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return accIndReservationResoanValidationResult;
+	}}
+
+
+
+
+
+

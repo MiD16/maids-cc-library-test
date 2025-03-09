@@ -1,0 +1,28 @@
+package com.template.Action.AccIndCustAccStatus;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+
+@Component(CActionConstant.CREATE_Acc_Ind_Cust_Acc_Status)
+@Lazy
+public class CAAccIndCustAccStatusCreate extends CAction 
+{
+	public CAAccIndCustAccStatusCreate(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		//addBusinessnRule(CBusinessRuleConstant.IND_SOCIAL_STATUS_IS_VALID);
+		addBusinessnRule(CBusinessRuleConstant.Acc_Ind_Cust_Acc_Status_IS_NOT_EXIST);
+	}}

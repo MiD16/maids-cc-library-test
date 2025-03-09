@@ -1,0 +1,20 @@
+package com.template.Repository.Table.ElectronicOperation;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.ElectronicOperation.ATM;
+import com.template.Model.Table.ElectronicOperation.CreditCard;
+import com.template.Model.Table.ElectronicOperation.CreditCardRequest;
+@Repository
+public interface CreditCardRequestRepository extends JpaRepository <CreditCardRequest, Long> {
+	 
+	@Query("Select a from CreditCardRequest a where a.IsDeleted != 1") 
+	  public  List<CreditCardRequest> getAll();
+	  
+	  @Query("Select a From CreditCardRequest a WHERE a.IsDeleted = 1 order by a.id desc"
+	  ) public List<CreditCardRequest> getAllDeleted();
+}

@@ -1,0 +1,17 @@
+package com.template.Enum;
+
+public enum ExceptionLogName {
+	GeneralException,RuntimeException,NoDataFoundException, NullPointerException,NumberFormatException, NonUniqueResultException,ConstraintViolationException;
+
+}
+//public enum ExceptionLogName {
+//	GeneralException("GeneralException"),RuntimeException("RuntimeException"),NoDataFoundException("NoDataFoundException"),NullPointerException("NullPointerException"),NumberFormatException("NumberFormatException"),NonUniqueResultException("NonUniqueResultException"),ConstraintViolationException("ConstraintViolationException");
+//    private final String displayName;
+//
+//    ExceptionLogName(String displayName) {
+//        this.displayName = displayName;
+//    }
+//
+//    public String getDisplayName() {
+//        return displayName;
+//    }

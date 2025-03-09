@@ -1,0 +1,18 @@
+package com.template.API.Response.ActionResponse.TestEntity;
+
+import com.Base.API.Response.CAPIResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.template.API.Response.DTO.CTestEntityDTO;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class CCreateTestEntityResponse extends CAPIResponse
+{
+	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+	CTestEntityDTO testEntity;
+}

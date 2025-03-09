@@ -1,0 +1,23 @@
+package com.template.Action.CurrencySegments;
+import javax.annotation.PostConstruct;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.CREATE_CURRENCY_SEGMENT)
+@Lazy
+public class CACurrencySegmentsCreate extends CAction {
+	public CACurrencySegmentsCreate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.CURRENCY_SEGMENT_IS_NOT_EXIST);
+	//	addBusinessnRule(CBusinessRuleConstant.IND_INTEREST_TYPE_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.CURRENCY_IS_NOT_DELETED);
+
+		
+	}
+}

@@ -1,0 +1,46 @@
+package com.template.BusinessRule.InterestRate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Interests.AccInterestRate;
+import com.template.Service.Table.Interest.InterestRateService;
+@Component(CBusinessRuleConstant.INTEREST_RATE_IS_NOT_EXIST)
+@Lazy
+public class CBRInterestRateIsNotExist implements IBusinessRule {
+	@Autowired
+	InterestRateService interestRateService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccInterestRate interestRate = null;
+		String path = null;
+		Long id=null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				interestRate= (AccInterestRate) parameters.getParameter(EKeyCode.INTEREST_RATE.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				id=interestRateService.checkInterestRateIsExist(interestRate);
+				if (id != null) {
+						String messageString = "<div style='margin-bottom: 12px'>" + " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"+ "</div> <a class='alert-url' href='" +path + "/interestRate/update?id="
+						+ id + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage(messageString);
+						actionValidationResult.setErrorCode(EErrorCode.INTEREST_RATE_IS_EXISTS.toString());
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

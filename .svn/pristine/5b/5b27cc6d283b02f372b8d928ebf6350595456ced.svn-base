@@ -1,0 +1,315 @@
+package com.template.Controller.Table.Commission;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
+import com.template.Service.Basic.ActionService;
+
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.IndCatigoryModuleService;
+import com.template.Service.Table.AllIndexes.IndCommissionTypeServices;
+import com.template.Service.Table.AllIndexes.IndCreditDebitCatigoryService;
+import com.template.Service.Table.Commission.*;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+
+import org.springframework.validation.BindingResult;
+
+import com.Base.Class.CResponse;
+import com.Base.DTO.CResponseDTO;
+import com.template.Class.Commission.ActionCommissionInfo;
+import com.template.Class.Pageing.PageInfo;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndCatigoryModule;
+import com.template.Model.Table.AllIndexes.IndCommissionType;
+import com.template.Model.Table.AllIndexes.IndCreditDebitCatigory;
+import com.template.Model.Table.Commission.*;
+
+
+
+@Controller
+@ControllerAdvice(assignableTypes = {CommissionController.class})
+@RequestMapping("commission")
+public class CommissionController {
+
+
+	@Autowired
+	CommissionService commissionService; 
+	
+	@Autowired
+	IndCommissionTypeServices indCommissionTypeService; 
+	
+	@Autowired
+	IndCreditDebitCatigoryService indCreditDebitCatigoryService;
+	
+	@Autowired
+	IndCatigoryModuleService indCatigoryModuleService;
+	
+	@Autowired
+	ActionCommissionService actionCommissionService;
+
+	@Autowired
+	ActionService actionService;
+
+	@Value("${page.size}")
+	int itemCountInPage;
+	
+
+	@GetMapping("/index")
+	public String index(Authentication auth, Model model, final RedirectAttributes redirectAttributes,@RequestParam(name = "page", required = false) Integer page,
+			 @RequestParam(name = "nameA", required = false) String nameA,
+			@RequestParam(name = "nameB", required = false) String nameB,
+			@RequestParam(name = "precentageFlag", required = false) Integer precentageFlag,
+			@RequestParam(name = "isEnableFlag", required = false) Integer isEnableFlag,
+			@RequestParam(name = "indCommissionType", required = false) Integer indCommissionType) {
+		String result;
+		if(page==null)
+			page=0;
+		
+		Commission commission = new Commission();
+		commission.setIndCommissionTypeId(indCommissionType);
+		commission.setIsEnableFlag(isEnableFlag);
+		commission.setPrecentageFlag(precentageFlag);
+		commission.setNameA(nameA);
+		commission.setNameB(nameB);
+		if(nameA != null || nameB!=null || isEnableFlag != null || indCommissionType != null || precentageFlag != null) {
+			Page<Commission> logAsPage = commissionService.getSearchCommission(commission,  (Pageable) PageRequest.of(page, itemCountInPage));
+			
+			long totalElements = logAsPage.getTotalElements();
+			Pageable newPageable = (Pageable) logAsPage.getPageable();
+			Page<Commission> updatedLogAsPage = new PageImpl<>(logAsPage.getContent(), newPageable, totalElements);
+			model.addAttribute("commissions", updatedLogAsPage.getContent());
+			model.addAttribute("pageInfo", PageInfo.getPageInfo(updatedLogAsPage));
+			//to keep display search criteria
+			model.addAttribute("nameA", nameA);
+			model.addAttribute("nameB", nameB);
+			model.addAttribute("precentageFlag", precentageFlag);
+			model.addAttribute("isEnableFlag", isEnableFlag);
+			model.addAttribute("indCommissionType", indCommissionType);
+		}
+		else {
+			Page<Commission> comPage = commissionService.findAllAsPage(PageRequest.of(page, itemCountInPage));
+			model.addAttribute("commissions", comPage.getContent());
+			model.addAttribute("pageInfo", PageInfo.getPageInfo(comPage));
+	
+			//model.addAttribute("allnonCust", new ArrayList<NonCustIndividual>());
+			//model.addAttribute("pageInfo", new PageInfo<NonCustIndividual>());
+		}
+		//System.err.println(comPage.getContent());
+		List<IndCommissionType> IndCommissionTypeList = indCommissionTypeService.getAll();
+		model.addAttribute("IndCommissionTypeList", IndCommissionTypeList);
+	
+		result = "/commission/index";
+		return result;
+
+	}
+
+	//@PreAuthorize("hasPermission('user', 'create')")
+	@GetMapping("/create")
+	public String createOrUpdate(@RequestParam(value = "id", required = false) Long id, Model model) {
+		Commission commission;
+		CResponse response=null;
+		
+		response = commissionService.findById(id);
+		ActionCommissionInfo actionCommissionInfo =(ActionCommissionInfo) response.getReturnedObject();
+		List<IndCommissionType> IndCommissionTypeList = indCommissionTypeService.getAll();
+	
+
+		model.addAttribute("actionCommissionInfo", actionCommissionInfo);
+		model.addAttribute("IndCommissionTypeList", IndCommissionTypeList);
+
+		String result = "/commission/create";
+		return result;
+
+	}
+
+	//@PreAuthorize("hasPermission('user', 'create')")
+	@PostMapping(value = "/save")
+	public String save(@Valid @ModelAttribute("actionCommissionInfo") ActionCommissionInfo actionCommissionInfo, BindingResult bindingResult,
+			final RedirectAttributes redirectAttributes,HttpServletRequest request) throws Exception {
+		String result;
+		CResponse response=null;
+		CResponseDTO responseDTO=null;
+		response = commissionService.save(actionCommissionInfo,request.getContextPath());
+		responseDTO=new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if(response.isSuccess())
+		{
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+		}
+		else {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);	
+
+
+//			if (actionCommissionInfo.getCommission().getId() == null) {// create
+//				if(actionCommissionInfo.getCommission().getActivationFlag()==1)
+//				{
+//					SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+//			        String formattedDate = outputFormat.format(actionCommissionInfo.getCommission().getEffectiveFrom());
+//					 
+//					flashMessage = " تم إنشاء العمولة وسيتم تفعيلها بتاريخ "+formattedDate;
+//				}
+//				else
+//				flashMessage = "تم إنشاء العمولة بدون تفعيل";
+//				actionType = "commission_create";
+//			} else { // edit
+//				if(actionCommissionInfo.getCommission().getActivationFlag()==1)
+//				{
+//					SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+//			        String formattedDate = outputFormat.format(actionCommissionInfo.getCommission().getEffectiveFrom());
+//					 if(actionCommissionInfo.getCommission().getIsEnableFlag()==0)
+//					flashMessage = " تم تعديل العمولة وسيتم تفعيلها بتاريخ "+formattedDate;
+//					 else
+//							flashMessage = " تم تعديل العمولة وهي مفعلة "+formattedDate;
+//
+//				}
+//				else {
+//					flashMessage = "تم تعديل العمولة بدون تفعيل";
+//				}
+//				
+//
+//				actionType = "commission_edit";
+//			}
+		//	System.out.println(request.getParameter("isEnableFlag"));
+		
+		
+		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@	
+		//	if(actionCommissionInfo.getActionCommissions() != null) {
+		//		actionCommissionService.setActivationAllActionCommission(actionCommissionInfo);
+		//	}
+		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@	
+
+		//	redirectAttributes.addFlashAttribute("success",flashMessage )
+		result = "redirect:/commission/index";
+		return result;
+	}
+	@GetMapping("/details-delete")
+	public String detailsDelete(@RequestParam(value = "id") Long id, Model model) {
+		String result;
+		CResponse response;
+		
+		response=commissionService.findById(id);
+	
+		ActionCommissionInfo actionCommissionInfo =(ActionCommissionInfo) response.getReturnedObject();
+		
+		model.addAttribute("actionCommissionInfo", actionCommissionInfo);
+		result = "/commission/details-delete";
+		return result;
+	}
+
+	@GetMapping("/delete")
+	public String delete(@RequestParam(value = "id") Long id, final RedirectAttributes redirectAttributes) throws Exception {
+		String result;
+		CResponse response;
+		CResponseDTO responseDTO=null;
+		response= commissionService.delete(id);
+		responseDTO=new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if(response.isSuccess())
+		{
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+		}
+		else {
+
+			responseDTO.setErrorMessage(response.getErrorMessage());
+		}
+		
+		redirectAttributes.addFlashAttribute("response", responseDTO);	
+		result = "redirect:/commission/index";
+		return result;
+	}
+	@GetMapping("/details")
+	public String details(@RequestParam(value = "id") Long id, Model model) {
+		String result;
+		Commission commission;
+		CResponse response=null;
+		
+		response = commissionService.findById(id);
+		ActionCommissionInfo actionCommissionInfo =(ActionCommissionInfo) response.getReturnedObject();
+		List<IndCommissionType> IndCommissionTypeList = indCommissionTypeService.getAll();
+	
+
+		model.addAttribute("actionCommissionInfo", actionCommissionInfo);
+		model.addAttribute("IndCommissionTypeList", IndCommissionTypeList);
+	
+		result = "/commission/details";
+		return result;
+	}
+	
+	@GetMapping("/actions-commission")
+	public String addActionsCommission(@RequestParam(value = "id") Long id, Model model) {
+		String result;
+		CResponse response=null;
+		
+		List<IndCatigoryModule> indCatigoryModules = indCatigoryModuleService.findAll();
+		List<IndCreditDebitCatigory> indCreditDebitCatigories = indCreditDebitCatigoryService.findAll();
+
+		response= commissionService.findById(id);
+
+
+		ActionCommissionInfo actionCommissionInfo = (ActionCommissionInfo) response.getReturnedObject();
+		
+		model.addAttribute("actionCommissionInfo", actionCommissionInfo);
+		model.addAttribute("indCatigoryModules", indCatigoryModules);
+		model.addAttribute("indCreditDebitCatigories", indCreditDebitCatigories);
+
+		result = "/commission/actions-commission";
+		return result;
+	}
+	
+	@PostMapping(value = "/actions-commission/save")
+	public String saveActionsCommission(@Valid @ModelAttribute("actionCommissionInfo") ActionCommissionInfo actionCommissionInfo, BindingResult bindingResult,
+			final RedirectAttributes redirectAttributes,HttpServletRequest request) throws Exception {
+		String result;
+		CResponse response;
+		CResponseDTO responseDTO=null;
+		response= actionCommissionService.save(actionCommissionInfo);
+		responseDTO=new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if(response.isSuccess())
+		{
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+		}
+		else {
+
+			responseDTO.setErrorMessage(response.getErrorMessage());
+		}
+		
+		redirectAttributes.addFlashAttribute("response", responseDTO);	
+		
+		
+		result = "redirect:/commission/index";
+		
+		return result;
+	}
+	
+	
+	
+	@ModelAttribute("title")
+	public String pageTitle() {
+		return "العمولات";
+	}
+}

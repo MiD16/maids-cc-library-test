@@ -1,0 +1,241 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.AccIndDateUnit;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Model.Table.Products.AccPeriod;
+import com.template.Repository.Table.AllIndexes.AccIndDateUnitRepository;
+import com.template.Service.Basic.UserService;
+
+@Service
+public class AccIndDateUnitService {
+	
+	@Autowired
+	AccIndDateUnitRepository accIndDateUnitRepository;
+	
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	UserService userService;
+	
+	
+	// create date unit
+	public CResponse saveCreate(AccIndDateUnit dateUnit, String path) throws Exception {
+		CResponse response = null;
+		// call validate for create object
+		response = validateUnitCreate(dateUnit, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		dateUnit.setInsertBy(userService.getAuthenticatedUser().getID());
+		accIndDateUnitRepository.save(dateUnit);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+	
+	
+	// update date unit
+	public CResponse saveUpdate(AccIndDateUnit dateUnit, String path) throws Exception {
+		CResponse response = null;
+		// call validate for update object
+		response = validateUnitUpdate(dateUnit, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		// to get insert date from object in database
+		AccIndDateUnit tem = accIndDateUnitRepository.findById(dateUnit.getId()).get();
+		dateUnit.setInsertDate(tem.getInsertDate());
+		dateUnit.setInsertBy(tem.getInsertBy());
+		// set user that updated
+		dateUnit.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		accIndDateUnitRepository.save(dateUnit);
+		response.setSuccessMessage("تم التعديل بنجاح");
+		return response;
+	}
+	
+	// delete date unit
+	public CResponse delete(Long id) throws Exception {
+
+		AccIndDateUnit dateUnit = accIndDateUnitRepository.findById(id).get();
+		CResponse response = null;
+		// call validate for delete object
+		response = validateUnitDelete(dateUnit);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		// soft delete
+		dateUnit.setIsDeleted(1);
+		// set deleted date
+		dateUnit.setDeletedDate(new Date());
+		// set user that deleted
+		dateUnit.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(accIndDateUnitRepository.save(dateUnit));
+		return response;
+	}
+	
+	public void update(AccIndDateUnit accIndDateUnit) {
+		accIndDateUnitRepository.save(accIndDateUnit);
+	}
+	
+	public CResponse findById(Long id) {
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(accIndDateUnitRepository.findById(id).get());
+		return response;
+	}
+	
+	public CResponse getAll(PageRequest pageRequest){
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(accIndDateUnitRepository.getAll(pageRequest));
+		return response;
+	}
+	
+	public List<AccIndDateUnit> getAllDeleted(){
+		List<AccIndDateUnit> allDeleted = accIndDateUnitRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+	
+	//check if date unit is deleted
+	//return true if deleted
+	//return false if not deleted
+	public boolean checkDateUnitIsDeleted(long id) {
+		AccIndDateUnit dateUnit= accIndDateUnitRepository.findById(id).get();
+		if (dateUnit.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	
+	// check if date unit is exist
+	// return id if exist
+	// return null if not exist
+	public Long checkDateUnitIsExist(AccIndDateUnit dateUnit) {
+		AccIndDateUnit dateUnitFromDB= findByNames(dateUnit.getNameA(),dateUnit.getNameB());
+		if (dateUnitFromDB != null) {
+			if (dateUnit.getId() == null || (dateUnit.getId() != null && !dateUnit.getId().equals(dateUnitFromDB.getId()))) {
+				return dateUnitFromDB.getId();
+			}
+		}
+		return null;
+	}
+	
+	public AccIndDateUnit findByNames(String nameA, String nameB) {
+		AccIndDateUnit dateUnit=accIndDateUnitRepository.findByNameA(nameA);
+		if(dateUnit!=null)
+			return dateUnit;
+		dateUnit=accIndDateUnitRepository.findByNameB(nameB);
+		return dateUnit;
+	}
+	// validate if can create date unit
+	public CResponse validateUnitCreate(AccIndDateUnit dateUnit, String path) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The date unit exists
+				if (dateUnit == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.Acc_Ind_Date_Unit_NOT_FOUND.toString());
+					response.setErrorMessage("وحدة التاريخ غير موجودة");
+					break;
+				}
+				// set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.Acc_Ind_Date_Unit.toString(), dateUnit);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IND_DATE_UNIT, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	// validate if can update date unit
+	public CResponse validateUnitUpdate(AccIndDateUnit dateUnit, String path) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The date unit exists
+				if (dateUnit == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.Acc_Ind_Date_Unit_NOT_FOUND.toString());
+					response.setErrorMessage("وحدة التاريخ غير موجودة");
+					break;
+				}
+				// set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.Acc_Ind_Date_Unit.toString(), dateUnit);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_IND_DATE_UNIT, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	// validate if can delete date unit
+	public CResponse validateUnitDelete(AccIndDateUnit dateUnit) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The date unit exists
+				if (dateUnit == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.Acc_Ind_Date_Unit_NOT_FOUND.toString());
+					response.setErrorMessage("وحدة التاريخ غير موجودة");
+					break;
+				}
+				// set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.Acc_Ind_Date_Unit.toString(), dateUnit);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_IND_DATE_UNIT, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+}

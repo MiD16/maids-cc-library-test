@@ -1,0 +1,27 @@
+package com.template.Repository.Table.SubpoenaRequest;
+
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+
+@Repository
+public interface SubpoenaRequestDetailsRep  extends JpaRepository<SubpoenaRequestDetails,Long>{
+	
+	@Query("Select a from SubpoenaRequestDetails a where a.isDeleted=0")
+	public Page<SubpoenaRequestDetails> findAllSubpoenaRequestDetails(PageRequest pageRequest);
+	
+
+	@Query("Select a from SubpoenaRequestDetails a where a.subpoenaRequest.id=:id and  a.isDeleted=0 and ROWNUM = 1")
+	public SubpoenaRequestDetails findBySubpoenaRequestId(@Param("id") long id);
+	
+
+	
+}
+

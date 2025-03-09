@@ -1,0 +1,51 @@
+package com.template.BusinessRule.Holidays;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Holiday.Holidays;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.Holiday.HolidaysService;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+import com.template.Service.Table.SubpoenaRequest.SubpoenaRequestDetailsService;
+
+@Component(CBusinessRuleConstant.HOLIDAY_IS_NOT_DELETED)
+@Lazy
+public class CBRHolidayIsNotDeleted implements IBusinessRule {
+
+	@Autowired
+	HolidaysService holidaysService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		Holidays holidays = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				holidays = (Holidays) parameters.getParameter(EKeyCode.HOLIDAY.toString());
+				if (holidaysService.checkHolidayIsDeleted(holidays.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("يوم العطلة محذوف");
+					actionValidationResult.setErrorCode(EErrorCode.HOLIDAY_IS_DELETED.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

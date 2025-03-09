@@ -1,0 +1,30 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.*;
+
+
+@Repository
+public interface BranchRepository extends JpaRepository<Branch, Long> {
+
+	@Query("Select a from Branch a where a.isDeleted = 0")
+	public List<Branch> getAll();
+
+	@Query("Select a From Branch a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<Branch> getAllDeleted();
+	
+	@Query("Select DISTINCT a From Branch a  WHERE a.isDeleted = 0 and a.id not in ( select distinct b.branch.id from BranchHoliday b where b.holiday.id=:id and b.isDeleted=0) order by a.id desc")
+	public List<Branch> findBranchNotInBranchHoliday(@Param("id") Long id);
+	
+	
+	@Query("Select a from  Branch a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public Branch findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+
+}

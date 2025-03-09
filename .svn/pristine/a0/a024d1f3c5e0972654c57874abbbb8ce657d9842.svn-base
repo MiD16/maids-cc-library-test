@@ -1,0 +1,46 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.AccIndWarningSign;
+import com.template.Model.Table.AllIndexes.ActionCustomerNature;
+import com.template.Model.Table.AllIndexes.IndBlacklistDocStatus;
+import com.template.Model.Table.AllIndexes.IndCommissionType;
+
+
+@Repository
+public interface ActionCustomerNatureRepository extends JpaRepository <ActionCustomerNature, Long>{
+
+	@Query("Select a from ActionCustomerNature a where a.isDeleted != 1")
+	public List<ActionCustomerNature> getAll();
+	
+	@Query("Select a From ActionCustomerNature a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<ActionCustomerNature> getAllDeleted();
+	
+	
+	@Query("Select a from  ActionCustomerNature a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public ActionCustomerNature findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+	/*
+	 * @Query("Select a From ActionCommission a WHERE a.isDeleted = 0 and a..id = :id order by a.id desc"
+	 * ) public List<ActionCustomerNature> getAllActionCustomerNature(@Param("id")
+	 * long id);
+	 */
+	
+	
+	/*
+	 * @Query("Select a from  ActionCustomerNature a where (a.customer_nature_id=:customer_nature_id or a.action_id=:action_id) and a.isDeleted=0 "
+	 * ) public ActionCustomerNature findByNames(@Param("customer_nature_id") String
+	 * customer_nature_id, @Param("action_id") String action_id);
+
+	
+	
+	@Query("Select a from  ActionCustomerNature a where (a.id=:id ) and a.isDeleted=0 ")
+	public ActionCustomerNature findByNames(@Param("id") String id);
+		 */
+}

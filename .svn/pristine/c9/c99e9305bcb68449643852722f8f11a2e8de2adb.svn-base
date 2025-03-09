@@ -1,0 +1,73 @@
+package com.template.Service.Table.AllIndexes;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
+import org.springframework.stereotype.Service;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+
+import com.template.Repository.Table.AllIndexes.IndAddressTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndFileTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndGenderRepository;
+import com.template.Repository.Table.AllIndexes.IndIdTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndKinshipRoleRepository;
+
+import java.util.List;
+
+
+@Service
+
+public class IndKinshipRoleServices {
+	@Autowired
+	IndKinshipRoleRepository indKinshipRoleRepository;
+
+	public IndKinshipRole save(IndKinshipRole indKinshipRole) {
+		if(indKinshipRole.getId() == null)
+		{
+			indKinshipRole.setInsertBy(0);
+			indKinshipRole.setInsertDate(getCurrentDate());
+			indKinshipRole.setIsDeleted(0);
+		}else if(indKinshipRole.getId() != null){
+			System.err.println(2121);
+			indKinshipRole.setInsertDate(getCurrentDate());
+			indKinshipRole.setLastUpdateDate(getCurrentDate());
+			indKinshipRole.setLastUpdateBy(1);
+		}
+		indKinshipRoleRepository.save(indKinshipRole);
+		return indKinshipRole;
+	}
+
+	public void update(IndKinshipRole indKinshipRole) {
+		indKinshipRoleRepository.save(indKinshipRole);
+	}
+
+	public IndKinshipRole findById(Long id) {
+		return indKinshipRoleRepository.getById(id);
+	}
+
+	public List<IndKinshipRole> getAll(){
+		List<IndKinshipRole> all = indKinshipRoleRepository.getAll();
+		return all;
+	}
+
+	public List<IndKinshipRole> getAllDeleted(){
+		List<IndKinshipRole> allDeleted = indKinshipRoleRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndKinshipRole delete(Long id) {
+		IndKinshipRole indKinshipRole = indKinshipRoleRepository.findById(id).get();
+		if (indKinshipRole == null) {
+			throw new NoDataFoundException("indSocialStatus With ID : " + id + " Not Found");
+		}
+		indKinshipRole.setIsDeleted(1);
+		return indKinshipRoleRepository.save(indKinshipRole);
+	}
+
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+	}
+

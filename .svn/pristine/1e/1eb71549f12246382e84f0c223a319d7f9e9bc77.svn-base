@@ -1,0 +1,200 @@
+package com.template.Controller.Basic;
+import java.util.List;
+import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.Base.Class.CResponse;
+import com.Base.DTO.CResponseDTO;
+import com.template.Class.Pageing.PageInfo;
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.RoleAction;
+import com.template.Model.View.RoleActionOpposite;
+import com.template.Service.Basic.ActionService;
+//import com.template.Service.Basic.LogService;
+import com.template.Service.Basic.RoleActionService;
+import com.template.Service.Basic.RoleService;
+import com.template.Service.Basic.UserActionService;
+import com.template.Service.Basic.UserRoleService;
+import com.template.Service.Basic.UserService;
+@Controller
+@ControllerAdvice(assignableTypes = { RoleController.class })
+public class RoleController {
+//	@Autowired
+//	public LogService logActionService;
+	@Autowired
+	RoleService roleService;
+	@Autowired
+	UserRoleService userRoleService;
+	@Autowired
+	UserActionService userActionService;
+	@Autowired
+	ActionService actionService;
+	@Autowired
+	UserService userService;
+	@Autowired
+	RoleActionService roleActionService;
+	@Value("${page.size}")
+	int itemCountInPage;
+
+	// Role Section
+	// @PreAuthorize("hasPermission('role', 'index')")
+	@GetMapping("/role/index")
+	public String index(Model model, final RedirectAttributes redirectAttributes,
+			@RequestParam(name = "page", required = false) Integer page) {
+		String result = null;
+		CResponse response = null;
+		Page<Role> rolePage = null;
+		if (page == null)
+			page = 0;
+		response = new CResponse();
+		response = roleService.findAllAsPage(PageRequest.of(page, itemCountInPage));
+		rolePage = (Page<Role>) response.getReturnedObject();
+		model.addAttribute("roleList", rolePage.getContent());
+		model.addAttribute("pageInfo", PageInfo.getPageInfo(rolePage));
+		result = "/role/index";
+		return result;
+	}
+
+//	@PreAuthorize("hasPermission('role', 'create')")
+	@GetMapping("/role/create")
+	public String createRole(@RequestParam(value = "id", required = false) Integer id, Model model,
+			final RedirectAttributes redirectAttributes, @RequestParam(name = "page", required = false) Integer page) {
+		String result = null;
+		CResponse response = null;
+		Page<RoleAction> roleactionPage = null;
+		List<RoleActionOpposite> roleActionOppositeList = null;
+		List<Role> roleList = null;
+		Role role = new Role();
+		if (page == null)
+			page = 0;
+		response = new CResponse();
+		if (id != null) {
+			
+			response = new CResponse();
+			response = roleActionService.getRoleActionByRoleId(id, PageRequest.of(page, itemCountInPage));
+			roleactionPage = (Page<RoleAction> ) response.getReturnedObject();
+			response =roleActionService.findRoleactionOppositeByRoleId(id);
+			roleActionOppositeList = (List<RoleActionOpposite> ) response.getReturnedObject();
+		
+			response = roleService.findRoleById(id);
+			role = (Role) response.getReturnedObject();
+			model.addAttribute("roleActionOppositeList", roleActionOppositeList);
+			model.addAttribute("roleactionList", roleactionPage.getContent());
+			model.addAttribute("pageInfo", PageInfo.getPageInfo(roleactionPage));
+
+		}
+		response = roleService.findAll();
+		roleList = (List<Role>) response.getReturnedObject();
+		model.addAttribute("roleList", roleList);
+		model.addAttribute("role", role);
+		result = "/role/create-role";
+		return result;
+	}
+
+	@GetMapping("/role/details")
+	public String details(@RequestParam(value = "id") int id, Model model,
+			@RequestParam(name = "page", required = false) Integer page) {
+		String result = null;
+		CResponse response = null;
+		Role role = null;
+		Page<RoleAction> roleactionPage = null;
+		if (page == null)
+			page = 0;
+		response = new CResponse();
+		response = roleService.findRoleById(id);
+		role = (Role) response.getReturnedObject();
+		response =  roleActionService.getRoleActionByRoleId(id, PageRequest.of(page, itemCountInPage));
+		roleactionPage =(Page<RoleAction>) response.getReturnedObject();
+		model.addAttribute("role", role);
+		model.addAttribute("roleactionList", roleactionPage.getContent());
+		model.addAttribute("pageInfo", PageInfo.getPageInfo(roleactionPage));
+		result = "/role/details";
+		return result;
+	}
+
+	// @PreAuthorize("hasPermission('role', 'create')")
+	@PostMapping("/role/save")
+	public String roleSave(@Valid @ModelAttribute("role") Role role, Model model,
+			final RedirectAttributes redirectAttributes) throws Exception {
+	
+		String result=null;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		response = new CResponse();
+		// create
+	
+		if (role.getID() == 0) {
+			response = roleService.createRole(role);
+			responseDTO = new CResponseDTO();
+			responseDTO.setSuccess(response.isSuccess());
+			if (!response.isSuccess()) {
+				responseDTO.setErrorMessage(response.getErrorMessage());
+
+				result = "redirect:/role/create";
+			} else {
+				responseDTO.setSuccessMessage(response.getSuccessMessage());
+				result = "redirect:/role/index";
+			}
+			redirectAttributes.addFlashAttribute("response", responseDTO);
+			return result;
+		} else { // edit
+			response = roleService.updateRole(role);
+			System.err.println("controller");
+			responseDTO = new CResponseDTO();
+			responseDTO.setSuccess(response.isSuccess());
+			System.err.println("controller");
+			if (!response.isSuccess()) {
+				responseDTO.setErrorMessage(response.getErrorMessage());
+				result = "redirect:/role/create?id=" + role.getID();
+			} else {
+				responseDTO.setSuccessMessage(response.getSuccessMessage());
+				result = "redirect:/role/index";
+			}
+			redirectAttributes.addFlashAttribute("response", responseDTO);
+			return result;
+		}
+	}
+
+//	@PreAuthorize("hasPermission('role', 'delete')")
+	@GetMapping("/role/delete")
+	public String delete(@RequestParam(value = "id") int id, final RedirectAttributes redirectAttributes)
+			throws Exception {
+		String result=null;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		Role role=null;
+		response = new CResponse();
+		response = roleService.findRoleById(id);
+		 role = (Role) response.getReturnedObject();
+		// delete role
+		response = roleService.deleteRole(id);
+		responseDTO = new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if (!response.isSuccess()) {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+			result = "redirect:/role/index";
+		} else {
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+			result = "redirect:/role/index";
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		return result;
+	}
+
+
+
+	@ModelAttribute("title")
+	public String pageTitle() {
+		return "الأدوار والصلاحيات";
+	}
+}

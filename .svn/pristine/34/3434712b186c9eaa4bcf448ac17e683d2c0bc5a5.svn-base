@@ -1,0 +1,170 @@
+package com.template.Model.Table.Products;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Table.AllIndexes.AccIndAccountTypeCategories;
+import com.template.Model.Table.Interests.AccInterest;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name="ACCOUNT_TYPE")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor 
+@AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class AccountType {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name="NAME_A")
+	private String accTypeNameA;
+	
+	@Column(name="NAME_B")
+	private String accTypeNameB;
+	
+	@Column(name="ACC_TYPE_CODE")
+	private String accTypeCode;
+	
+	@Column(name="IS_ENABLED")
+	private Integer isEnabled;
+	
+	@ManyToOne
+	@JoinColumn(name="CATEGORY_ID")
+	private AccIndAccountTypeCategories categoryId;
+	
+	@Column(name="GL_ID")
+	private Integer glId;
+	
+	@Column(name="GL_CREDIT_ID")
+	private Integer glCreditId;
+	
+	@Column(name="GL_DEBIT_ID")
+	private Integer glDebitId;
+	
+	@Column(name="GL_ACCRUAL_ID")
+	private Integer glAccrualId;
+	
+	@Column(name="ATM_FLAG")
+	private Integer atmFlag;
+	
+	@Column(name="CHEQUE_FLAG")
+	private Integer chequeFlag;
+	
+	@Column(name = "NUMBERS_OF_ACCOUNTS")
+	private Integer numberOfAccounts;
+	
+	@Column(name="INTEREST_TAKE_FLAG")
+	private Integer interestTakeFlag;
+	
+	@Column(name="FOR_INTEREST_COMPILATION_FLAG")
+	private Integer forInterestCompilationFlag;
+	
+	@Column(name="PASS_BOOK_TAKE_FLAG")
+	private Integer passBookTakeFlag;
+	
+	@Column(name="ACCOUNT_STATEMENT_FLAG")
+	private Integer accountStatementFlag;
+	
+	@Column(name="DEPOSIT_PERIOD_FLAG")
+	private Integer depositPeriodFlag;
+	
+	@Column(name = "INTEREST_PERIOD_FLAG")
+	private Integer interestPeriodFlag;
+	
+	@Column(name = "DAY_INTEREST")
+	private Integer dayInterest;
+	
+	@Column(name = "MONTH_INTEREST")
+	private Integer monthInterest;
+	
+	@ManyToOne
+	@JoinColumn(name="DEBIT_INTEREST_ID")
+	private AccInterest debitInterestId;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="CREDIT_INTEREST_ID")
+	private AccInterest creditInterestId;
+	
+	@ManyToOne
+	@JoinColumn(name="RENWAL_PERIOD_ID")
+	private AccPeriod renwalPeriodId;
+	
+	@ManyToOne
+	@JoinColumn(name="MATURITY_PERIOD_ID")
+	private AccPeriod maturityPeriodId;
+	
+	@ManyToOne
+	@JoinColumn(name="INTEREST_PERIOD_ID")
+	private AccPeriod interestPeriodId;
+	
+	@ManyToOne
+	@JoinColumn(name="PERMISSION_PERIOD_ID")
+	private AccPeriod permissionPeriodId;
+	
+	@Column(name="PENTALY_BREAK_DEPOSIT")
+	private Integer pentalyBreakDeposit;
+	
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+	
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+	
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+	
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	
+	@Column(name="IS_DELETED")
+	private Integer isDeleted;
+	
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+	
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+	
+	@Column(name="NOTE")
+	private String note;
+	
+	@Transient
+	private String nameType;
+	
+	@PrePersist
+	  void createdAt() {
+	    this.insertDate = this.lastUpdateDate = new Date();
+	    this.isDeleted = 0;
+	  }
+	
+	 @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	  }
+	
+}

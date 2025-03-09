@@ -1,0 +1,124 @@
+package com.template.Controller.Basic.SystemLog;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.Base.Class.CResponse;
+import com.Base.DTO.CResponseDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.template.Class.Pageing.PageInfo;
+import com.template.Model.Basic.SystemLog.Commandar;
+import com.template.Model.Basic.SystemLog.SystemLog;
+import com.template.Model.Basic.SystemLog.SystemLogExtention;
+import com.template.Service.Basic.SystemLog.CommandarService;
+import com.template.Service.Basic.SystemLog.SystemLogExtentionService;
+import com.template.Service.Basic.SystemLog.SystemLogService;
+
+@Controller
+@RequestMapping("SystemLog")
+public class SystemLogController {
+	
+	@Value("${page.size}")
+	int itemCountInPage;
+	
+	@Autowired
+	SystemLogService systemLogService;
+	@Autowired
+	CommandarService commandarService;
+	@Autowired
+	SystemLogExtentionService systemlogExtentionService;
+
+	@GetMapping("/index")
+	public String index(Model model, final RedirectAttributes redirectAttributes,
+			@RequestParam(name = "page", required = false) Integer page) {
+		String result;
+		CResponse response = new CResponse();
+		if (page == null)
+			page = 0;
+		response = systemLogService.getAllSystemLog(PageRequest.of(page, itemCountInPage));
+		System.err.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+		Page<SystemLog> sysPage = (Page<SystemLog>) response.getReturnedObject();
+		model.addAttribute("sysPage", sysPage.getContent());
+		model.addAttribute("pageInfo", PageInfo.getPageInfo(sysPage));
+		result = "/SystemLog/index";
+		return result;
+	}
+
+	@GetMapping("/create")
+	public String create(@RequestParam(value = "id", required = false) Long id, Model model,
+			final RedirectAttributes redirectAttributes) {
+		String result;
+		CResponse response = null;
+		SystemLog systemLog;
+		if (id == null) {
+			systemLog = new SystemLog();
+		} else {
+			response = new CResponse();
+			response = systemLogService.findById(id);
+			systemLog = (SystemLog) response.getReturnedObject();
+			model.addAttribute("systemLog", systemLog);
+		}
+		result = "/SystemLog/create";
+		return result;
+	}
+
+//	@PostMapping("/save")
+//	public String save(@Valid @ModelAttribute("systemLog") SystemLog systemLog,
+//			Model model, final RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+//		String result;
+//
+//		CResponse response = null;
+//		CResponseDTO responseDTO = null;
+//		response = systemLogService.save(systemLog);
+//		responseDTO = new CResponseDTO();
+//		responseDTO.setSuccess(response.isSuccess());
+//		if (response.isSuccess()) {
+//			responseDTO.setSuccessMessage(response.getSuccessMessage());
+//		} else {
+//			responseDTO.setErrorMessage(response.getErrorMessage());
+//		}
+//		redirectAttributes.addFlashAttribute("response", responseDTO);
+//		result = "redirect:/SystemLog/index";
+//		return result;
+//	}
+
+	@GetMapping("/details")
+	public String details(@RequestParam(value = "id", required = true) Long id, Model model,
+			final RedirectAttributes redirectAttributes) throws JsonProcessingException {
+		String result;
+		ObjectMapper objectMapper=new ObjectMapper();
+		CResponse response = new CResponse();
+		response = systemLogService.findById(id);
+		SystemLog systemLog =  (SystemLog) response.getReturnedObject();
+	
+		response=commandarService.findBySystemLogId(systemLog.getId());
+		List<Commandar>  commandar =  (List<Commandar> ) response.getReturnedObject();
+		response=systemlogExtentionService.findBySystemLogId(systemLog.getId());
+		List<SystemLogExtention>  systemLogExtentions =  (List<SystemLogExtention> ) response.getReturnedObject();
+		model.addAttribute("systemLog", systemLog);
+		model.addAttribute("commandar", commandar);
+		model.addAttribute("systemLogExtentions", systemLogExtentions);
+		result = "/SystemLog/details";
+		System.err.println(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+		
+		System.err.println(objectMapper.writeValueAsString((Object)systemLog));
+		return result;
+	}
+
+}

@@ -1,0 +1,101 @@
+package com.template.Model.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.template.Model.Basic.Action;
+import com.template.Model.Table.Products.AccountTypeNature;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "ACTION_CUSTOMER_COMMISSION ")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+
+public class ActionCustomerNature {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	
+	 @ManyToOne
+	  
+	  @JoinColumn(name="customer_nature_id ") private IndCustomerNature
+	  indCustomerNature;
+	 
+	  
+	  @ManyToOne
+	  
+	  @JoinColumn(name="action_id  ") private Action action ;
+	  
+	  @Column(name="NAME_A")
+		private String nameA;
+
+		@Column(name="NAME_B")
+		private String nameB;
+
+	@Column(name = "Percentage_flag ")
+	private Integer Percentageflag;
+
+	@Column(name = "value ")
+	private Integer value;
+
+	@Column(name = "DELETED_BY")
+	private Integer deletedBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DELETED_DATE")
+	private Date deletedDate;
+
+	@Column(name = "INSERT_BY")
+	private Integer insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "INSERT_DATE")
+	private Date insertDate;
+
+	@Column(name = "IS_DELETED")
+	private Integer isDeleted;
+
+	@Column(name = "LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+
+	private String note;
+
+	@PrePersist
+	void createdAt() {
+		this.insertDate = this.lastUpdateDate = new Date();
+		this.isDeleted = 0;
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.lastUpdateDate = new Date();
+	}
+}

@@ -1,0 +1,61 @@
+package com.template.BusinessRule.AccIndDateUnit;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndDateUnit;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Service.Table.AllIndexes.AccIndDateUnitService;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+@Component(CBusinessRuleConstant.Acc_Ind_Date_Unit_IS_NOT_EXIST)
+@Lazy
+public class CBRAccIndDateUnitIsNotDeleted implements IBusinessRule{
+	@Autowired
+	AccIndDateUnitService accIndDateUnitService;
+	
+
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult accIndDateUnitValidationResult = null;
+		AccIndDateUnit accIndDateUnit = null;
+		AccIndDateUnit accIndDateUnitName = null;
+		long accIndDateUnitDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				accIndDateUnitValidationResult = new CActionValidationResult();
+
+				accIndDateUnit = (AccIndDateUnit) parameters.getParameter(EKeyCode.Acc_Ind_Date_Unit.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				accIndDateUnitName = accIndDateUnitService.findByNames(accIndDateUnitName.getNameA(), accIndDateUnitName.getNameB());
+				
+				if (accIndDateUnit != null) {
+			
+					if (accIndDateUnit.getId() == null || accIndDateUnit.getId()!=accIndDateUnit.getId()) {
+						String messageString = "<div style='margin-bottom: 12px'>" + accIndDateUnit.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ accIndDateUnit.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						accIndDateUnitValidationResult.setValid(false);
+						accIndDateUnitValidationResult.setErrorMessage(messageString);
+						accIndDateUnitValidationResult.setErrorCode(EErrorCode.Acc_Ind_Date_Unit_IS_EXIST.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return accIndDateUnitValidationResult;
+	}}
+

@@ -1,0 +1,28 @@
+package com.template.Action.Action;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.UPDATE_ACTION)
+@Lazy
+public class CAUpdateAction extends CAction 
+{
+	public CAUpdateAction(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+	
+		addBusinessnRule(CBusinessRuleConstant.ACTION_IS_NOT_EXIST);
+	}
+}

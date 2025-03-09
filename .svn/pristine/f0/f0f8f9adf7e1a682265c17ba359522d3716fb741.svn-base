@@ -1,0 +1,55 @@
+package com.template.BusinessRule.IndCatigoryModule;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.AllIndexes.IndCatigoryModule;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Holiday.Holidays;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+import com.template.Service.Table.AllIndexes.IndCatigoryModuleService;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.Holiday.HolidaysService;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+import com.template.Service.Table.SubpoenaRequest.SubpoenaRequestDetailsService;
+
+@Component(CBusinessRuleConstant.IND_CATIGORY_MODULE_IS_NOT_DELETED)
+@Lazy
+public class CBRIndCatigoryModuleIsNotDeleted implements IBusinessRule {
+
+	@Autowired
+	IndCatigoryModuleService indCatigoryModuleService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		IndCatigoryModule indCatigoryModule= null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				indCatigoryModule = (IndCatigoryModule) parameters.getParameter(EKeyCode.IND_CATEGORY_MODULE.toString());
+				if (indCatigoryModuleService.checkIndCatigoryModuleIsDeleted(indCatigoryModule.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("الوحدة التي تنتمي لها العملية محذوفة");
+				
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

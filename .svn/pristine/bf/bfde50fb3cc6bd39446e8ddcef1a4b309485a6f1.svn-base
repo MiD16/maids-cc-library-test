@@ -1,0 +1,31 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.AccIndDateUnit;
+import com.template.Model.Table.Holiday.IndHolidays;
+
+@Repository
+public interface AccIndDateUnitRepository extends JpaRepository <AccIndDateUnit, Long> {
+	
+	@Query("Select a from AccIndDateUnit a where a.isDeleted = 0 order by a.placeOrder desc")
+	public Page<AccIndDateUnit> getAll(PageRequest pageRequest);
+	
+	@Query("Select a From AccIndDateUnit a WHERE a.isDeleted = 1 order by a.placeOrder desc")
+	public List<AccIndDateUnit> getAllDeleted();
+
+	
+	@Query("Select a from  AccIndDateUnit a where a.nameA=:nameA and a.isDeleted=0 ")
+	public AccIndDateUnit findByNameA(@Param("nameA") String nameA);
+	
+	@Query("Select a from  AccIndDateUnit a where a.nameB=:nameB and a.isDeleted=0 ")
+	public AccIndDateUnit findByNameB(@Param("nameB") String nameB);
+
+}

@@ -1,0 +1,29 @@
+package com.template.Repository.Basic;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.Notification;
+
+@Repository
+public interface NotificationsRep extends JpaRepository<Notification,Integer>{
+
+
+	
+	@Query("Select n from Notification n where n.user_to.ID=:id ORDER BY  n.notif_date DESC")
+	public List<Notification> getAllNotificationsByUserId(@Param("id") int user_id);
+	@Query("Select n from Notification n where user_to_id=:id and n.seen=0 ORDER BY seen ASC, notif_date DESC ")
+
+//	@Query(value="Select * from Notification n where user_to_id=:id ORDER BY seen ASC, notif_date DESC FETCH NEXT 10 ROWS ONLY",nativeQuery = true)
+	public List<Notification> getLastTenNotificationsByUserId(@Param("id") int user_id);
+	
+	@Query("Select count(*) from Notification n where n.user_to.ID=:id and n.seen=0")
+	public int getNumberNewNotificationsByUserId(@Param("id") int user_id);
+	
+	
+	
+}

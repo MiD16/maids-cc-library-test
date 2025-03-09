@@ -1,0 +1,72 @@
+package com.template.Model.Basic;
+
+
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "Log_Action")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class LogAction {
+	
+	@Id
+	@Column(name="ID")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int ID ;
+	
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "user_id",unique=false, referencedColumnName = "ID")
+	private User user ;
+	
+	@DateTimeFormat(pattern="dd/MM/yyyy")
+	@Column(name = "action_date")
+	private Date action_date;
+	
+	@ManyToOne( optional = true)
+    @JoinColumn(name = "action_id",unique=false, referencedColumnName = "ID")
+	private Action action ;
+	@Column(name = "description")
+	private String description ;
+	@Transient
+	private String contractorName;
+	
+
+
+
+	public LogAction( User user, Date action_date, Action action, String description) {
+		super();
+	
+		this.user = user;
+		this.action_date = action_date;
+		this.action = action;
+		this.description = description;
+	}
+
+
+
+}

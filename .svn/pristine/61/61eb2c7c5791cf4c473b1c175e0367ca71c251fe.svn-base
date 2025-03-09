@@ -1,0 +1,48 @@
+package com.template.BusinessRule.RoleAction;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.RoleAction;
+import com.template.Model.Basic.User;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.RoleActionService;
+import com.template.Service.Basic.UserService;
+
+@Component(CBusinessRuleConstant.ROLE_ACTION_IS_NOT_EXIST)
+@Lazy
+public class CBRRoleActionIsNotExist implements IBusinessRule {
+	@Autowired
+	RoleActionService roleActionService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		RoleAction roleaction = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				roleaction = (RoleAction) parameters.getParameter(EKeyCode.ROLEACTION.toString());
+				if (roleActionService.check_role_action_is_exist(roleaction)) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("الصلاحية  موجود  داخل الدور مسبقا");
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

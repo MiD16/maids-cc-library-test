@@ -1,0 +1,20 @@
+package com.template.Class.Index;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class CustomerAccountType  {
+
+	private String nameA;
+	private String nameB;
+	private long categoryId; // حساب جاري، وديعة، قرض، ...
+	private Long statusId;
+
+}

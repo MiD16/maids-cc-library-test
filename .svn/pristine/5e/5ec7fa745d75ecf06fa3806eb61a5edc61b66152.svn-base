@@ -1,0 +1,39 @@
+package com.template.DataBase.Seeders;
+
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.springframework.stereotype.Component;
+
+import com.template.DataBase.Seeder;
+import com.template.Model.Basic.ControllerName;
+import com.template.Repository.Basic.ControllerRep;
+
+
+@Component
+public class ControllerSeeder {
+
+
+	private final Log logger = LogFactory.getLog(Seeder.class);
+	
+	public ControllerSeeder() {
+		logger.info("	==>Seeder ==> "+ getClass().getSimpleName());
+	}
+	
+	public void run(ControllerRep controllerRep) {
+		ControllerName controllerName=new ControllerName();
+		
+		controllerName.setController_name("user");
+		controllerName.setStatus(0);
+		
+		controllerRep.save(controllerName);
+		//=========
+		controllerName=new ControllerName();
+		controllerName.setController_name("role");
+		controllerName.setStatus(0);
+		
+		controllerRep.save(controllerName);
+	}
+	
+	
+}

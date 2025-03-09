@@ -1,0 +1,24 @@
+package com.template.Class;
+import java.io.Serializable;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class UserActionOppositeId implements Serializable {
+	
+	 private int action_id;
+	 private int user_id;
+	
+	public UserActionOppositeId(int user_id, int action_id) {
+    
+        this.user_id =user_id;
+        this.action_id = action_id;
+    }
+	
+
+}

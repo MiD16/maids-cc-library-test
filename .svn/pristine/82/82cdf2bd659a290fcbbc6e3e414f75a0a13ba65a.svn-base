@@ -1,0 +1,77 @@
+package com.template.Service.Table;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.Base.Component.CTokenUtility;
+import com.template.Repository.Basic.RoleRep;
+import com.template.Service.Basic.UserService;
+import com.template.util.Util;
+
+@Service
+public class AccountService {
+
+	@Autowired
+	UserService userService;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
+	@Autowired
+	CTokenUtility tokenUtility;
+	
+	@Autowired
+	private RoleRep roleRep;
+	@Autowired
+	Util util;
+	@Value("${otp.user.date.expiration.minute}")
+	int minuteCount;
+//
+//	public Integer saveMobileUser(SingUpRequest request) {
+//		CResponse response = null;
+//		response = new CResponse();
+//		response = userService.getUserByUserName(request.getMobile());
+//		User oldUser = (User) response.getReturnedObject();
+//
+//		if (oldUser == null) {
+//			String otp = util.getSaltString(6);
+//			User user = new User();
+//			user.setUsername(request.getMobile());
+//			// user.setNickname(request.getNickname());
+//			user.setPassword(passwordEncoder.encode(request.getPassword()));
+//			// user.setUser_role(roleRep.findRoleByRoleNameEnglish("mobile_user"));
+//			user.setOtp(otp);
+//			// user.setExpirationDate(util.AddMinuteToCurrentDate(minuteCount));
+//			// user.setStatus(UserStatus.WITH_USERNAME_AND_PASSWORD.getValue());
+//			// sms send otp
+//			userService.save(user);
+//			return Integer.valueOf(user.getID());
+//		} else {
+//			return null;
+//		}
+//
+//	}
+//
+//	public Boolean verifyOTP(OTPRequest request) {
+//
+//		CResponse response = null;
+//		response = new CResponse();
+//		response = userService.getUserByID(request.getId());
+//		User user = (User) response.getReturnedObject();
+//
+//		if (user != null && user.getIs_enabled() == 1 && user.getIsDeleted() != 1 && user.getOtp() != null
+//				&& user.getOtp().equals(request.getOtp())) {
+//			if (user.getExpiry_date() != null && user.getExpiry_date().after(util.getCurrentSqlDate())) {
+//				// user.setStatus(UserStatus.WITH_VALID_OTP.getValue());
+//				userService.save(user);
+//				return true;
+//
+//			}
+//
+//		}
+//		return false;
+//
+//	}
+
+}

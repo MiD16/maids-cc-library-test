@@ -1,0 +1,77 @@
+
+#application config
+server.port=8089
+server.servlet.context-path=/CoreAdmin/
+spring.application.name = CoreAdmin 
+ ######################
+#view
+spring.mvc.view.prefix: /WEB-INF/jsp/
+spring.mvc.view.suffix: .jsp
+ ######################
+#database info
+spring.datasource.url=jdbc:oracle:thin:@192.168.1.20:1521/orclpdb
+spring.datasource.username=CORE_ADMIN
+spring.datasource.password=Password1
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.jpa.hibernate.ddl-auto=update
+ ######################
+#database config
+spring.datasource.hikari.minimum-idle=10
+spring.datasource.hikari.maximum-pool-size= 50
+spring.datasource.hikari.idle-timeout=60000 
+######################
+#format
+spring.mvc.format.date-time=yyyy-mm-dd HH:mm:ss
+######################
+#logging
+#logging.level.root=INFO
+#spring.jpa.show-sql=true
+#spring.jpa.properties.hibernate.show_sql=true
+ ######################
+#Email
+spring.mail.protocol=smtp
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=senderforspring@gmail.com
+spring.mail.password=nwlssnbkytrcrhpp
+spring.mail.properties.mail.smtp.auth = true
+spring.mail.properties.mail.smtp.starttls.enable = true 
+ ###################### 
+#Max file size.
+spring.servlet.multipart.max-file-size=5MB
+#Max request size.
+spring.servlet.multipart.max-request-size=50MB
+ ######################
+#session mangement
+server.servlet.session.timeout=1200m
+server.servlet.session.cookie.max-age=300m
+server.servlet.session.cookie.secure=true
+login.session.max = 2
+######################
+#jwt auth
+auth.expiration: 1440
+auth.secret: ======================BezKoder=Spring=================================================BezKoder=Spring=================================================BezKoder=Spring===========================
+auth.header: Authorization
+######################
+#schedule
+cron.expression = 0 52 9 * * ?
+######################
+#login
+login.max.fault.count=3
+login.fault.time.interval = 15
+######################
+#otp five minute
+otp.user.date.expiration.minute:5
+######################
+#pageing
+page.size=10
+######################
+
+spring.main.allow-circular-references=true
+######################################
+
+# Enable Hibernate Envers
+#spring.jpa.properties.hibernate.envers.autoRegisterListeners = true
+#spring.jpa.properties.hibernate.envers.store_data_at_delete = true
+
+

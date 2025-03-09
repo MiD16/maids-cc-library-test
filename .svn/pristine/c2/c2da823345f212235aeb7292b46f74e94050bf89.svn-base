@@ -1,0 +1,625 @@
+package com.template.Service.Table.Product;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+
+import java.math.BigDecimal;
+import java.sql.Types;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.ClassesForm.*;
+import com.template.Class.GeneralLedger;
+import com.template.Class.SearchForAccountType;
+import com.template.Enum.ActionEnum;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.AccIndAccountTypeCategories;
+import com.template.Model.Table.Interests.AccInterest;
+import com.template.Model.Table.Products.AccPeriod;
+import com.template.Model.Table.Products.AccountType;
+import com.template.Repository.Table.Product.AccountTypeRepository;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.AccIndAccountTypeCategoriesService;
+import com.template.Service.Table.Interest.AccInterestService;
+import com.template.Service.Basic.SystemLog.ModifyLogService;
+import com.template.Service.Basic.SystemLog.SystemLogService;
+
+@Service
+public class AccountTypeService {
+	
+	@Autowired
+	AccountTypeRepository accountTypeRepository;
+	
+	@Autowired
+	AccountTypeCurrencyService accountTypeCurrencyService;
+	
+	@Autowired
+	AccountTypeNatureService accountTypeNatureService;
+	
+	@Autowired
+	AccInterestService accInterestService;
+	
+	@Autowired
+	AccPeriodService accPeriodService;
+	
+	@Autowired
+	AccIndAccountTypeCategoriesService accIndAccountTypeCategoriesService;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	SystemLogService systemLogService;
+	
+	@Autowired
+	ActionService actionService;
+	
+	@Autowired
+	ModifyLogService modifyLogService;
+	
+	
+	
+	public Page<AccountType> getAllAsPage(Pageable p) {
+		return accountTypeRepository.getAllAsPage(p);
+	}
+	
+
+	
+	
+	//call stored function to search for account type
+	public Page<SearchForAccountType> getSearchAccountType(SearchForAccountType searchCustomer, Pageable pageRequest) throws Exception {
+	    
+	    RowMapper<SearchForAccountType> rowMapper = BeanPropertyRowMapper.newInstance(SearchForAccountType.class);
+
+	    //add function parameter
+	    SqlParameterSource parameters = new MapSqlParameterSource()
+	        .addValue("I_NAME_A", searchCustomer.getAccTypeName1A())
+	        .addValue("I_NAME_B", searchCustomer.getAccTypeName1B())
+	        .addValue("I_CATEG", searchCustomer.getCategoryId());
+
+	    //call stored function
+	    SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+	        .withFunctionName("SEARCH_ACCOUNT_TYPE")
+	        .declareParameters(
+	            new SqlParameter("I_NAME_A", Types.VARCHAR),
+	            new SqlParameter("I_NAME_B", Types.VARCHAR),
+	            new SqlParameter("I_CATEG", Types.NUMERIC)
+	        ).returningResultSet("return", rowMapper);
+
+	    Map<String, Object> result = call.execute(parameters);
+	    
+	    List<SearchForAccountType> lastResult = (List<SearchForAccountType>) result.get("return");
+	    
+	    //pagination
+	    final int start = (int)pageRequest.getOffset();
+	    final int end = Math.min((start + pageRequest.getPageSize()), lastResult.size());
+	    final Page<SearchForAccountType> page = new PageImpl<>(lastResult.subList(start, end), pageRequest, lastResult.size());
+	    
+	    //insert system log
+		systemLogService.saveSystemLog( ActionEnum.search_account_type.toString(),userService.getAuthenticatedUser().getID());
+		
+	    return page;
+	}
+	
+	public CResponse save(AccountTypeForm accountTypeForm, String path) throws Exception {
+
+		CResponse responseAccountType = null;
+		CResponse responseAccountTypeCurr = null;
+		CResponse responseAccountTypeNat = null;
+		CResponse responseObject = null;
+		
+		AccInterest accInterestCredit = null;
+		AccInterest accInterestDebit = null;
+		
+		AccPeriod accPeriodPermission = null;
+		AccPeriod accPeriodInterest = null;
+		AccPeriod accPeriodMaturity = null;
+		AccPeriod accPeriodRenwal = null;
+		
+		AccIndAccountTypeCategories accIndAccountTypeCategories = null;
+		
+		//get category from database
+		if(accountTypeForm.getAccountType().getCategoryId() != null) {
+			responseObject = accIndAccountTypeCategoriesService.findById(accountTypeForm.getAccountType().getCategoryId().getId());
+			accIndAccountTypeCategories = (AccIndAccountTypeCategories) responseObject.getReturnedObject();
+		}
+		//get interest from database
+		if(accountTypeForm.getAccountType().getCreditInterestId() != null) {
+			responseObject = accInterestService.findById(accountTypeForm.getAccountType().getCreditInterestId().getId());
+			accInterestCredit = (AccInterest) responseObject.getReturnedObject();
+		}
+		//get interest from database
+		if(accountTypeForm.getAccountType().getDebitInterestId() != null) {
+			responseObject = accInterestService.findById(accountTypeForm.getAccountType().getDebitInterestId().getId());
+			accInterestDebit = (AccInterest) responseObject.getReturnedObject();
+		}
+		//get period from database
+		if(accountTypeForm.getAccountType().getPermissionPeriodId() != null) {
+			responseObject = accPeriodService.findById(accountTypeForm.getAccountType().getPermissionPeriodId().getId());
+			accPeriodPermission = (AccPeriod) responseObject.getReturnedObject();
+		}
+		//get period from database
+		if(accountTypeForm.getAccountType().getInterestPeriodId() != null) {
+			responseObject = accPeriodService.findById(accountTypeForm.getAccountType().getInterestPeriodId().getId());
+			accPeriodInterest = (AccPeriod) responseObject.getReturnedObject();
+		}
+		//get period from database
+		if(accountTypeForm.getAccountType().getMaturityPeriodId() != null) {
+			responseObject = accPeriodService.findById(accountTypeForm.getAccountType().getMaturityPeriodId().getId());
+			accPeriodMaturity = (AccPeriod) responseObject.getReturnedObject();
+		}
+		//get period from database
+		if(accountTypeForm.getAccountType().getRenwalPeriodId() != null) {
+			responseObject = accPeriodService.findById(accountTypeForm.getAccountType().getRenwalPeriodId().getId());
+			accPeriodRenwal = (AccPeriod) responseObject.getReturnedObject();
+		}
+		//account type create
+		if (accountTypeForm.getAccountType().getId() == null) {
+			if(accountTypeForm.getAccountType().getDepositPeriodFlag() == 0)
+				accountTypeForm.getAccountType().setMaturityPeriodId(null);
+			accountTypeForm.getAccountType().setIsEnabled(1);
+			responseAccountType = validateaAccountTypeCreate(accountTypeForm.getAccountType() ,accIndAccountTypeCategories,
+					accInterestCredit,accInterestDebit,
+					accPeriodPermission,accPeriodInterest,accPeriodMaturity,accPeriodRenwal, path);
+			if (!responseAccountType.isSuccess()) {
+				return responseAccountType;
+			}else {
+				//insert system log
+				System.err.println("ActionEnum");
+				systemLogService.saveSystemLog(ActionEnum.create_account_type.toString(),userService.getAuthenticatedUser().getID());
+				System.err.println("ActionEnum");
+			}
+		}
+		//account type update
+		else {
+			if(accountTypeForm.getAccountType().getDepositPeriodFlag() == 0) 
+				accountTypeForm.getAccountType().setMaturityPeriodId(null);
+			responseAccountType = validateAccountTypeUpdate(accountTypeForm.getAccountType() ,accIndAccountTypeCategories,
+					accInterestCredit,accInterestDebit,
+					accPeriodPermission,accPeriodInterest,accPeriodMaturity,accPeriodRenwal, path);
+			if (!responseAccountType.isSuccess()) {
+				return responseAccountType;
+			}
+		}
+		responseAccountType = new CResponse();
+
+		// if update : set old insert date
+		if (accountTypeForm.getAccountType().getId() != null) {
+			AccountType tem = accountTypeRepository.findById(accountTypeForm.getAccountType().getId()).get();
+			accountTypeForm.getAccountType().setInsertDate(tem.getInsertDate());
+			accountTypeForm.getAccountType().setInsertBy(tem.getInsertBy());
+			accountTypeForm.getAccountType().setIsDeleted(tem.getIsDeleted());
+			accountTypeForm.getAccountType().setIsEnabled(tem.getIsEnabled());;
+			accountTypeForm.getAccountType().setLastUpdateBy(userService.getAuthenticatedUser().getID());
+			
+			responseAccountType.setSuccessMessage("تم التعديل بنجاح");
+		} else {
+			System.err.println("ssss");
+			accountTypeForm.getAccountType().setInsertBy(userService.getAuthenticatedUser().getID());
+			System.err.println("vvvv");
+			responseAccountType.setSuccessMessage("تم الإضافة بنجاح");
+		}
+		
+		//edit account type to has currency
+		if (accountTypeForm.getAccountTypeCurrencies().size() == 0) {
+			String messageString = "<div style='margin-bottom: 12px'>" +"لا يمكن إضافة منتج بدون عملة!! "+" يرجى تعديل المنتج لإضافة عملة المنتج "+
+					"</div> <a class='alert-url ></a>";
+			responseAccountType.setSuccess(false);
+			responseAccountType.setErrorCode(EErrorCode.ACCOUNT_TYPE_CURRENCY_NOT_FOUND.toString());
+			responseAccountType.setErrorMessage(messageString);
+			return responseAccountType;
+		}
+		
+		//edit account type to has nature
+		if (accountTypeForm.getAccountTypeNatures().size() == 0) {
+			String messageString = "<div style='margin-bottom: 12px'>" +"لا يمكن إضافة منتج بدون طبيعة عملاء!! "+" يرجى تعديل المنتج لإضافة طبيعة عملاء المنتج "+
+					"</div> <a class='alert-url ></a>";
+			responseAccountType.setSuccess(false);
+			responseAccountType.setErrorCode(EErrorCode.ACCOUNT_TYPE_NATURE_IS_DELTED.toString());
+			responseAccountType.setErrorMessage(messageString);
+			return responseAccountType;
+		}
+		
+		//add account type, account type currency and account type nature
+		if(responseAccountType.isSuccess()) {
+			//insert system log
+			
+			
+			if(accountTypeForm.getAccountType().getId()!= null) {
+				Long id  = accountTypeForm.getAccountType().getId();
+				AccountType old = accountTypeRepository.findById(id).get();
+				
+				modifyLogService.saveSystemLogAndModifyLog(old, accountTypeForm.getAccountType(), ActionEnum.update_account_type.toString());
+				
+			}
+				
+				
+			accountTypeRepository.save(accountTypeForm.getAccountType());
+			
+			responseAccountTypeCurr = accountTypeCurrencyService.saveAllToAccountType(accountTypeForm, accountTypeForm.getAccountType(), path);
+			//if(response.isSuccess())
+			responseAccountTypeNat = accountTypeNatureService.saveAllToAccountType(accountTypeForm, accountTypeForm.getAccountType());	
+		}
+
+		if(!responseAccountTypeCurr.isSuccess()) {
+			responseAccountType.setSuccess(false);
+			responseAccountType.setErrorCode(responseAccountTypeCurr.getErrorCode()+ " ");
+			if(responseAccountType.getErrorMessage()!= null)
+			responseAccountType.setErrorMessage(responseAccountType.getErrorMessage() + " "+responseAccountTypeCurr.getErrorMessage()+" ");
+			else
+				responseAccountType.setErrorMessage(responseAccountTypeCurr.getErrorMessage()+" ");
+		}
+		
+		if(!responseAccountTypeNat.isSuccess()) {
+			responseAccountType.setSuccess(false);
+			responseAccountType.setErrorCode(responseAccountTypeNat.getErrorCode()+ " ");
+			if(responseAccountType.getErrorMessage()!= null)
+				responseAccountType.setErrorMessage(responseAccountType.getErrorMessage() + responseAccountTypeNat.getErrorMessage()+" ");
+			else 
+				responseAccountType.setErrorMessage(responseAccountTypeNat.getErrorMessage()+" ");	
+		}
+
+		return responseAccountType;
+	}
+
+
+	private CResponse validateAccountTypeUpdate(AccountType accountType, AccIndAccountTypeCategories accIndAccountTypeCategories, AccInterest accInterestCredit, AccInterest accInterestDebit, AccPeriod accPeriodPermission,
+			AccPeriod accPeriodInterest, AccPeriod accPeriodMaturity, AccPeriod accPeriodRenwal, String path) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (accountType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_CATEGORY_IS_NOT_FOUND.toString());
+					response.setErrorMessage("المنتج غير موجود");
+					break;
+				}
+				
+				if (accIndAccountTypeCategories == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_CATEGORY_IS_NOT_FOUND.toString());
+					response.setErrorMessage("صنف المنتج غير موجود");
+					break;
+				}
+				
+				if (accInterestCredit == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_NOT_FOUND.toString());
+					response.setErrorMessage("الفائدة الدائنة بلمنتج غير موجودة");
+					break;
+				}
+				
+				if (accInterestDebit == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_NOT_FOUND.toString());
+					response.setErrorMessage("الفائدة المدينة بلمنتج غير موجودة");
+					break;
+				}
+				
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE.toString(), accountType);
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE_CATEGORY.toString(), accIndAccountTypeCategories);
+				parameters.addParameter(EKeyCode.INTEREST_CREDIT.toString(), accInterestCredit);
+				parameters.addParameter(EKeyCode.INTEREST_DEBIT.toString(), accInterestDebit);
+				
+				if(accPeriodInterest != null)
+					parameters.addParameter(EKeyCode.INTEREST_PERIOD.toString(), accPeriodInterest);
+				if(accPeriodPermission != null)
+					parameters.addParameter(EKeyCode.PERMISSON_PERIOD.toString(), accPeriodPermission);
+				if(accPeriodMaturity != null)
+					parameters.addParameter(EKeyCode.MATURITY_PERIOD.toString(), accPeriodMaturity);
+				if(accPeriodRenwal != null)
+					parameters.addParameter(EKeyCode.RENWAL_PERIOD.toString(), accPeriodRenwal);
+				
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_ACCOUNT_TYPE, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+
+	private CResponse validateaAccountTypeCreate(AccountType accountType, AccIndAccountTypeCategories accIndAccountTypeCategories, AccInterest accInterestCredit, AccInterest accInterestDebit, AccPeriod accPeriodPermission,
+			AccPeriod accPeriodInterest, AccPeriod accPeriodMaturity, AccPeriod accPeriodRenwal, String path) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (accountType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_CATEGORY_IS_NOT_FOUND.toString());
+					response.setErrorMessage("المنتج غير موجود");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE.toString(), accountType);
+				//parameters.addParameter(EKeyCode.ID.toString(), accountType);
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE_CATEGORY.toString(), accIndAccountTypeCategories);
+				parameters.addParameter(EKeyCode.INTEREST_CREDIT.toString(), accInterestCredit);
+				parameters.addParameter(EKeyCode.INTEREST_DEBIT.toString(), accInterestDebit);
+				
+				if(accPeriodRenwal!= null)
+					parameters.addParameter(EKeyCode.RENWAL_PERIOD.toString(), accPeriodRenwal);
+				if(accPeriodPermission != null)
+					parameters.addParameter(EKeyCode.PERMISSON_PERIOD.toString(), accPeriodPermission);
+				if(accPeriodMaturity!= null)
+					parameters.addParameter(EKeyCode.MATURITY_PERIOD.toString(), accPeriodMaturity);
+				if(accPeriodInterest != null)
+					parameters.addParameter(EKeyCode.INTEREST_PERIOD.toString(), accPeriodInterest);
+				
+				
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_ACCOUNT_TYPE, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	public AccountType findByCode(String code) {
+		return accountTypeRepository.findeByCode(code);
+	}
+	
+	
+	public void update(AccountType accountType) {
+		accountTypeRepository.save(accountType);
+	}
+	
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		AccountType accountType= accountTypeRepository.findById(id).get();
+		response.setReturnedObject(accountType);
+		return response;
+	}
+	
+	public List<AccountType> getAll(){
+		List<AccountType> all = accountTypeRepository.getAll();
+		for (int i = 0; i < all.size(); i++) {
+		}
+		return all;
+	}
+	
+	public List<AccountType> getAllDeleted(){
+		List<AccountType> allDeleted = accountTypeRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public AccountType delete(Long id) {
+		AccountType accountType = accountTypeRepository.findById(id).get();
+		if (accountType == null) {
+			throw new NoDataFoundException("accountType With ID : " + id + " Not Found");
+		}
+		accountType.setIsDeleted(1);
+		return accountTypeRepository.save(accountType);
+	}
+	
+	public boolean checkAccountTypeIsDeleted(long id) {
+		AccountType accountType = accountTypeRepository.findById(id).get();
+		if (accountType.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+
+	public Long checkAccountTypeIsExist(AccountType accountType) {
+
+		AccountType accountTypeCode = findByCode(accountType.getAccTypeCode());
+		if (accountTypeCode != null)
+			if (accountType.getId() == null
+					|| (accountType.getId() != null && !accountType.getId().equals(accountTypeCode.getId()))) {
+				return accountTypeCode.getId();
+			}
+
+		return null;
+	}
+	
+	public CResponse getAllGeneralLedgers() {
+		RowMapper<GeneralLedger> rowMapper = BeanPropertyRowMapper.newInstance(GeneralLedger.class);
+		SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withFunctionName("GET_ALL_GENERAL_LEDGER")
+				.returningResultSet("return", rowMapper);
+		;
+		Map<String, Object> result = call.execute(new HashMap<>());
+		List<GeneralLedger> list = (List<GeneralLedger>) result.get("return");
+		CResponse response = new CResponse();
+		response.setReturnedObject(list);
+		
+		return response;
+	}
+	
+	private Long deactiveAccountType(Long id) {
+		 //RowMapper<Integer> rowMapper = BeanPropertyRowMapper.newInstance(Integer.class);
+		
+	    // Add function parameter
+	    SqlParameterSource parameters = new MapSqlParameterSource()
+	        .addValue("I_ACCOUNT_TYPE_ID", id);
+
+	    // Call stored function
+	    SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+	        .withFunctionName("GET_CUSTOMER_ACCOUNT_TYPE")
+	        .declareParameters(new SqlParameter("I_ACCOUNT_TYPE_ID", Types.NUMERIC));
+
+	    // Execute the function and retrieve the result
+	    Map<String, Object> result = call.execute(parameters);
+
+	    // Extract the returned value
+	    BigDecimal lastResult = (BigDecimal) result.values().iterator().next();
+	    
+	    return lastResult != null ? lastResult.longValue() : null; 
+	}
+
+
+
+	public CResponse changeEnableFlag(Long id,int enable) throws Exception {
+		CResponse response = new CResponse();
+	
+		
+		AccountType accountType = accountTypeRepository.findById(id).get();
+
+		//if need Activate
+		if(enable==1)
+		{
+			
+			response=validateAccountTypeActivate(accountType);
+			if(!response.isSuccess())
+				return response;
+			
+			else 
+				{
+				accountType.setIsEnabled(1);
+				response.setSuccessMessage("تم تفعيل المنتج");
+				accountTypeRepository.save(accountType);
+				
+				//insert system log
+				systemLogService.saveSystemLog(ActionEnum.active_account_type.toString(),userService.getAuthenticatedUser().getID());
+				}
+		}
+		//if need DeActivate
+		else {
+			Long result = (long) 0;
+			
+			response=validateAccountTypeDeActivate(accountType);
+			if(response.isSuccess())
+			{
+				result = deactiveAccountType(id);
+			}
+
+			if (result == 1)
+			{
+				response.setSuccessMessage("تم إلغاء تفعيل المنتج لأن جميع حسابات العملاء المتعلقة بالمنتج مغلقة");
+				//insert system log
+				systemLogService.saveSystemLog(ActionEnum.deactive_account_type.toString(),userService.getAuthenticatedUser().getID());
+				
+			}
+			else if(result == 2)
+			{
+				response.setSuccessMessage("تم إلغاء تفعيل تفعيل المنتج لأن المنتج غير مرتبط بأي حساب عميل"); 
+				
+				//insert system log
+				systemLogService.saveSystemLog(ActionEnum.deactive_account_type.toString(),userService.getAuthenticatedUser().getID());
+			}
+			else if(result == -11) {
+				response.setSuccess(false);
+				response.setErrorMessage("لا يمكن إلغاء تفعيل المنتج لأن المنتج مرتبط بحسابات عملاء");
+				
+				//insert system log
+				systemLogService.saveSystemLog(ActionEnum.faield_deactive_account_type.toString(),userService.getAuthenticatedUser().getID());
+				
+				return response;
+			}
+		}
+
+		accountType.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		// 
+		return response;
+	}
+
+
+	private CResponse validateAccountTypeActivate(AccountType accountType) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The Account Type exists
+				if (accountType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_CATEGORY_IS_NOT_FOUND.toString());
+					response.setErrorMessage("المنتج غير موجود");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE.toString(), accountType);
+				actionValidationResult = actionHandler.validate(CActionConstant.ACTIVATE_ACCOUNT_TYPE,
+						parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+
+	private CResponse validateAccountTypeDeActivate(AccountType accountType) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The Account Type exists
+				if (accountType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.ACCOUNT_TYPE_CATEGORY_IS_NOT_FOUND.toString());
+					response.setErrorMessage("المنتج غير موجود");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.ACCOUNT_TYPE.toString(), accountType);
+				actionValidationResult = actionHandler.validate(CActionConstant.DEACTIVATE_ACCOUNT_TYPE,
+						parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+
+	public boolean checkAccountTypeIsEnabled(AccountType accountType) {
+		AccountType accTyp = accountTypeRepository.findById(accountType.getId()).get();
+		if(accTyp.getIsEnabled() == 1)
+			return true;
+		return false;
+	}
+	
+
+}

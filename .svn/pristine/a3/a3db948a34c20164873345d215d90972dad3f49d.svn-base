@@ -1,0 +1,21 @@
+package com.template.Repository.Table.Commission;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.Commission.*;
+
+
+@Repository
+public interface ActionCustomerCommissionRepositpry extends JpaRepository <ActionCustomerCommission, Long> {
+	
+	@Query("Select a From ActionCustomerCommission a WHERE a.isDeleted = 0 order by a.id desc")
+	public List<ActionCustomerCommission> getAll();
+	
+	@Query("Select a From ActionCustomerCommission a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<ActionCustomerCommission> getAllDeleted();
+	
+}

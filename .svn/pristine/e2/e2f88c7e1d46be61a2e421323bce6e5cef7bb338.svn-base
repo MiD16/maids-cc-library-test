@@ -1,0 +1,92 @@
+package com.Base.Configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.Base.Component.CTokenUtility;
+import com.Base.Configuration.Filter.jwt.BasicAuthFilter;
+import com.Base.Configuration.Filter.jwt.DelegatedAuthenticationEntryPoint;
+import com.Base.Configuration.Filter.jwt.TokenAuthFilter;
+import com.template.Service.Basic.UserService;
+
+@Configuration
+@EnableWebSecurity
+public class APISecurityConfig
+{
+	@Autowired ApplicationContext applicationContext;
+
+	@Autowired DelegatedAuthenticationEntryPoint authEntryPoint;
+	
+	@Autowired CustomPermissionEvaluator customPermissionEvaluator;
+	
+	@Autowired CTokenUtility tokenUtility;
+	
+	@Autowired UserService userService;
+    
+	@Bean
+	@Order(1)
+	SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception 
+	{
+      
+		return
+        http
+            .cors().and().csrf().disable()
+            .headers(
+			        header ->
+			          header
+			            .xssProtection()
+			      )
+            .exceptionHandling()
+            .authenticationEntryPoint(authEntryPoint)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        
+            .and()
+            .antMatcher("/api/users/generate-auth-token")
+            .authorizeRequests()
+            .anyRequest().authenticated()
+            .and()
+           //.addFilterBefore((Filter)applicationContext.getBean(CFilterConstant.BASIC_AUTH_FILTER), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new BasicAuthFilter(userService), UsernamePasswordAuthenticationFilter.class)
+           .build();
+         
+	}
+	
+	@Bean
+	@Order(2)
+	SecurityFilterChain apiSecurityFilterChain2(HttpSecurity http) throws Exception 
+	{
+      
+		return
+        http 
+            .cors().and().csrf().disable()
+            .headers(
+			        header ->
+			          header
+			            .xssProtection()
+			      )
+            .exceptionHandling()
+            .authenticationEntryPoint(authEntryPoint)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        
+            .and()
+            .antMatcher("/api/**")
+            .authorizeRequests()
+            .antMatchers("/api/users/signup", "/api/camunda/**").permitAll()
+            .anyRequest().authenticated()
+            .and()
+           .addFilterBefore(new TokenAuthFilter(userService, tokenUtility), UsernamePasswordAuthenticationFilter.class)
+           .build();
+	}
+}

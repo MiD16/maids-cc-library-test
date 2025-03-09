@@ -1,0 +1,70 @@
+package com.template.BusinessRule.Ind_Position;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndPosition;
+import com.template.Model.Table.AllIndexes.IndRegion;
+import com.template.Model.Table.AllIndexes.IndSocialStatus;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Service.Table.AllIndexes.IndPositionServices;
+import com.template.Service.Table.AllIndexes.IndRegionServices;
+import com.template.Service.Table.AllIndexes.IndSocialStatusServices;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+
+
+
+
+@Component(CBusinessRuleConstant.IND_POSITION_IS_NOT_EXIST)
+@Lazy
+
+public class CBRIndPositionIsNotExist implements IBusinessRule{
+	@Autowired
+	IndPositionServices indPositionServices;
+	
+	
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult indPositionValidationResult = null;
+		IndPosition indPosition = null;
+		IndPosition indPositionName = null;
+		long indPositionDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				indPositionValidationResult = new CActionValidationResult();
+				
+				indPosition = (IndPosition) parameters.getParameter(EKeyCode.Ind_Position.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				indPositionName = indPositionServices.findByNames(indPosition.getNameA(), indPosition.getNameB());
+				
+				if (indPosition != null) {
+			
+					if (indPosition.getId() == null || indPosition.getId()!=indPosition.getId()) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indPositionName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ indPositionName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						indPositionValidationResult.setValid(false);
+						indPositionValidationResult.setErrorMessage(messageString);
+						indPositionValidationResult.setErrorCode(EErrorCode.IND_POSITION_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return indPositionValidationResult;
+	}}

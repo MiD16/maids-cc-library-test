@@ -1,0 +1,60 @@
+package com.Base.Class;
+
+import java.util.ArrayList;
+
+import org.springframework.context.ApplicationContext;
+
+import com.Base.Interface.IBusinessRule;
+
+
+
+public abstract class CAction
+{
+	private ApplicationContext applicationContext;
+	protected ArrayList<IBusinessRule> businessRuleList;
+	
+    public void setApplicationContext(ApplicationContext context)
+    {
+		applicationContext = context;
+    }
+	
+	public ArrayList<IBusinessRule> getBusinessRuleList()
+	{
+		ArrayList<IBusinessRule> businessRuleList = null; 
+		
+		try
+		{
+			do
+			{
+				businessRuleList = this.businessRuleList;
+			}
+			while(false);
+		}
+		catch(Exception e) {throw new RuntimeException(e.getMessage());}
+		
+		return businessRuleList;
+	}
+	
+	protected void addBusinessnRule(String businessRuleName)
+	{
+		IBusinessRule businessRule = null;
+		
+		try
+		{
+			do
+			{
+				
+				businessRule = (IBusinessRule)applicationContext.getBean(businessRuleName);
+				
+				if(businessRule == null) throw new RuntimeException("Null Object.");
+				
+				if(businessRuleList == null)
+					businessRuleList = new ArrayList<IBusinessRule>();
+				
+				businessRuleList.add(businessRule);
+			}
+			while(false);
+		}
+		catch(Exception e) {throw new RuntimeException(e.getMessage());}
+	}
+}

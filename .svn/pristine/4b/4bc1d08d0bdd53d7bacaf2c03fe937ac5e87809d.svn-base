@@ -1,0 +1,203 @@
+package com.template.Model.Table.ElectronicOperation;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Table.AllIndexes.IndFileType;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "CREDIT_CARD")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
+public class CreditCard {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "BIN")
+	private String Bin;
+
+	@Column(name = "PAN")
+	private String Pan;
+
+
+
+	@Column(name = "CUSTOMER_FULL_NAME_A")
+	private String CustomerFullNameA;
+	
+	
+	@Column(name = "CUSTOMER_FULL_NAME_B")
+	private String CustomerFullNameB;
+	
+	
+	@Column(name = "FIRST_NAME")
+	private String FirstName;
+	
+	@Column(name = "LAST_NAME")
+	private String LastName;
+	
+	@Column(name = "EMBOSSING_NAME")
+	private String EmbossingName;
+	
+	@Column(name = "CUSTOMER_ADDRESS1_A")
+	private String CustomerAddress1_A;
+	
+	
+	@Column(name = "CUSTOMER_ADDRESS2_A")
+	private String CustomerAddress2_A;
+	
+	
+	@Column(name = "CUSTOMER_ADDRESS1_B")
+	private String CustomerAddress1_B;
+	
+	
+	@Column(name = "CUSTOMER_ADDRESS2_B")
+	private String CustomerAddress2_B;
+	
+	@Column(name = "PHONE")
+	private String Phone;
+	
+	
+	@Column(name = "MOBILE")
+	private String Mobile;
+	
+	
+	
+	@Column(name = "GENDER_ID")
+	private Integer GenderId;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "BIRTH_DATE")
+	private Date BirthDate;
+	
+	@Column(name = "NATIONALITY")
+	private String Nationality;
+	
+	@Column(name = "PASSPORT_NUMBER")
+	private String PassportNumber;
+	
+	@Column(name = "NATIONALITY_ID")
+	private Integer NationalityID;
+
+	
+	
+	@Column(name = "PREFERRED_LANGUAGE")
+	private String Prefered_Language;
+	
+	@Column(name = "STATUS_ID")
+	private Integer Status_ID;
+	
+	
+
+	@Column(name = "INSERT_BY")
+	private Integer InsertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "INSERT_DATE")
+	private Date InsertDate;
+	
+	
+	@Column(name = "LAST_UPDATE_BY")
+	private Integer LastUpdateBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "LAST_UPDATE_DATE")
+	private Date LastUpdateDate;
+	
+	
+	@Column(name = "Commision")
+	private Integer Commision;
+
+	
+	@Column(name = "IS_DELETED")
+	private Integer IsDeleted;
+	
+
+	@Column(name = "DELETED_BY")
+	private Integer DeletedBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DELETED_DATE")
+	private Date DeletedDate;
+
+	@Column(name = "IS_ENABLED_FLAG")
+	private Integer IsEnabledFlag;
+	
+	
+	/*
+	 * @Temporal(TemporalType.DATE)
+	 * 
+	 * @Column(name="INSERT_DATE") private Date insertDate;
+	 */
+	
+	private String note;
+
+
+	//@ManyToOne
+//	@JoinColumn(name="INSTITUTION_ID")
+	@Column(name = "INSTITUTION_ID")
+
+	private long INSTITUTIONID;
+
+	
+	
+	//@ManyToOne
+	//@JoinColumn(name="CUSTOMER_ID")
+	@Column(name = "CUSTOMER_ID")
+
+	private long CUSTOMERID;
+	
+	
+	//@ManyToOne
+	//@JoinColumn(name="BRANCH_ID")
+	@Column(name = "BRANCH_ID")
+
+	private long BRANCHID;
+
+	
+	
+	//@ManyToOne
+	//@JoinColumn(name="CARD_TYPE_ID")
+	@Column(name = "CARD_TYPE_ID")
+
+	private long CARDTYPEID;
+	
+	
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "UPDATE_DATE")
+	private Date updateDate;
+
+	/*
+	 * @PrePersist void createdAt() { this.insertDate = this.updateDate = new
+	 * Date(); this.isDeleted = 0; }
+	 */
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.updateDate = new Date();
+	}
+}
+

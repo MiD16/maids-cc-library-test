@@ -1,0 +1,74 @@
+//package com.template.Service.Table.Product;
+//
+//import java.util.List;
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Service;
+//
+//import com.Base.Class.CResponse;
+//import com.template.Exception.NoDataFoundException;
+//import com.template.Model.Table.Products.AccTax;
+//import com.template.Repository.Table.Product.AccTaxRepository;
+//
+//@Service
+//public class AccTaxService {
+//	
+//	@Autowired
+//	AccTaxRepository accTaxRepository;
+//	
+//	public AccTax save(AccTax accTax) {
+//		if(accTax.getId() == null)
+//		{
+//			accTax.setInsertBy(0);
+//		}else if(accTax.getId() != null){
+//			AccTax temCompany=accTaxRepository.findById(accTax.getId()).get();
+//			accTax.setInsertDate(temCompany.getInsertDate());
+//		}
+//		accTaxRepository.save(accTax);
+//		return accTax;
+//	}
+//	
+//	public void update(AccTax accTax) {
+//		accTaxRepository.save(accTax);
+//	}
+//	
+//	//get object by id
+//	public CResponse findById(Long id) {
+//		CResponse response = new CResponse();
+//		response.setReturnedObject(accTaxRepository.findById(id).get());
+//		return response;
+//	}
+//	
+//	public CResponse getAll(){
+//		CResponse response = null;	
+//		response= new CResponse();
+//		response.setReturnedObject( accTaxRepository.getAll());
+//		return response;
+//	}
+//	
+//	public List<AccTax> getAllDeleted(){
+//		List<AccTax> allDeleted = accTaxRepository.getAllDeleted();
+//		return allDeleted;
+//	}
+//
+//	public AccTax delete(Long id) {
+//		AccTax accTax = accTaxRepository.findById(id).get();
+//		if (accTax == null) {
+//			throw new NoDataFoundException("accTax With ID : " + id + " Not Found");
+//		}
+//		accTax.setIsDeleted(1);
+//		return accTaxRepository.save(accTax);
+//	}
+//	
+//	private static java.sql.Date getCurrentDate() {
+//		java.util.Date today = new java.util.Date();
+//		return new java.sql.Date(today.getTime());
+//	}
+//
+//	public boolean checkTaxIsDeleted(Long id) {
+//		AccTax tax = accTaxRepository.findById(id).get();
+//		if(tax.getIsDeleted() == 1)
+//			return true;
+//		return false;
+//	}
+//}

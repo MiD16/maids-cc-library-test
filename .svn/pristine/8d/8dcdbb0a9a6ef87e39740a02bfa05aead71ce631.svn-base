@@ -1,0 +1,155 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndSignatureType;
+import com.template.Model.Table.AllIndexes.IndSocialStatus;
+import com.template.Repository.Table.AllIndexes.IndSignatureTypeRepository;
+
+@Service
+public class IndSignatureTypeServices {
+	
+	@Autowired
+	IndSignatureTypeRepository indSignatureTypeRepository;
+	
+	
+	@Autowired CActionHandler actionHandler;
+	
+	public CResponse createIndSignatureType(IndSignatureType indSignatureType) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.IND_SIGNATURE_TYPE.toString(), indSignatureType);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IND_SIGNATURE_TYPE, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indSignatureType.setInsertBy(0);
+			indSignatureType.setIsDeleted(0);
+			indSignatureType.setInsertDate(new Date());
+			indSignatureTypeRepository.save(indSignatureType);
+			
+			response.setReturnedObject(indSignatureType);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+	public IndSignatureType updateSocialStatus(IndSignatureType indSignatureType) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(indSignatureType.getId() == null) 
+		{
+			
+			indSignatureType.setInsertBy(0);
+		}
+		
+		
+		
+		else if(indSignatureType.getId() != null)
+		{
+			IndSignatureType temSocialStatus = indSignatureTypeRepository.findById(indSignatureType.getId()).get();
+			indSignatureType.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indSignatureTypeRepository.save(indSignatureType);
+		return indSignatureType;
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public IndSignatureType findByNames(String nameA, String nameB) {
+		return indSignatureTypeRepository.findByNames(nameA, nameB);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public IndSignatureType save(IndSignatureType indSignatureType) {
+		if(indSignatureType.getId() == null)
+		{
+			indSignatureType.setInsertBy(0);
+		}else if(indSignatureType.getId() != null){
+			IndSignatureType temSignatureType=indSignatureTypeRepository.findById(indSignatureType.getId()).get();
+			indSignatureType.setInsertDate(temSignatureType.getInsertDate());
+		}
+		indSignatureTypeRepository.save(indSignatureType);
+		return indSignatureType;
+	}
+	
+	public void update(IndSignatureType indSignatureType) {
+		indSignatureTypeRepository.save(indSignatureType);
+	}
+	
+	public IndSignatureType findById(Long id) {
+		return indSignatureTypeRepository.getById(id);
+	}
+	
+	public List<IndSignatureType> getAll(){
+		List<IndSignatureType> all = indSignatureTypeRepository.getAll();
+		return all;
+	}
+	
+	public List<IndSignatureType> getAllDeleted(){
+		List<IndSignatureType> allDeleted = indSignatureTypeRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndSignatureType delete(Long id) {
+		IndSignatureType indSignatureType = indSignatureTypeRepository.findById(id).get();
+		if (indSignatureType == null) {
+			throw new NoDataFoundException("indSignatureType With ID : " + id + " Not Found");
+		}
+		indSignatureType.setIsDeleted(1);
+		return indSignatureTypeRepository.save(indSignatureType);
+	}
+	
+}

@@ -1,0 +1,36 @@
+package com.template.BusinessRule.IndHoliday;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Holiday.IndHolidays;
+
+@Component(CBusinessRuleConstant.IND_HOLIDAY_IS_ACTIVATE)
+@Lazy
+public class CBRIndHolidayIsActivate implements IBusinessRule {
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		IndHolidays indHolidays = null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				System.err.println("------------------------");
+				indHolidays = (IndHolidays) parameters.getParameter(EKeyCode.IND_HOLIDAY.toString());
+				System.err.println("88888888888888888888"+indHolidays);
+				if (indHolidays.getId()!=null&& indHolidays.getIsEnableFlag()==0) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("العطلة الثابتة غير مفعلة");
+					actionValidationResult.setErrorCode(EErrorCode.IND_HOLIDAY_IS_NOT_ACTIVATE.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		return actionValidationResult;
+	}
+}

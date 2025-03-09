@@ -1,0 +1,14 @@
+package com.Shared.Enum;
+
+public enum EParameter 
+{
+	AUTH_TYPE,
+	USER_NAME,
+	PASSWORD,
+	TAX,
+	ATM,
+	PATH,
+	Credit_Card,
+	Credit_Card_Account,
+	POS, CARD_REQUEST_ACCOUNT, CARD, CARD_ACCOUNT, CARD_REQUEST
+}

@@ -1,0 +1,5 @@
+package com.template.Repository.Table.AllIndexes;
+
+public interface IndexCreditCardRequestStatus {
+
+}

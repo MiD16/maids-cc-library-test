@@ -1,0 +1,26 @@
+package com.template.Repository.Basic.SystemLog;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.SystemLog.ExceptionLogAction;
+import com.template.Model.Basic.SystemLog.SystemLog;
+
+@Repository
+public interface ExceptionLogActionRepository extends JpaRepository<ExceptionLogAction,Long>{
+	
+
+	
+	@Query("Select l from ExceptionLogAction l ORDER BY l.action_date DESC")
+	public List<ExceptionLogAction> getAllExLogActions();
+	
+	@Query("Select a From ExceptionLogAction a order by a.id desc")
+	public Page<ExceptionLogAction> getAll(PageRequest pageRequest);
+
+}

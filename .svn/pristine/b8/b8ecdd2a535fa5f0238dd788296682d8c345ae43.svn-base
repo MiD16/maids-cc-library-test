@@ -1,0 +1,456 @@
+package com.template.Controller.Basic;
+
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.Base.Class.CResponse;
+import com.Base.DTO.CResponseDTO;
+import com.template.Class.UserInformation;
+import com.template.Class.Pageing.PageInfo;
+import com.template.Enum.ConfigurationEnum;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.RoleAction;
+import com.template.Model.Basic.User;
+import com.template.Model.Basic.UserAction;
+import com.template.Model.Table.AllIndexes.Branch;
+import com.template.Model.Basic.UserRole;
+import com.template.Model.Table.AllIndexes.IndPosition;
+import com.template.Model.Table.Configuration.AllConfiguration;
+import com.template.Repository.Basic.RoleActionRep;
+
+import com.template.Service.Basic.RoleService;
+import com.template.Service.Basic.UserActionService;
+import com.template.Service.Basic.UserRoleService;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.BranchServices;
+import com.template.Service.Table.AllIndexes.IndPositionServices;
+import com.template.Service.Table.Configuration.HomeConfigurationServices;
+
+@Controller
+@ControllerAdvice(assignableTypes = { UserController.class })
+@RequestMapping("user")
+public class UserController {
+
+	@Autowired
+	private RoleService roleService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private BranchServices branchServices;
+	@Autowired
+	private IndPositionServices positionServices;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+//	@Autowired
+//	public LogService logActionService;
+	@Autowired
+	public RoleActionRep roleActionRep;
+
+	@Autowired
+	UserRoleService userRoleService;
+	@Autowired 
+	HomeConfigurationServices homeConfigurationServices;
+	@Autowired
+	UserActionService userActionService;
+
+	@Value("${page.size}")
+	int itemCountInPage;
+
+	// @PreAuthorize("hasPermission('user', 'index')")
+	@GetMapping("/index")
+	public String index(Authentication auth, Model model, final RedirectAttributes redirectAttributes,
+			@RequestParam(name = "page", required = false) Integer page) {
+		String result;
+		CResponse response = null;
+		Page<User> userAsPage = null;
+		if (page == null)
+			page = 0;
+		response = new CResponse();
+		response = userService.getAllUsersAsPage(PageRequest.of(page, itemCountInPage));
+		userAsPage = (Page<User>) response.getReturnedObject();
+		model.addAttribute("userList", userAsPage.getContent());
+		model.addAttribute("pageInfo", PageInfo.getPageInfo(userAsPage));
+		result = "/user/index";
+		return result;
+
+	}
+
+
+	// @PreAuthorize("hasPermission('user', 'create')")
+	@GetMapping("/create")
+	public String createOrUpdate(@RequestParam(value = "id", required = false) Integer id, Model model) {
+		User user=new User();
+		CResponse response = null;
+		List<Role> listRole = null;
+		List<Role> roleList = null;
+		List<IndPosition> positionslist = null;
+		List<Branch> branchlist = null;
+		List<User> userList = null;
+		
+	
+	
+		if (id == null) {
+			response = new CResponse();
+			response = roleService.findAll();
+			listRole = (List<Role>) response.getReturnedObject();
+			user = new User();
+			user.setPwd_exp_date(userService.generatetPwd_exp_date());
+		user.setExpiry_date(userService.generatetExpiry_date());
+		
+		} else {
+			response = new CResponse();
+			response = userService.getUserByID(id);
+			user = (User) response.getReturnedObject();
+		
+		}
+		if (model.getAttribute("user") != null)
+			user = (User) model.getAttribute("user");
+		response = new CResponse();
+		response = roleService.findAll();
+		roleList = (List<Role>) response.getReturnedObject();
+		response = userService.getAllUsers();
+		userList = (List<User>) response.getReturnedObject();
+		branchlist = branchServices.getAll();
+		positionslist = positionServices.getAll();
+		model.addAttribute("positionslist", positionslist);
+		model.addAttribute("branchlist", branchlist);
+		model.addAttribute("userList", userList);
+		model.addAttribute("roleList", roleList);
+		model.addAttribute("user", user);
+		String result = "/user/create";
+		return result;
+
+	}
+
+	@PostMapping(value = "/save")
+	public String saveCreate(@Valid @ModelAttribute("user") User user, BindingResult bindingResult,
+			final RedirectAttributes redirectAttributes) throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		response = new CResponse();
+		result = "redirect:/user/create";
+
+		if (user.getID() == 0) {// create
+			response = userService.createUser(user);
+			responseDTO = new CResponseDTO();
+			responseDTO.setSuccess(response.isSuccess());
+			if (!response.isSuccess()) {
+
+				responseDTO.setErrorMessage(response.getErrorMessage());
+
+			} else {
+
+				responseDTO.setSuccessMessage(response.getSuccessMessage());
+				result = "redirect:/user/index";
+			}
+			redirectAttributes.addFlashAttribute("response", responseDTO);
+			return result;
+		} else { // edit
+			response = userService.getUserByID(user.getID());
+			User useroldUser=(User) response.getReturnedObject();
+			System.err.println("--222--"+useroldUser.getFirst_name_a());
+			response = userService.updateUser(user);
+			responseDTO = new CResponseDTO();
+			responseDTO.setSuccess(response.isSuccess());
+			if (!response.isSuccess()) {
+
+				responseDTO.setErrorMessage(response.getErrorMessage());
+
+			} else {
+				responseDTO.setSuccessMessage(response.getSuccessMessage());
+				result = "redirect:/user/index";
+			}
+			redirectAttributes.addFlashAttribute("response", responseDTO);
+			return result;
+		}
+
+	}
+
+	// @PreAuthorize("hasPermission('user', 'delete')")
+	@GetMapping("/delete")
+	public String delete(@RequestParam(value = "id") int id, final RedirectAttributes redirectAttributes)
+			throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		User user = null;
+		result = "redirect:/user/index";
+		response = new CResponse();
+		response = userService.getUserByID(id);
+		user = (User) response.getReturnedObject();
+		response = userService.deleteuser(id);
+		responseDTO = new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if (!response.isSuccess()) {
+	
+			responseDTO.setErrorMessage(response.getErrorMessage());
+		
+		} else {
+	
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+			result = "redirect:/user/index";
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		return result;
+	}
+
+	// @PreAuthorize("hasPermission('user', 'details')")
+	@GetMapping("/details")
+	public String details(@RequestParam(value = "id") int id, Model model) {
+		String result = null;
+		User user = null;
+		CResponse response = new CResponse();
+		response = userService.getUserByID(id);
+		user = (User) response.getReturnedObject();
+		model.addAttribute("user", user);
+		result = "/user/details";
+		return result;
+	}
+
+	// @PreAuthorize("hasPermission('user', 'lock_toggle')")
+	@GetMapping("/lockToggle")
+	public String lockUserToggle(@RequestParam(value = "id") int id, final RedirectAttributes redirectAttributes)
+			throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		User user = null;
+		response = new CResponse();
+		result = "redirect:/user/index";
+		response = userService.getUserByID(id);
+		user = (User) response.getReturnedObject();
+		response = userService.lockUser(user);
+		responseDTO = new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if (!response.isSuccess()) {
+
+			responseDTO.setErrorMessage(response.getErrorMessage());
+
+			return result;
+		} else {
+
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+			result = "redirect:/user/index";
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		return result;
+
+	}
+
+	@GetMapping("/unlockToggle")
+	public String unlockUserToggle(@RequestParam(value = "id") int id, final RedirectAttributes redirectAttributes)
+			throws Exception {
+		String result;
+		User user = null;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		response = new CResponse();
+		result = "redirect:/user/index";
+		response = userService.getUserByID(id);
+		user = (User) response.getReturnedObject();
+		response = userService.unLockUser(user);
+		responseDTO = new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if (!response.isSuccess()) {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+			return result;
+		} else {
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+			result = "redirect:/user/index";
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		return result;
+
+	}
+
+	// @PreAuthorize("hasPermission('user', 'resetpassword')")
+	@GetMapping("/resetpassword")
+	public String resetPassword(@RequestParam(value = "id") int id, final RedirectAttributes redirectAttributes)
+			throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		User user = null;
+		response = new CResponse();
+		result = "redirect:/user/index";
+		response = userService.getUserByID(id);
+		user = (User) response.getReturnedObject();
+		response = userService.resetpassword(user);
+		responseDTO = new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if (!response.isSuccess()) {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+			return result;
+		} else {
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+			result = "redirect:/user/index";
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		return result;
+	}
+
+	// @PreAuthorize("hasPermission('user', 'change_password')")
+	@GetMapping(value = "/change-password")
+	public String resetPassword(Model model) {
+		String result = "/login/reset-password";
+		CResponse response = null;
+		User user = null;
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		response = new CResponse();
+		response = userService.getUserByID(userInformation.getUser_id());
+		user = (User) response.getReturnedObject();
+		model.addAttribute("id", user.getID());
+		return result;
+	}
+
+	// @PreAuthorize("hasPermission('user', 'change_password')")
+	@PostMapping(value = "/change-password-save")
+	public String resetPasswordSave(@RequestParam(value = "id") Integer id,
+			@RequestParam(value = "oldPassword") String oldPassword,
+			@RequestParam(value = "newPassword") String newPassword,
+			@RequestParam(value = "confirmPassword") String confirmPassword, Model model,
+			final RedirectAttributes redirectAttributes) throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		User user = null;
+		response = new CResponse();
+		result = "redirect:/user/change-password";
+		response = userService.getUserByID(id);
+		user = (User) response.getReturnedObject();
+		
+		response = userService.changePassword(user, oldPassword, newPassword, confirmPassword);
+		responseDTO = new CResponseDTO();
+		
+		responseDTO.setSuccess(response.isSuccess());
+		if (!response.isSuccess()) {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+			return result;
+		} else {
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+			result = "redirect:/user/index";
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		return result;
+
+	}
+
+	// @PreAuthorize("hasPermission('user', 'change_password')")
+	@GetMapping(value = "/first-change-password")
+	public String firstResetPassword(@RequestParam(value = "id") Integer id, Model model) {
+		String result = "/login/first-change-password";
+		User user = null;
+		CResponse response = null;
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		response = new CResponse();
+		response = userService.getUserByID(userInformation.getUser_id());
+		user = (User) response.getReturnedObject();
+		model.addAttribute("id", user.getID());
+		return result;
+	}
+
+	@GetMapping(value = "/update-profile")
+	public String updateprofile(Model model, @RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "page", required = false) Integer page1) {
+		String result = "/profile/details";
+		User user = null;
+		List<IndPosition> positionslist = null;
+		List<Branch> branchlist = null;
+		List<User> userList = null;
+		Page<UserAction> useractionPage = null;
+		Page<UserRole> userrolePage = null;
+		CResponse response = null;
+		response = new CResponse();
+		if (page == null)
+			page = 0;
+		if (page1 == null)
+			page1 = 0;
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		response = userService.getUserByID(userInformation.getUser_id());
+		user = (User) response.getReturnedObject();
+		response = userRoleService.getUserRoleByUserId(userInformation.getUser_id(),
+				PageRequest.of(page, itemCountInPage));
+		userrolePage = (Page<UserRole>) response.getReturnedObject();
+		response = userActionService.getUserActionByUserId(userInformation.getUser_id(),
+				PageRequest.of(page, itemCountInPage));
+		useractionPage = (Page<UserAction>) response.getReturnedObject();
+		response = userService.getAllUsers();
+		userList = (List<User>) response.getReturnedObject();
+		branchlist = branchServices.getAll();
+		positionslist = positionServices.getAll();
+		model.addAttribute("positionslist", positionslist);
+		model.addAttribute("branchlist", branchlist);
+		model.addAttribute("userList", userList);
+		model.addAttribute("userroleList", userrolePage.getContent());
+		model.addAttribute("pageInfo1", PageInfo.getPageInfo(userrolePage));
+		model.addAttribute("useractionList", useractionPage.getContent());
+		model.addAttribute("pageInfo2", PageInfo.getPageInfo(useractionPage));
+		model.addAttribute("id", user.getID());
+		model.addAttribute("user", user);
+		return result;
+	}
+
+	// @PreAuthorize("hasPermission('user', 'change_password')")
+	@PostMapping(value = "/first-change-password-save")
+	public String firstResetPasswordSave(@RequestParam(value = "id") Integer id,
+			@RequestParam(value = "oldPassword") String oldPassword,
+			@RequestParam(value = "newPassword") String newPassword,
+			@RequestParam(value = "confirmPassword") String confirmPassword, Model model,
+			final RedirectAttributes redirectAttributes) throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		User user = null;
+		response = new CResponse();
+		result = "redirect:/user/first-change-password?id=" + id;
+		response = userService.getUserByID(id);
+		user = (User) response.getReturnedObject();
+		response = userService.changePassword(user, oldPassword, newPassword, confirmPassword);
+		responseDTO = new CResponseDTO();
+		responseDTO.setSuccess(response.isSuccess());
+		if (!response.isSuccess()) {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+			return result;
+		} else {
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+			result = "redirect:/user/index";
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		return result;
+
+	}
+
+	@ModelAttribute("title")
+	public String pageTitle() {
+		return "المستخدمين";
+	}
+
+}

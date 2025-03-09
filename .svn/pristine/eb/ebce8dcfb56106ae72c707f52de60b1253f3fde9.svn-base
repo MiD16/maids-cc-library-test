@@ -1,0 +1,49 @@
+package com.template.BusinessRule.Currency;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndSubpoenaRequest;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Service.Table.AllIndexes.IndSubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.Product.AccCurrencyService;
+
+@Component(CBusinessRuleConstant.CURRENCY_IS_NOT_DELETED)
+@Lazy
+public class CBRCurrencyNotDeleted implements IBusinessRule {
+
+	@Autowired
+	AccCurrencyService currencyService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccCurrency currency = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				currency = (AccCurrency) parameters.getParameter(EKeyCode.CURRENCY.toString());
+				if (currencyService.checkCurrencyIsDeleted(currency.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("العملة "+currency.getNameA()+ " محذوفة ");
+					actionValidationResult.setErrorCode(EErrorCode.CURRENCY_IS_DELETED.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

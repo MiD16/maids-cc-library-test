@@ -1,0 +1,47 @@
+package com.Base.Class;
+
+import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import com.Base.Interface.IBusinessRule;
+
+@Component
+public class CActionHandler 
+{
+	@Autowired ApplicationContext applicationContext;
+	
+	public CActionValidationResult validate(String actionName, CActionValidationParameters parameters)
+	{
+		CAction action = null;
+		CActionValidationResult actionValidationResult = null;
+		ArrayList<IBusinessRule> businessRuleList = null;
+		
+		try
+		{
+			do
+			{
+				actionValidationResult = new CActionValidationResult();
+				
+				action = (CAction)applicationContext.getBean(actionName);
+				
+				businessRuleList = action.getBusinessRuleList();
+				
+				if(businessRuleList == null) break;
+				
+				for(IBusinessRule businessRule : businessRuleList)
+				{
+					actionValidationResult = businessRule.validate(parameters);
+					
+					if(!actionValidationResult.isValid) break;
+				}
+			}
+			while(false);
+		}
+		catch(Exception e) {
+		
+			throw new RuntimeException(e.getMessage());}
+		
+		return actionValidationResult;
+	}
+}

@@ -1,0 +1,45 @@
+package com.template.API.Response.DTO;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+
+public class CIndexDTO {
+	
+	private Long id;
+
+	private Integer deletedBy;
+
+	private Date deletedDate;
+
+	private Integer insertBy;
+
+	private Date insertDate;
+
+	private Integer isDeleted;
+
+	private Integer isEnabledFlag;
+
+	private String nameA;
+
+	private String nameB;
+
+	private String note;
+
+	private Integer placeOrder;
+
+	private Integer updateBy;
+
+	private Date updateDate;
+}

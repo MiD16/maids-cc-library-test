@@ -1,0 +1,33 @@
+package com.template.API.Response.DTO.Mapper;
+
+import com.template.API.Response.DTO.CTestEntityDTO;
+import com.template.Model.Table.TestEntity;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+public class CTestEntityMapper 
+{
+	public static CTestEntityDTO parse(TestEntity testEntity) 
+	{
+		CTestEntityDTO testEntityDTO = null;
+		do 
+		{	
+			if(testEntity == null) break;
+				
+			testEntityDTO = new CTestEntityDTO();	
+				
+			testEntityDTO.setName(testEntity.getName());
+			
+			testEntityDTO.setDescription(testEntity.getDescription());
+		} 
+		while (false);
+		
+		return testEntityDTO;	
+	}
+}

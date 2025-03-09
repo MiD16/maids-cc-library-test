@@ -1,0 +1,45 @@
+package com.template.BusinessRule.AccountType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndAccountTypeCategories;
+import com.template.Service.Table.AllIndexes.AccIndAccountTypeCategoriesService;
+
+@Component(CBusinessRuleConstant.ACCOUNT_TYPE_CATEGORY_IS_NOT_DELETE)
+@Lazy
+public class CBRAccountTypeCategoryIsNotDeleted implements IBusinessRule {
+
+	@Autowired
+	AccIndAccountTypeCategoriesService accIndAccountTypeCategoriesService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccIndAccountTypeCategories accountTypeCategories = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				accountTypeCategories = (AccIndAccountTypeCategories) parameters.getParameter(EKeyCode.ACCOUNT_TYPE_CATEGORY.toString());
+				if (accIndAccountTypeCategoriesService.checkAccountTypeCategoryIsDeleted(accountTypeCategories.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("صنف المنتج "+accountTypeCategories.getNameA() + " محذوف ");
+					actionValidationResult.setErrorCode(EErrorCode.ACCOUNT_TYPE_IS_DELETED.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

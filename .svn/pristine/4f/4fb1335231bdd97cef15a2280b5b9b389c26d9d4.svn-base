@@ -1,0 +1,38 @@
+package com.template.Enum;
+
+public enum NotificationType {
+	closed_the_operation("close_the_operation"),
+	continue_requested("continue_requested"),
+	legal_offer_reject("legal_offer_reject"),
+	add_operation("add_operation"),
+	add_inquest("add_inquest"), 
+	reply("reply"),
+	edit_operation("edit_operation"),
+	edit_operation_requested("edit_operation_requested"),
+	to_close_the_operation("to_close_the_operation"),
+	accept_operation("accept_operation"),
+	reject_operation("reject_operation"),
+	add_contractor("add_contractor"),
+	result_accept("result_accept"),
+	result_reject("result_reject"),
+	offer_open("offer_open"),
+	new_operation("new_operation"),
+	completed("completed"),
+	add_evaluation("add_evaluation"),
+	edit_evaluation("edit_evaluation"),
+	accept_evaluation("accept_evaluation"),
+	assign_winner("assign_winner"),
+	operation_fail("operation_fail"),
+	add_study_committee("add_study_committee");
+
+
+	private String name_en;
+
+	NotificationType(String name_en) {
+		this.name_en = name_en;
+	}
+
+	public String getArabicType() {
+		return name_en;
+	}
+}

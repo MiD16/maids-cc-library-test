@@ -1,0 +1,63 @@
+package com.template.Service.Basic.SystemLog;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CResponse;
+import com.template.Enum.ActionEnum;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.User;
+import com.template.Model.Basic.SystemLog.SystemLog;
+import com.template.Repository.Basic.SystemLog.SystemLogRepository;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.UserService;
+
+@Service
+public class SystemLogService {
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	SystemLogRepository systemLogRepository;
+
+	@Autowired
+	ActionService actionService;
+
+	// save to system log SystemLog
+	public SystemLog saveSystemLog(String actionName, int userId) throws Exception {
+
+		SystemLog systemLog = new SystemLog();
+		CResponse response =  userService.getUserByID(userId);
+		User user = (User) response.getReturnedObject();
+		systemLog.setInsertBy(user);
+		systemLog.setBranchId(user.getBranch());
+		systemLog.setTerminalIp(user.getTo_ip_terminal());
+		CResponse response1 = actionService.findActionByNameB(actionName);
+		Action action = (Action) response1.getReturnedObject();
+	
+		systemLog.setActionId(action);
+		//systemLog.setTransgressionFlag(action.getIsTransactionFlag());
+		systemLogRepository.save(systemLog);
+		return systemLog;
+	}
+
+	// find all not deleted
+	public CResponse getAllSystemLog(PageRequest pageRequest) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(systemLogRepository.getAll(pageRequest));
+		return response;
+	}
+
+	// get object by id
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(systemLogRepository.findById(id).get());
+		return response;
+	}
+}

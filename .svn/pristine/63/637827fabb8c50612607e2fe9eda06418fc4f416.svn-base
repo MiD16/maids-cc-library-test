@@ -1,0 +1,160 @@
+package com.template.DataBase.Seeders;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.template.DataBase.Seeder;
+import com.template.Model.Basic.Action;
+import com.template.Repository.Basic.ActionsRep;
+
+
+@Component
+public class ActionSeeder {
+
+	
+	@Autowired
+	ActionsRep actionsRep;
+	
+	private final Log logger = LogFactory.getLog(Seeder.class);
+	
+	
+	
+	public ActionSeeder() {
+		logger.info("	==>Seeder ==> "+ getClass().getSimpleName());
+	}
+
+
+	public void run(ActionsRep actionsRep) {
+		
+		Action action=new Action();
+		
+		
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("login");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("logout");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		
+		//======
+		action=new Action();
+		action.setAction_name_ar("   ");
+		action.setAction_name_en("password_reset");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar("");
+		action.setAction_name_en("user_create");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("user_edit");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("user_delete");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+
+		
+		//======
+		action=new Action();
+		action.setAction_name_ar("  ");
+		action.setAction_name_en("password_change");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		
+		
+		//======
+		action=new Action();
+		action.setAction_name_ar("");
+		action.setAction_name_en("roleaction_create");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar("");
+		action.setAction_name_en("roleaction_delete");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar("");
+		action.setAction_name_en("role_delete");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("employee_create");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("employee_delete");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("employee_edit");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("departement_create");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("departement_edit");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("departement_delete");
+		action.setDescription("description");
+
+		actionsRep.save(action);
+		//======
+		action=new Action();
+		action.setAction_name_ar(" ");
+		action.setAction_name_en("applicant_accept");
+		action.setDescription("description");
+		actionsRep.save(action);
+		
+	}
+	
+	
+}

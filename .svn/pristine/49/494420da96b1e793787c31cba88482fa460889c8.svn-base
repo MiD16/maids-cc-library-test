@@ -1,0 +1,18 @@
+package com.template.RestClient.CustomerManagement;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.Base.Configuration.CorsConfig;
+import com.template.RestClient.CustomerManagement.API.Request.ActionRequest.TestTable.CRCCreateTestLogRequest;
+import com.template.RestClient.CustomerManagement.API.Response.ActionResponse.TestTable.CRCCreateTestLogResponse;
+
+
+@FeignClient(name = "CustomerManagement", url = "http://localhost:8083/CustomerManagement", configuration = CorsConfig.class)
+public interface IRCCustomerManagement
+{
+	@PostMapping(value = "/camunda/create-test-log", consumes = MediaType.APPLICATION_JSON_VALUE)
+	CRCCreateTestLogResponse createTestLog(@RequestBody CRCCreateTestLogRequest requestBody);
+}

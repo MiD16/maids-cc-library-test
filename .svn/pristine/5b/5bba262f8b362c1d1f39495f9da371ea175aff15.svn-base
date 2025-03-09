@@ -1,0 +1,215 @@
+package com.template.Service.Table.ElectricOperation;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.AllIndexes.IndCity;
+import com.template.Model.Table.ElectronicOperation.ATM;
+import com.template.Model.Table.Interests.AccInterest;
+import com.template.Model.Table.Interests.AccInterestRate;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Model.Table.Products.AccPeriod;
+import com.template.Repository.Table.AllIndexes.IndCityRepository;
+import com.template.Repository.Table.ElectronicOperation.ATMRepository;
+import com.template.Service.Basic.UserService;
+
+public class ATMServices {
+
+	@Autowired
+	ATMRepository aTMRepository;
+	@Autowired
+	CActionHandler actionHandler;
+	@Autowired
+	UserService userService;
+
+
+
+	
+	
+	public Long checkATMIsExist(ATM atm) {
+		ATM atmByCode= aTMRepository.findByCode(atm.getAtmCode());
+		if (atmByCode!= null) {
+			if (atm.getId() == null
+					|| (atm.getId() != null && !atm.getId().equals(atmByCode.getId()) )) {
+				return atmByCode.getId();
+			}
+		}
+		return null;
+	}
+	
+	
+	
+	//create ATM
+		public CResponse saveCreate(ATM atm, String path) throws Exception {
+			CResponse response = null;
+			
+			// call validate for create object
+			response = validateATMCreate(atm, path);
+			if (response.isSuccess() == false) {
+				return response;
+			}
+			atm.setInsertBy(userService.getAuthenticatedUser().getID());
+			aTMRepository.save(atm);
+			response.setSuccessMessage("تم الإضافة بنجاح");
+			return response;
+		}
+	
+		public CResponse validateATMCreate(ATM atm, String path)
+				throws Exception {
+			CActionValidationParameters parameters = null;
+			CActionValidationResult actionValidationResult = null;
+			CResponse response = null;
+			try {
+				do {
+					response = new CResponse();
+					// check if The interest exists
+					if (atm == null) {
+						response.setSuccess(false);
+						response.setErrorCode(EErrorCode.ATM_NOT_FOUND.toString());
+						response.setErrorMessage("الصراف غير موجودة");
+						break;
+					}
+					
+					//set parameters
+					parameters = new CActionValidationParameters();
+					parameters.addParameter(EKeyCode.ATM.toString(), atm);
+					parameters.addParameter(EKeyCode.PATH.toString(), path);
+					actionValidationResult = actionHandler.validate(CActionConstant.CREATE_ATM, parameters);
+					response.setSuccess(actionValidationResult.isValid());
+					response.setErrorCode(actionValidationResult.getErrorCode());
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+				} while (false);
+			} catch (Exception e) {
+				throw new Exception(e.getMessage());
+			}
+			return response;
+		}
+	
+		//update ATM
+		public CResponse saveUpdate(ATM atm, String path) throws Exception {
+			CResponse response = null;
+		
+			// call validate for update object
+			response = validateInterestUpdate(atm, path);
+			if (response.isSuccess() == false) {
+				return response;
+			}
+			//to get insert date from object in database
+			ATM tem = aTMRepository.findById(atm.getId()).get();
+			atm.setInsertDate(tem.getInsertDate());
+			atm.setInsertBy(tem.getInsertBy());
+			//set user that updated 
+			atm.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+			aTMRepository.save(atm);
+			response.setSuccessMessage("تم التعديل بنجاح");
+			return response;
+		}
+		
+		
+		// validate if can update ATM
+		public CResponse validateInterestUpdate(ATM atm, String path)
+				throws Exception {
+			CActionValidationParameters parameters = null;
+			CActionValidationResult actionValidationResult = null;
+			CResponse response = null;
+			try {
+				do {
+					response = new CResponse();
+
+					// check if The interest exists
+					if (atm == null) {
+						response.setSuccess(false);
+						response.setErrorCode(EErrorCode.ATM_NOT_FOUND.toString());
+						response.setErrorMessage("االصراف غير موجودة");
+						break;
+					}
+					
+				
+					//set parameters
+					parameters = new CActionValidationParameters();
+					parameters.addParameter(EKeyCode.ATM.toString(), atm);
+					parameters.addParameter(EKeyCode.PATH.toString(), path);
+					actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_ATM, parameters);
+					response.setSuccess(actionValidationResult.isValid());
+					response.setErrorCode(actionValidationResult.getErrorCode());
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+				} while (false);
+			} catch (Exception e) {
+				throw new Exception(e.getMessage());
+			}
+			return response;
+		}
+		
+		
+		//delete ATM
+		public CResponse delete(Long id) throws Exception {
+			ATM atm = aTMRepository.findById(id).get();
+			CResponse response=null;
+			// call validate for delete object
+			response = validateInterestDelete(atm);
+			if (response.isSuccess() == false) {
+				return response;
+			}
+			//soft delete
+			atm.setIsDeleted(1);
+			//set deleted date
+			atm.setDeletedDate(new Date());
+			//set user that deleted 
+			atm.setDeletedBy(userService.getAuthenticatedUser().getID());
+			response.setSuccessMessage("تم الحذف بنجاح");
+			response.setReturnedObject(aTMRepository.save(atm));
+			return response;
+		}
+		
+		
+		// validate if can delete ATM
+		public CResponse validateInterestDelete(ATM atm)
+				throws Exception {
+			CActionValidationParameters parameters = null;
+			CActionValidationResult actionValidationResult = null;
+			CResponse response = null;
+			try {
+				do {
+					response = new CResponse();
+					// check if The ATM exists
+					if (atm == null) {
+						response.setSuccess(false);
+						response.setErrorCode(EErrorCode.ATM_NOT_FOUND.toString());
+						response.setErrorMessage("الفائدة غير موجودة");
+						break;
+					}
+					//set parameters
+					parameters = new CActionValidationParameters();
+					parameters.addParameter(EKeyCode.ATM.toString(), atm);
+					actionValidationResult = actionHandler.validate(CActionConstant.DELETE_ATM, parameters);
+					response.setSuccess(actionValidationResult.isValid());
+					response.setErrorCode(actionValidationResult.getErrorCode());
+					response.setErrorMessage(actionValidationResult.getErrorMessage());
+				} while (false);
+			} catch (Exception e) {
+				throw new Exception(e.getMessage());
+			}
+			return response;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+}

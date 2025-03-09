@@ -1,0 +1,51 @@
+package com.template.Class.Index;
+
+
+import java.util.Date;
+import java.util.List;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class IndCity {
+
+	private Long id;
+
+	private String cbCode;
+
+	private Integer deletedBy;
+
+	private Date deletedDate;
+
+	private Integer insertBy;
+
+	private Date insertDate;
+
+	private Integer isDeleted;
+
+	private Integer isEnabledFlag;
+
+	private String nameA;
+
+	private String nameB;
+
+	private String note;
+
+	private Integer placeOrder;
+
+	private Integer updateBy;
+
+	private Date updateDate;
+
+	private IndCountry indCountry;
+
+	private List<IndRegion> indRegions;
+
+}

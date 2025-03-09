@@ -1,0 +1,29 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.*;
+
+@Repository
+public interface HomeIndexRepository extends JpaRepository <Allindex, Long> {
+	
+	@Query("Select a from Allindex a where a.isDeleted = 0")
+	public List<Allindex> getAll();
+	
+	@Query("Select a From Allindex a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<Allindex> getAllDeleted();
+	
+	@Query("Select a from Allindex a where a.nameB =:name")
+	public Allindex getByName(@Param("name") String name);
+	
+	
+	@Query("Select a from  Allindex a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public Allindex findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+
+}

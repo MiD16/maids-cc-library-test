@@ -1,0 +1,87 @@
+package com.template.BusinessRule.IndNonCustDocument;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndNonCustDocument;
+import com.template.Model.Table.AllIndexes.IndSignatureType;
+import com.template.Model.Table.AllIndexes.IndSocialStatus;
+import com.template.Service.Table.AllIndexes.IndNonCustDocumentServices;
+import com.template.Service.Table.AllIndexes.IndSignatureTypeServices;
+import com.template.Service.Table.AllIndexes.IndSocialStatusServices;
+
+
+@Component(CBusinessRuleConstant.IND_NON_CUST_DOCUMENT_IS_NOT_EXIST)
+
+
+public class CBRIndNonCustDocumentIsNotExist implements IBusinessRule{
+	@Autowired
+	IndNonCustDocumentServices indNonCustDocumentServices;
+	
+	public CBRIndNonCustDocumentIsNotExist()
+	{
+		
+	}
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult indNonCustDocumentValidationResult = null;
+		IndNonCustDocument indNonCustDocument = null;
+		IndNonCustDocument indNonCustDocumentName = null;
+		long indNonCustDocumentDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				indNonCustDocumentValidationResult = new CActionValidationResult();
+				
+				indNonCustDocument = (IndNonCustDocument) parameters.getParameter(EKeyCode.IND_NON_CUST_DOCUMENT.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				indNonCustDocumentName = indNonCustDocumentServices.findByNames(indNonCustDocument.getNameA(), indNonCustDocument.getNameB());
+				
+				if (indNonCustDocumentName != null) {
+			
+					if (indNonCustDocument.getId() == null || (indNonCustDocument.getId() != null && indNonCustDocument.getId()!=indNonCustDocumentName.getId())) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indNonCustDocumentName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ indNonCustDocumentName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						indNonCustDocumentValidationResult.setValid(false);
+						indNonCustDocumentValidationResult.setErrorMessage(messageString);
+						indNonCustDocumentValidationResult.setErrorCode(EErrorCode.IND_SECTOR_TYPE_IS_DELETED.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return indNonCustDocumentValidationResult;
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

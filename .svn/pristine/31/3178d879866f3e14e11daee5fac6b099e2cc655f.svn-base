@@ -1,0 +1,114 @@
+package com.template.Model.Table.ElectronicOperation;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Table.AllIndexes.IndFileType;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "CREDIT_CARD_REQ_ACCOUNT")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class CreditCardReqAccount {
+
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+
+
+	
+
+	@Column(name = "INSERT_BY")
+	private Integer InsertBy;
+	
+	
+	 @Temporal(TemporalType.DATE)
+	 
+	  @Column(name = "INSERT_DATE") 
+	 private Date InsertDate;
+	
+	@Column(name = "LAST_UPDATE_BY")
+	private Integer LastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "LAST_UPDATE_DATE")
+	private Date LastUpdateDate;
+
+	@Column(name = "IS_DELETED")
+	private Integer IsDeleted;
+
+	@Column(name = "DELETED_BY")
+	private Integer DeletedBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DELETED_DATE")
+	private Date DeletedDate;
+
+	/*
+	 * @Column(name = "IS_ENABLED_FLAG") private Integer isEnabledFlag;
+	 */
+	private String note;
+
+	
+	@ManyToOne
+	@JoinColumn(name="REQUEST_CARD_ID")
+	private IndFileType REQUESTCARDID;
+	
+	@ManyToOne
+	@JoinColumn(name="ACCOUNT_NUMBER_ID")
+	private IndFileType ACCOUNTNUMBERID;
+	
+	@ManyToOne
+	@JoinColumn(name="ACCOUNT_TYPE_ID")
+	private IndFileType ACCOUNTTYPEID;
+	
+	@ManyToOne
+	@JoinColumn(name="ACCOUNT_CURRENCY_ID")
+	private IndFileType ACCOUNTCURRENCYID;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="ACCOUNT_RELATION_ID")
+	private IndFileType ACCOUNTRELATIONID;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="ACCOUNT_BRANCH_ID")
+	private IndFileType ACCOUNTBRANCHID;
+	
+	
+	
+	
+	
+	
+	
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,3467 @@
+package com.template.Controller.Table.Indexes;
+
+import java.util.ArrayList;
+
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServlet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.template.Model.Basic.Action;
+import com.template.Model.Table.AllIndexes.*;
+import com.Base.Class.CResponse;
+import com.template.Exception.NoDataFoundException;
+import com.template.Repository.Table.AllIndexes.CustomerSituationRepository;
+import com.template.Repository.Table.AllIndexes.HomeIndexRepository;
+import com.template.Repository.Table.AllIndexes.IndBlacklistDocStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndCountryRepository;
+import com.template.Repository.Table.AllIndexes.IndCustomerTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndEconmicActivityRepository;
+import com.template.Repository.Table.AllIndexes.IndFamilyMemberTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndJournalTypeRepository;
+import com.template.Repository.Table.AllIndexes.IndSubpoenaRequestRepository;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Table.AllIndexes.AccIndAccountTypeCategoriesService;
+import com.template.Service.Table.AllIndexes.AccIndCustAccStatusServices;
+import com.template.Service.Table.AllIndexes.AccIndDateUnitService;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+import com.template.Service.Table.AllIndexes.AccIndPassBookStatusServices;
+import com.template.Service.Table.AllIndexes.AccIndReservationResoanServices;
+import com.template.Service.Table.AllIndexes.AccIndWarningSignServices;
+import com.template.Service.Table.AllIndexes.ActionCustomerNatureService;
+import com.template.Service.Table.AllIndexes.BranchServices;
+//import com.template.Service.Table.AllIndexes.BranchServices;
+import com.template.Service.Table.AllIndexes.CustomerSituationServices;
+import com.template.Service.Table.AllIndexes.CustomerStageServices;
+import com.template.Service.Table.AllIndexes.HomeIndexServices;
+import com.template.Service.Table.AllIndexes.IndAddressTypeService;
+
+import com.template.Service.Table.AllIndexes.IndBlacklistDocStatusService;
+import com.template.Service.Table.AllIndexes.IndBranchTypeServices;
+import com.template.Service.Table.AllIndexes.IndCertificateTypeServices;
+import com.template.Service.Table.AllIndexes.IndCommisionTypeServices;
+import com.template.Service.Table.AllIndexes.IndCompanyTypeServices;
+import com.template.Service.Table.AllIndexes.IndCountryServices;
+
+import com.template.Service.Table.AllIndexes.IndCityServices;
+import com.template.Service.Table.AllIndexes.IndCountryServices;
+import com.template.Service.Table.AllIndexes.IndNationalityServices;
+import com.template.Service.Table.AllIndexes.IndRegionServices;
+
+import com.template.Service.Table.AllIndexes.IndSignatureTypeServices;
+import com.template.Service.Table.AllIndexes.IndSocialStatusServices;
+import com.template.Service.Table.AllIndexes.IndSubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.IndCustDocumentServices;
+import com.template.Service.Table.AllIndexes.IndCustomerMemberTypeServices;
+import com.template.Service.Table.AllIndexes.IndCustomerNatureKeyServices;
+import com.template.Service.Table.AllIndexes.IndCustomerNatureServices;
+import com.template.Service.Table.AllIndexes.IndCustomerTypeServices;
+import com.template.Service.Table.AllIndexes.IndEconmicActivityServices;
+import com.template.Service.Table.AllIndexes.IndEconmicSectorServices;
+import com.template.Service.Table.AllIndexes.IndFamilyMemberTypeServices;
+import com.template.Service.Table.AllIndexes.IndBranchTypeServices;
+
+import com.template.Service.Table.AllIndexes.BranchServices;
+
+import com.template.Service.Table.AllIndexes.IndFileTypeServices;
+import com.template.Service.Table.AllIndexes.IndFiscalYearStatusServices;
+import com.template.Service.Table.AllIndexes.IndGenderServices;
+import com.template.Service.Table.AllIndexes.IndGlClassServices;
+import com.template.Service.Table.AllIndexes.IndIdTypeServices;
+import com.template.Service.Table.AllIndexes.IndIncomeTypeServices;
+import com.template.Service.Table.AllIndexes.IndJournalStatusServices;
+import com.template.Service.Table.AllIndexes.IndJournalTypeServices;
+import com.template.Service.Table.AllIndexes.IndKeyService;
+import com.template.Service.Table.AllIndexes.IndKinshipRoleServices;
+import com.template.Service.Table.AllIndexes.IndLegalStatusServices;
+import com.template.Service.Table.AllIndexes.IndNonCustDocumentServices;
+import com.template.Service.Table.AllIndexes.IndNonCustStatusServices;
+import com.template.Service.Table.AllIndexes.IndPositionServices;
+import com.template.Service.Table.AllIndexes.IndProfessionService;
+import com.template.Service.Table.AllIndexes.IndSectorTypeServices;
+
+@Controller
+@RequestMapping("HomeIndex")
+public class HomeIndexController {
+
+	@Autowired
+	HomeIndexServices homeIndexServices;
+
+	@Autowired
+	IndSocialStatusServices indSocialStatusServices;
+
+	@Autowired
+	IndSignatureTypeServices indSignatureTypeServices;
+
+	@Autowired
+	IndAddressTypeService indAddressTypeService;
+
+	@Autowired
+	IndBlacklistDocStatusService indBlacklistDocStatusService;
+
+	@Autowired
+	IndCommisionTypeServices indCommisionTypeServices;
+
+	@Autowired
+	IndCompanyTypeServices indCompanyTypeServices;
+
+	@Autowired
+	IndCountryServices indCountrySevices;
+
+	@Autowired
+	IndCustDocumentServices indCustDocumentServices;
+
+	@Autowired
+	IndCustomerMemberTypeServices indCustomerMemberTypeServices;
+
+	// @Autowired
+	// IndCustDocumentServices indCustDocumentServices;
+
+	@Autowired
+	IndCustomerTypeServices indCustomerTypeServices;
+
+	@Autowired
+	IndCustomerNatureKeyServices indCustomerNatureKeyServices;
+
+	@Autowired
+	IndCustomerNatureServices indCustomerNatureServices;
+
+	@Autowired
+	IndEconmicActivityServices indEconmicActivityServices;
+
+	@Autowired
+	IndFamilyMemberTypeServices indFamilyMemberTypeServices;
+
+	@Autowired
+	IndEconmicSectorServices indEconmicSectorServices;
+
+	@Autowired
+	IndFileTypeServices indFileTypeServices;
+
+	@Autowired
+	IndGenderServices indGenderServices;
+	
+	@Autowired
+	IndGlClassServices  indGlClassServices;
+
+	@Autowired
+	IndIdTypeServices indIdTypeServices;
+
+	@Autowired
+	IndIncomeTypeServices indIncomeTypeServices;
+
+	@Autowired
+	IndKinshipRoleServices indKinshipRoleServices;
+
+	@Autowired
+	IndLegalStatusServices indLegalStatusServices;
+
+	@Autowired
+	IndNonCustStatusServices indNonCustStatusServices;
+	@Autowired
+	IndNonCustDocumentServices indNonCustDocumentServices;
+
+	@Autowired
+	IndSectorTypeServices indSectorTypeServices;
+
+	@Autowired
+	AccIndAccountTypeCategoriesService accIndAccountTypeCategoryServices;
+
+	@Autowired
+	AccIndCustAccStatusServices accIndCustAccStatusServices;
+
+	@Autowired
+	AccIndDateUnitService accIndDateUnitServices;
+
+	@Autowired
+	AccIndInterestTypeService accIndInterestTypeServices;
+
+	@Autowired
+	IndNationalityServices indNationalityServices;
+
+	@Autowired
+	IndCountryServices indCountryServices;
+
+	@Autowired
+	IndCityServices indCityServices;
+
+	@Autowired
+	IndRegionServices indRegionServices;
+	@Autowired
+	CustomerSituationServices customerSituationServices;
+
+	@Autowired
+	CustomerStageServices customerStageServices;
+
+	@Autowired
+	AccIndPassBookStatusServices accIndPassBookStatusServices;
+	@Autowired
+	AccIndWarningSignServices accIndWarningSignServices;
+
+	@Autowired
+	AccIndReservationResoanServices accIndReservationResoanServices;
+
+	@Autowired
+	HomeIndexRepository homeIndexRepository;
+
+	@Autowired
+	IndSubpoenaRequestServices indSubpoenaRequestServices;
+
+	@Autowired
+	SubpoenaRequestServices subpoenaRequestServices;
+
+	@Autowired
+	IndBranchTypeServices indBranchTypeServices;
+	@Autowired
+	BranchServices bRANCHServices;
+	@Autowired
+	IndCertificateTypeServices indCertificateTypeServices;
+	@Autowired
+	IndPositionServices indPositionServices;
+	@Autowired
+	ActionCustomerNatureService actionCustomerNatureService;
+	@Autowired
+	ActionService actionService;
+
+	@Autowired
+	CustomerSituationRepository  customerSituationRepository;
+	@Autowired
+	IndJournalStatusServices indJournalStatusServices;
+	
+	@Autowired
+	IndKeyService indKeyService;
+	
+	@Autowired
+	IndProfessionService indProfessionService;
+	
+	@Autowired
+	IndJournalTypeServices	indJournalTypeServices;
+	
+	
+	@Autowired
+	IndFiscalYearStatusServices		indFiscalYearStatusServices;
+	
+	
+	
+	@GetMapping("/index")
+	public String index(Model model) {
+		List<Allindex> allindexs = homeIndexServices.getAll();
+		model.addAttribute("allindexs", allindexs);
+
+		String result = "/index-management/index";
+		return result;
+	}
+
+	@GetMapping("/tableindex")
+	public String sysTableInfo(@RequestParam(value = "tableId") String name, Model model) {
+
+		String result = "index-management/tableindex";
+
+		do {
+			if (name.equalsIgnoreCase("IND_SOCIAL_STATUS")) {
+				List<IndSocialStatus> indSocialStatusList = homeIndexServices.indSocialStatusIndex();
+				model.addAttribute("sysTable", indSocialStatusList);
+				model.addAttribute("tableId", "IND_SOCIAL_STATUS");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_SOCIAL_STATUS").getNameA());
+				break;
+			}
+
+			if (name.equalsIgnoreCase("IND_SIGNATURE_TYPE")) {
+				List<IndSignatureType> indSignatureType = homeIndexServices.indSignatureTypeIndex();
+				model.addAttribute("sysTable", indSignatureType);
+				model.addAttribute("tableId", "IND_SIGNATURE_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_SIGNATURE_TYPE").getNameA());
+				break;
+			}
+			if (name.equalsIgnoreCase("IND_ADDRESS_TYPE")) {
+				List<IndAddressType> indAddressTypes = homeIndexServices.indAddressTypeIndex();
+				model.addAttribute("sysTable", indAddressTypes);
+				model.addAttribute("tableId", "IND_ADDRESS_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_ADDRESS_TYPE").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_ADDRESS_TYPE")) {
+				List<IndAddressType> indAddressTypes = homeIndexServices.indAddressTypeIndex();
+				model.addAttribute("sysTable", indAddressTypes);
+				model.addAttribute("tableId", "IND_ADDRESS_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_ADDRESS_TYPE").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_NATIONALITY")) {
+				List<IndNationality> indNationalities = homeIndexServices.indNationalityIndex();
+				model.addAttribute("sysTable", indNationalities);
+				model.addAttribute("tableId", "IND_NATIONALITY");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_NATIONALITY").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_COUNTRY")) {
+				List<IndCountry> indCountry = homeIndexServices.indCountryIndex();
+				model.addAttribute("sysTable", indCountry);
+				model.addAttribute("tableId", "IND_COUNTRY");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_COUNTRY").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_CITY")) {
+				List<IndCity> indCity = homeIndexServices.indCityIndex();
+				model.addAttribute("sysTable", indCity);
+				model.addAttribute("tableId", "IND_CITY");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_CITY").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_REGION")) {
+				List<IndRegion> indRegion = homeIndexServices.indRegionIndex();
+				model.addAttribute("sysTable", indRegion);
+				model.addAttribute("tableId", "IND_REGION");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_REGION").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_BLACKLIST_DOC_STATUS")) {
+				List<IndBlacklistDocStatus> IndBlacklistDocStatus = homeIndexServices.indBlackListDocStatusIndex();
+				model.addAttribute("sysTable", IndBlacklistDocStatus);
+				model.addAttribute("tableId", "IND_BLACKLIST_DOC_STATUS");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("IND_BLACKLIST_DOC_STATUS").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_COMMISSION_TYPE")) {
+				List<IndCommissionType> IndCommisionType = homeIndexServices.IndCommisionTypeindex();
+				model.addAttribute("sysTable", IndCommisionType);
+				model.addAttribute("tableId", "IND_COMMISSION_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_COMMISSION_TYPE").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_COMPANY_TYPE")) {
+				List<IndCompanyType> IndCompanyType = homeIndexServices.IndCompanyTypeindex();
+				model.addAttribute("sysTable", IndCompanyType);
+				model.addAttribute("tableId", "IND_COMPANY_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_COMPANY_TYPE").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_COUNTRY")) {
+				List<IndCountry> IndCountry = homeIndexServices.IndCountryindex();
+				model.addAttribute("sysTable", IndCountry);
+				model.addAttribute("tableId", "IND_COUNTRY");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_COUNTRY").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_CUST_DOCUMENT")) {
+				List<IndCustDocument> IndCustDocument = homeIndexServices.IndCustDocumentindex();
+				model.addAttribute("sysTable", IndCustDocument);
+				// system.out.print("ssssssssss");
+				model.addAttribute("tableId", "IND_CUST_DOCUMENT");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_CUST_DOCUMENT").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_CUSTOMER_MEMBER_TYPE")) {
+				List<IndCustomerMemberType> indCustomerMemberType = homeIndexServices.IndCustomerMemberTypeindex();
+				model.addAttribute("sysTable", indCustomerMemberType);
+				model.addAttribute("tableId", "IND_CUSTOMER_MEMBER_TYPE");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("IND_CUSTOMER_MEMBER_TYPE").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {
+				List<IndCustomerNature> indCustomerNatures = homeIndexServices.IndCustomerNatureindex();
+				model.addAttribute("sysTable", indCustomerNatures);
+				model.addAttribute("tableId", "IND_CUSTOMER_NATURE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_CUSTOMER_NATURE").getNameA());
+				break;
+
+			}
+			if (name.equalsIgnoreCase("IND_CUSTOMER_TYPE")) {
+				List<IndCustomerType> indCustomerType = homeIndexServices.IndCustomerTypeindex();
+				model.addAttribute("sysTable", indCustomerType);
+				model.addAttribute("tableId", "IND_CUSTOMER_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_CUSTOMER_TYPE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_ECONMIC_ACTIVITY")) {
+				// ??
+				List<IndEconmicActivity> indEconmicActivity = homeIndexServices.IndEconmicActivityindex();
+				model.addAttribute("sysTable", indEconmicActivity);
+				model.addAttribute("tableId", "IND_ECONMIC_ACTIVITY");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_ECONMIC_ACTIVITY").getNameA());
+
+				System.err.println(homeIndexRepository.getByName("IND_ECONMIC_ACTIVITY").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_FAMILY_MEMBER_TYPE")) {
+				List<IndFamilyMemberType> indFamilyMemberType = homeIndexServices.IndFamilyMemberTypeindex();
+				model.addAttribute("sysTable", indFamilyMemberType);
+				model.addAttribute("tableId", "IND_FAMILY_MEMBER_TYPE");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("IND_FAMILY_MEMBER_TYPE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_ECONMIC_SECTOR")) {
+				List<IndEconmicSector> indEconmicSector = homeIndexServices.IndEconmicSectorindex();
+				model.addAttribute("sysTable", indEconmicSector);
+				model.addAttribute("tableId", "IND_ECONMIC_SECTOR");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_ECONMIC_SECTOR").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_FILE_TYPE")) {
+				List<IndFileType> indFileType = homeIndexServices.IndFileTypeindex();
+				model.addAttribute("sysTable", indFileType);
+				model.addAttribute("tableId", "IND_FILE_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_FILE_TYPE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_GENDER")) {
+				List<IndGender> indGender = homeIndexServices.IndGenderindex();
+				model.addAttribute("sysTable", indGender);
+				model.addAttribute("tableId", "IND_GENDER");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_GENDER").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_ID_TYPE")) {
+				List<IndIdType> indIdType = homeIndexServices.IndIdTypeindex();
+				model.addAttribute("sysTable", indIdType);
+				model.addAttribute("tableId", "IND_ID_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_ID_TYPE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_INCOME_TYPE")) {
+				List<IndIncomeType> indIncomeType = homeIndexServices.IndIncomeTypeindex();
+				model.addAttribute("sysTable", indIncomeType);
+				model.addAttribute("tableId", "IND_INCOME_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_INCOME_TYPE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_KINSHIP_ROLE")) {
+				List<IndKinshipRole> indKinshipRole = homeIndexServices.IndKinshipRoleindex();
+				model.addAttribute("sysTable", indKinshipRole);
+				model.addAttribute("tableId", "IND_KINSHIP_ROLE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_KINSHIP_ROLE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_LEGAL_STATUS")) {
+				List<IndLegalStatus> indLegalStatus = homeIndexServices.IndLegalStatusindex();
+				model.addAttribute("sysTable", indLegalStatus);
+				model.addAttribute("tableId", "IND_LEGAL_STATUS");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_LEGAL_STATUS").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_NON_CUST_STATUS")) {
+				List<IndNonCustStatus> indNonCustStatus = homeIndexServices.IndNonCustStatusindex();
+				model.addAttribute("sysTable", indNonCustStatus);
+				model.addAttribute("tableId", "IND_NON_CUST_STATUS");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_NON_CUST_STATUS").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_NON_CUST_DOCUMENT")) {
+				List<IndNonCustDocument> indNonCustDocument = homeIndexServices.IndNonCustDocumentindex();
+				model.addAttribute("sysTable", indNonCustDocument);
+				model.addAttribute("tableId", "IND_NON_CUST_DOCUMENT");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("IND_NON_CUST_DOCUMENT").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("ACC_IND_ACCOUNT_TYPE_CATEGORIES")) {
+				List<AccIndAccountTypeCategories> accIndAccountTypeCategory = homeIndexServices
+						.AccIndAccountTypeCategoryindex();
+				model.addAttribute("sysTable", accIndAccountTypeCategory);
+				model.addAttribute("tableId", "ACC_IND_ACCOUNT_TYPE_CATEGORIES");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("ACC_IND_ACCOUNT_TYPE_CATEGORIES").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("ACC_IND_CUST_ACC_STATUS")) {
+				List<AccIndCustAccStatus> accIndCustAccStatusServices = homeIndexServices.AccIndCustAccStatusindex();
+				model.addAttribute("sysTable", accIndCustAccStatusServices);
+				model.addAttribute("tableId", "ACC_IND_CUST_ACC_STATUS");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("ACC_IND_CUST_ACC_STATUS").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("ACC_IND_DATE_UNIT")) {
+				List<AccIndDateUnit> accIndDateUnitServices = homeIndexServices.AccIndDateUnitindex();
+				model.addAttribute("sysTable", accIndDateUnitServices);
+				model.addAttribute("tableId", "ACC_IND_DATE_UNIT");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("ACC_IND_DATE_UNIT").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("ACC_IND_INTEREST_TYPE")) {
+				List<AccIndInterestType> accIndInterestTypeServices = homeIndexServices.AccIndInterestTypeindex();
+				model.addAttribute("sysTable", accIndInterestTypeServices);
+				model.addAttribute("tableId", "ACC_IND_INTEREST_TYPE");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("ACC_IND_INTEREST_TYPE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("CUSTOMER_SITUATION")) {
+				List<CustomerSituation> customerSituationServices = homeIndexServices.CustomerSituationindex();
+				System.err.println(customerSituationServices);
+				model.addAttribute("sysTable", customerSituationServices);
+				model.addAttribute("tableId", "CUSTOMER_SITUATION");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("CUSTOMER_SITUATION").getNameA());
+				System.out.println("the print all "+homeIndexRepository.getByName("CUSTOMER_SITUATION").getNameA()+"\n");
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("CUSTOMER_STAGE")) {
+				List<CustomerStage> customerStage = homeIndexServices.CustomerStageindex();
+				System.err.println(customerStageServices);
+				model.addAttribute("sysTable", customerStage);
+				model.addAttribute("tableId", "CUSTOMER_STAGE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("CUSTOMER_STAGE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("ACC_IND_PASS_BOOK_STATUS")) {
+				List<AccIndPassBookStatus> accIndPassBookStatus = homeIndexServices.AccIndPassBookStatusindex();
+				model.addAttribute("sysTable", accIndPassBookStatus);
+				model.addAttribute("tableId", "ACC_IND_PASS_BOOK_STATUS");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("ACC_IND_PASS_BOOK_STATUS").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("ACC_IND_RESERVATION_RESOAN")) {
+				List<AccIndReservationResoan> accIndReservationResoan = homeIndexServices
+						.AccIndReservationResoanindex();
+				model.addAttribute("sysTable", accIndReservationResoan);
+				model.addAttribute("tableId", "ACC_IND_RESERVATION_RESOAN");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("ACC_IND_RESERVATION_RESOAN").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("ACC_IND_WARNING_SIGN")) {
+				List<AccIndWarningSign> accIndWarningSign = homeIndexServices.AccIndWarningSignindex();
+				model.addAttribute("sysTable", accIndWarningSign);
+				model.addAttribute("tableId", "ACC_IND_WARNING_SIGN");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("ACC_IND_WARNING_SIGN").getNameA());
+				break;
+
+			}
+
+			/*
+			 * else if (name.equalsIgnoreCase("IND_SUBPOENA_REQUEST")) {
+			 * List<IndSubpoenaRequest> indSubpoenaRequest =
+			 * homeIndexServices.IndSubpoenaRequestindex(); model.addAttribute("sysTable",
+			 * indSubpoenaRequest); model.addAttribute("tableId", "IND_SUBPOENA_REQUEST");
+			 * model.addAttribute("tableNameArabic",
+			 * homeIndexRepository.getByName("IND_SUBPOENA_REQUEST").getNameA());
+			 * 
+			 * }
+			 */
+
+			if (name.equalsIgnoreCase("SUBPOENA_REQUEST")) {
+				List<SubpoenaRequest> sUBPOENA_REQUEST = homeIndexServices.SubpoenaRequestRequestindex();
+				model.addAttribute("sysTable", sUBPOENA_REQUEST);
+				model.addAttribute("tableId", "SUBPOENA_REQUEST");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("SUBPOENA_REQUEST").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("Ind_Branch_Type")) {
+
+				List<IndBranchType> indBranchType = homeIndexServices.IndBranchTypeindex();
+				model.addAttribute("sysTable", indBranchType);
+				model.addAttribute("tableId", "Ind_Branch_Type");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("Ind_Branch_Type").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("BRANCH")) {
+				System.err.println("@@@@@@@@@@@@@@@@@");
+
+				List<Branch> bRANCH = homeIndexServices.BRANCHindex();
+				System.err.println(bRANCH);
+				model.addAttribute("sysTable", bRANCH);
+				model.addAttribute("tableId", "BRANCH");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("BRANCH").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_CERTIFICATE_TYPE")) {
+
+				List<IndCertificateType> indCertificateType = homeIndexServices.IndCertificateTypeindex();
+				model.addAttribute("sysTable", indCertificateType);
+				model.addAttribute("tableId", "IND_CERTIFICATE_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_CERTIFICATE_TYPE").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_POSITION")) {
+
+				List<IndPosition> indPosition = homeIndexServices.IndPositionindex();
+				model.addAttribute("sysTable", indPosition);
+				model.addAttribute("tableId", "IND_POSITION");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_POSITION").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_SUBPOENA_REQUEST")) {
+
+				List<IndSubpoenaRequest> indSubpoenaRequest = homeIndexServices.IndSubpoenaRequestindex();
+				model.addAttribute("sysTable", indSubpoenaRequest);
+				model.addAttribute("tableId", "IND_SUBPOENA_REQUEST");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_SUBPOENA_REQUEST").getNameA());
+				break;
+
+			}
+
+			if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE_KEY")) {
+				List<IndCustomerNatureKey> indCustomerNatureKey = homeIndexServices.IndCustomerNatureKeyTypeindex();
+				model.addAttribute("sysTable", indCustomerNatureKey);
+				model.addAttribute("tableId", "IND_CUSTOMER_NATURE_KEY");
+				model.addAttribute("tableNameArabic",
+						homeIndexRepository.getByName("IND_CUSTOMER_NATURE_KEY").getNameA());
+			}
+			
+			if (name.equalsIgnoreCase("IND_KEY")) {
+				List<IndKey> indKeys = homeIndexServices.indKeyIndex();
+				model.addAttribute("sysTable", indKeys);
+				model.addAttribute("tableId", "IND_KEY");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_KEY").getNameA());
+				break;
+			}
+			
+			if (name.equalsIgnoreCase("IND_PROFESSION")) {
+				List<IndProfession> indProfessions = homeIndexServices.indProfessionIndex();
+				model.addAttribute("sysTable", indProfessions);
+				model.addAttribute("tableId", "IND_PROFESSION");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_PROFESSION").getNameA());
+				break;
+			}
+			
+			
+			if (name.equalsIgnoreCase("IND_SUBPOENA_REQUEST")) {
+			
+
+				List<IndSubpoenaRequest> indSubpoenaRequest = homeIndexServices.IndSubpoenaRequestindex();
+				model.addAttribute("sysTable", indSubpoenaRequest);
+				model.addAttribute("tableId", "IND_SUBPOENA_REQUEST");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_SUBPOENA_REQUEST").getNameA());
+				break;
+
+			}
+			
+			
+			
+			if (name.equalsIgnoreCase("IND_JOURNAL_TYPE")) {
+
+				List<IndJournalType> indJournalType = homeIndexServices.IndJournalTypeindex();
+				model.addAttribute("sysTable", indJournalType);
+				model.addAttribute("tableId", "IND_JOURNAL_TYPE");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_JOURNAL_TYPE").getNameA());
+				break;
+
+			}
+			
+			
+			if (name.equalsIgnoreCase("IND_JOURNAL_STATUS")) {
+
+				List<IndJournalStatus> indJournalStatus = homeIndexServices.IndJournalStatusindex();
+				model.addAttribute("sysTable", indJournalStatus);
+				model.addAttribute("tableId", "IND_SUBPOENA_REQUEST");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_JOURNAL_STATUS").getNameA());
+				break;
+
+			}
+			
+			if (name.equalsIgnoreCase("IND_FISCAL_YEAR_STATUS")) {
+
+				List<IndFiscalYearStatus> indFiscalYearStatus = homeIndexServices.IndFiscalYearStatusindex();
+				model.addAttribute("sysTable", indFiscalYearStatus);
+				model.addAttribute("tableId", "IND_FISCAL_YEAR_STATUS");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_FISCAL_YEAR_STATUS").getNameA());
+				break;
+
+			}
+			
+			
+			if (name.equalsIgnoreCase("IND_GL_CLASS")) {
+
+				List<IndGlClass> indGlClass = homeIndexServices.IndGlClassindex();
+				model.addAttribute("sysTable", indGlClass);
+				model.addAttribute("tableId", "IND_GL_CLASS");
+				model.addAttribute("tableNameArabic", homeIndexRepository.getByName("IND_GL_CLASS").getNameA());
+				break;
+
+			}
+			
+			
+			
+			
+
+		} while (false);
+
+		return result;
+
+		/*
+		 * else if (name.equalsIgnoreCase("ACC_IND_RESERVATION_RESOAN")) {
+		 * List<AccIndReservationResoan> accIndReservationResoan =
+		 * homeIndexServices.AccIndPassBookStatusindex(); model.addAttribute("sysTable",
+		 * accIndReservationResoan); model.addAttribute("tableId",
+		 * "ACC_IND_RESERVATION_RESOAN"); }
+		 */
+	}
+
+	@GetMapping("create")
+	public String createOrUpdate(@RequestParam(value = "elementId", required = false) Integer elementId, // @RequestParam(value
+																											// =
+																											// "indexId",
+																											// required
+																											// = false)
+																											// long
+																											// indexId,
+			@RequestParam("tableId") String tableId, Model model, final RedirectAttributes redirectAttributes) {
+		String result = "/index-management/create";
+
+		String actionType = null;
+		IndSocialStatus indSocilStatus;
+		IndSignatureType indSignatureType;
+		IndNationality indNationalities;
+		IndAddressType indAddressTypes;
+		IndCountry indCountry;
+		IndCity indCity;
+		IndRegion indRegion;
+		IndKey indKey;
+		
+		do {
+			if (elementId == null) {
+				actionType = "tables_tableindex_create";
+
+				do {
+					if (tableId.equalsIgnoreCase("IND_SOCIAL_STATUS")) {
+						indSocilStatus = new IndSocialStatus();
+						model.addAttribute("sysTable", indSocilStatus);
+						model.addAttribute("tableId", "IND_SOCIAL_STATUS");
+
+					}
+					if (tableId.equalsIgnoreCase("IND_SIGNATURE_TYPE")) {
+						indSignatureType = new IndSignatureType();
+						model.addAttribute("sysTable", indSignatureType);
+						model.addAttribute("tableId", "IND_SIGNATURE_TYPE");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("IND_ADDRESS_TYPE")) {
+						indAddressTypes = new IndAddressType();
+
+						model.addAttribute("sysTable", indAddressTypes);
+						model.addAttribute("tableId", "IND_ADDRESS_TYPE");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("IND_NATIONALITY")) {
+						indNationalities = new IndNationality();
+						model.addAttribute("sysTable", indNationalities);
+						model.addAttribute("tableId", "IND_NATIONALITY");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("IND_COUNTRY")) {
+						indCountry = new IndCountry();
+						model.addAttribute("sysTable", indCountry);
+						model.addAttribute("tableId", "IND_COUNTRY");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("IND_CITY")) {
+						indCity = new IndCity();
+						List<IndCountry> indCountries = indCountryServices.getAll();
+						model.addAttribute("sysTable", indCity);
+						model.addAttribute("indCountries", indCountries);
+						model.addAttribute("tableId", "IND_CITY");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("IND_REGION")) {
+						indRegion = new IndRegion();
+						List<IndCity> indCities = indCityServices.getAll();
+						model.addAttribute("sysTable", indRegion);
+						model.addAttribute("indCities", indCities);
+						model.addAttribute("tableId", "IND_REGION");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_COMMISSION_TYPE")) {
+
+						IndCommissionType indCommisionType = new IndCommissionType();
+						model.addAttribute("sysTable", indCommisionType);
+
+						// system.out.println("create commision is " + indCommisionType);
+						model.addAttribute("tableId", "IND_COMMISSION_TYPE");
+						break;
+
+					}
+
+					////////////////////
+
+					if (tableId.equalsIgnoreCase("IND_COMPANY_TYPE")) {
+						// system.out.println("create commision is ss");
+						IndCompanyType indCompanyType = new IndCompanyType();
+
+						model.addAttribute("sysTable", indCompanyType);
+						model.addAttribute("tableId", "IND_COMPANY_TYPE");
+						model.addAttribute("test", "IND_COMPANY_TYPE");
+						break;
+					}
+
+					////////////////////// ..
+					/*
+					 * else if (tableId.equalsIgnoreCase("IND_CITY")) {
+					 * 
+					 * IndCity indCity = new IndCity();
+					 * 
+					 * 
+					 * model.addAttribute("sysTable", indCity); model.addAttribute("tableId",
+					 * "IND_CITY"); }
+					 */
+
+					if (tableId.equalsIgnoreCase("IND_COUNTRY")) {
+						indCountry = new IndCountry();
+
+						model.addAttribute("sysTable", indCountry);
+						model.addAttribute("tableId", "IND_COUNTRY");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CUST_DOCUMENT")) {
+						IndCustDocument indCustDocument = new IndCustDocument();
+						// system.out.print("ssssssssss");
+						model.addAttribute("sysTable", indCustDocument);
+						model.addAttribute("tableId", "IND_CUST_DOCUMENT");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CUST_DOCUMENT")) {
+						IndCustDocument indCustDocument = new IndCustDocument();
+
+						model.addAttribute("sysTable", indCustDocument);
+						model.addAttribute("tableId", "IND_CUST_DOCUMENT");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CUSTOMER_MEMBER_TYPE")) {
+						IndCustomerMemberType indCustomerMemberType = new IndCustomerMemberType();
+
+						model.addAttribute("sysTable", indCustomerMemberType);
+						model.addAttribute("tableId", "IND_CUSTOMER_MEMBER_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_BLACKLIST_DOC_STATUS")) {
+						IndBlacklistDocStatus indBlacklistDocStatus = new IndBlacklistDocStatus();
+
+						model.addAttribute("sysTable", indBlacklistDocStatus);
+						model.addAttribute("tableId", "IND_BLACKLIST_DOC_STATUS");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {
+						IndCustomerNature indCustomerNature = new IndCustomerNature();
+
+						model.addAttribute("sysTable", indCustomerNature);
+						model.addAttribute("tableId", "IND_CUSTOMER_NATURE");
+						System.out.println(indCustomerNature);						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CUSTOMER_TYPE")) {
+						IndCustomerType iND_CUSTOMER_TYPE = new IndCustomerType();
+
+						model.addAttribute("sysTable", iND_CUSTOMER_TYPE);
+						model.addAttribute("tableId", "IND_CUSTOMER_TYPE");
+						break;
+
+					}
+					CResponse response=indCustomerNatureServices.getAll();
+					if (tableId.equalsIgnoreCase("IND_CUSTOMER_NATURE_KEY")) {
+						
+
+						IndCustomerNatureKey indCustomerNatureKey = new IndCustomerNatureKey();
+						List<IndCustomerNature> indCustomerNature = (List<IndCustomerNature>)response.getReturnedObject();
+
+						model.addAttribute("sysTable", indCustomerNatureKey);
+						model.addAttribute("tableId", "IND_CUSTOMER_NATURE_KEY");
+						model.addAttribute("indCustomerNature", indCustomerNature);
+						break;
+
+					}
+
+					///////////////////
+
+					if (tableId.equalsIgnoreCase("IND_SOCIAL_STATUS")) {
+						IndSocialStatus indSocialStatus = new IndSocialStatus();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indSocialStatus);
+						model.addAttribute("tableId", "IND_SOCIAL_STATUS");
+						break;
+
+					}
+					////////////////////////////////////////////////////////////////////////////
+					////////////////////////
+					/////////
+					////
+					///
+
+					if (tableId.equalsIgnoreCase("IND_ECONMIC_ACTIVITY")) {
+
+						// creat
+						IndEconmicActivity indEconmicActivity = new IndEconmicActivity();
+						List<IndEconmicSector> indEconmicSector = indEconmicSectorServices.getAll();
+						List<IndSectorType> indSectorType = indSectorTypeServices.getAll();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+						model.addAttribute("indEconmicSector", indEconmicSector);
+						model.addAttribute("indSectorType", indSectorType);
+
+						model.addAttribute("sysTable", indEconmicActivity);
+						model.addAttribute("tableId", "IND_ECONMIC_ACTIVITY");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_FAMILY_MEMBER_TYPE")) {
+						IndFamilyMemberType indFamilyMemberType = new IndFamilyMemberType();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indFamilyMemberType);
+						model.addAttribute("tableId", "IND_FAMILY_MEMBER_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_ECONMIC_SECTOR")) {
+						IndEconmicSector indEconmicSector = new IndEconmicSector();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indEconmicSector);
+						model.addAttribute("tableId", "IND_ECONMIC_SECTOR");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_FILE_TYPE")) {
+						IndFileType indFileType = new IndFileType();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indFileType);
+						model.addAttribute("tableId", "IND_FILE_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_GENDER")) {
+						IndGender indGender = new IndGender();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indGender);
+						model.addAttribute("tableId", "IND_GENDER");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_ID_TYPE")) {
+						IndIdType indIdType = new IndIdType();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indIdType);
+						model.addAttribute("tableId", "IND_ID_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_INCOME_TYPE")) {
+						IndIncomeType indIncomeType = new IndIncomeType();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indIncomeType);
+						model.addAttribute("tableId", "IND_INCOME_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_KINSHIP_ROLE")) {
+						IndKinshipRole indKinshipRole = new IndKinshipRole();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indKinshipRole);
+						model.addAttribute("tableId", "IND_KINSHIP_ROLE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_LEGAL_STATUS")) {
+						IndLegalStatus indLegalStatus = new IndLegalStatus();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indLegalStatus);
+						model.addAttribute("tableId", "IND_LEGAL_STATUS");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_NON_CUST_STATUS")) {
+						IndNonCustStatus indNonCustStatus = new IndNonCustStatus();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indNonCustStatus);
+						model.addAttribute("tableId", "IND_NON_CUST_STATUS");
+						break;
+
+					}
+//					CResponse response1=indNonCustDocumentServices.getAll();
+//					
+//					CResponse response=indCustomerNatureServices.getAll();
+
+					
+
+
+					if (tableId.equalsIgnoreCase("IND_NON_CUST_DOCUMENT")) {
+						IndNonCustStatus indNonCustStatus = new IndNonCustStatus();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indNonCustStatus);
+						model.addAttribute("tableId", "IND_NON_CUST_STATUS");
+						break;
+
+					}
+
+//					
+					if (tableId.equalsIgnoreCase("ACC_IND_ACCOUNT_TYPE_CATEGORIES")) {
+						AccIndAccountTypeCategories accIndAccountTypeCategory = new AccIndAccountTypeCategories();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", accIndAccountTypeCategory);
+						model.addAttribute("tableId", "ACC_IND_ACCOUNT_TYPE_CATEGORIES");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("ACC_IND_CUST_ACC_STATUS")) {
+						AccIndCustAccStatus accIndCustAccStatus = new AccIndCustAccStatus();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", accIndCustAccStatus);
+						model.addAttribute("tableId", "ACC_IND_CUST_ACC_STATUS");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("ACC_IND_DATE_UNIT")) {
+						AccIndDateUnit accIndDateUnit = new AccIndDateUnit();
+
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", accIndDateUnit);
+						model.addAttribute("tableId", "ACC_IND_DATE_UNIT");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("ACC_IND_INTEREST_TYPE")) {
+						AccIndInterestType accIndInterestType = new AccIndInterestType();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", accIndInterestType);
+						model.addAttribute("tableId", "ACC_IND_INTEREST_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("CUSTOMER_SITUATION")) {
+						CustomerSituation customerSituation = new CustomerSituation();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", customerSituation);
+						model.addAttribute("tableId", "CUSTOMER_SITUATION");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("CUSTOMER_STAGE")) {
+						CustomerStage customerStage = new CustomerStage();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+						// system.out.println("--------------- "+customerStage);
+						model.addAttribute("sysTable", customerStage);
+						model.addAttribute("tableId", "CUSTOMER_STAGE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("ACC_IND_PASS_BOOK_STATUS")) {
+						AccIndPassBookStatus accIndPassBookStatus = new AccIndPassBookStatus();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+						//// system.out.println("--------------- "+accIndPassBookStatus);
+						model.addAttribute("sysTable", accIndPassBookStatus);
+						model.addAttribute("tableId", "ACC_IND_PASS_BOOK_STATUS");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("ACC_IND_WARNING_SIGN")) {
+						AccIndWarningSign accIndWarningSign = new AccIndWarningSign();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+						//// system.out.println("--------------- "+accIndPassBookStatus);
+						model.addAttribute("sysTable", accIndWarningSign);
+						model.addAttribute("tableId", "ACC_IND_WARNING_SIGN");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("ACC_IND_RESERVATION_RESOAN")) {
+						AccIndReservationResoan accIndReservationResoan = new AccIndReservationResoan();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+						//// system.out.println("--------------- "+accIndPassBookStatus);
+						model.addAttribute("sysTable", accIndReservationResoan);
+						model.addAttribute("tableId", "ACC_IND_RESERVATION_RESOAN");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_SUBPOENA_REQUEST")) {
+						IndSubpoenaRequest indSubpoenaRequest = new IndSubpoenaRequest();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+						//// system.out.println("--------------- "+accIndPassBookStatus);
+						model.addAttribute("sysTable", indSubpoenaRequest);
+						model.addAttribute("tableId", "IND_SUBPOENA_REQUEST");
+
+						System.out.print("model.addAttribute" + model);
+						break;
+
+					}
+
+					/*
+					 * else if (tableId.equalsIgnoreCase("SUBPOENA_REQUEST")) { SubpoenaRequest
+					 * subpoenaRequest = new SubpoenaRequest(); // IndCustomerNature
+					 * indCustomerNature = indCustomerNatureServices.getAll();
+					 * ////system.out.println("--------------- "+accIndPassBookStatus);
+					 * model.addAttribute("sysTable", subpoenaRequest);
+					 * model.addAttribute("tableId", "SUBPOENA_REQUEST");
+					 * model.addAttribute("indexId", indexId);
+					 * 
+					 * 
+					 * 
+					 * }
+					 */
+
+					/*
+					 * else if (tableId.equalsIgnoreCase("SUBPOENA_REQUEST")) { SubpoenaRequest
+					 * subpoenaRequest = new SubpoenaRequest(); List<IndSubpoenaRequest>
+					 * indSubpoenaRequest = indSubpoenaRequestServices.getAll(); List<IndSectorType>
+					 * indSectorType = indSectorTypeServices.getAll();
+					 * 
+					 * // IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+					 * model.addAttribute("indEconmicSector", indSubpoenaRequest);
+					 * 
+					 * 
+					 * model.addAttribute("sysTable", subpoenaRequest);
+					 * model.addAttribute("tableId", "SUBPOENA_REQUEST");
+					 * 
+					 * 
+					 * }
+					 */
+					if (tableId.equalsIgnoreCase("SUBPOENA_REQUEST")) {
+						SubpoenaRequest subpoenaRequest = new SubpoenaRequest();
+
+						List<IndSubpoenaRequest> indSubpoenaRequest = indSubpoenaRequestServices.getAll();
+
+						model.addAttribute("sysTable", subpoenaRequest);
+						model.addAttribute("tableId", "SUBPOENA_REQUEST");
+						model.addAttribute("indSubpoenaRequest", indSubpoenaRequest);
+						break;
+
+						// system.out.println("subpoenaRequest"+ subpoenaRequest) ;
+					}
+
+					if (tableId.equalsIgnoreCase("Ind_Branch_Type")) {
+						IndBranchType indBranchType = new IndBranchType();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indBranchType);
+						model.addAttribute("tableId", "Ind_Branch_Type");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("BRANCH")) {
+						Branch bRANCH = new Branch();
+
+						List<IndBranchType> indBranchType = indBranchTypeServices.getAll();
+						List<IndCountry> indCountry1 = indCountryServices.getAll();
+						List<IndCity> indCity1 = indCityServices.getAll();
+
+						List<Branch> ListBranch = bRANCHServices.getAll();
+
+						for (IndCountry indCountry2 : indCountry1) {
+							// system.out.println( indCountry2.getNameA());
+						}
+
+						model.addAttribute("sysTable", bRANCH);
+						model.addAttribute("tableId", "BRANCH");
+						model.addAttribute("indBranchType", indBranchType);
+						model.addAttribute("indCountry1", indCountry1);
+						model.addAttribute("indCity1", indCity1);
+						model.addAttribute("ListBranch", ListBranch);
+
+						//// system.out.println("ListBranch" + ListBranch) ;
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CERTIFICATE_TYPE")) {
+						IndCertificateType indCertificateType = new IndCertificateType();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indCertificateType);
+						model.addAttribute("tableId", "IND_CERTIFICATE_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CERTIFICATE_TYPE")) {
+						IndCertificateType indCertificateType = new IndCertificateType();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indCertificateType);
+						model.addAttribute("tableId", "IND_CERTIFICATE_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_POSITION")) {
+						IndPosition indPosition = new IndPosition();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indPosition);
+						model.addAttribute("tableId", "IND_POSITION");
+						break;
+
+					}
+					
+					if (tableId.equalsIgnoreCase("IND_KEY")) {
+						indKey = new IndKey();
+						CResponse response2 = actionService.findAll();
+						List<Action> actions = (List<Action>) response2.getReturnedObject();
+						
+						model.addAttribute("actions", actions);
+						model.addAttribute("sysTable", indKey);
+						model.addAttribute("tableId", "IND_KEY");
+					}
+					
+					if (tableId.equalsIgnoreCase("IND_PROFESSION")) {
+						IndProfession indProfession = new IndProfession();
+						model.addAttribute("sysTable", indProfession);
+						model.addAttribute("tableId", "IND_PROFESSION");
+					}
+
+					
+					
+					
+					if (tableId.equalsIgnoreCase("IND_JOURNAL_TYPE")) {
+						IndJournalType indJournalType = new IndJournalType();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indJournalType);
+						model.addAttribute("tableId", "IND_JOURNAL_TYPE");
+						break;
+
+					}
+					
+					
+					if (tableId.equalsIgnoreCase("IND_JOURNAL_STATUS")) {
+						IndJournalStatus indJournalStatus = new IndJournalStatus();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indJournalStatus);
+						model.addAttribute("tableId", "IND_JOURNAL_STATUS");
+						break;
+
+					}
+					
+					
+					if (tableId.equalsIgnoreCase("IND_FISCAL_YEAR_STATUS")) {
+						IndFiscalYearStatus indFiscalYearStatus = new IndFiscalYearStatus();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indFiscalYearStatus);
+						model.addAttribute("tableId", "IND_FISCAL_YEAR_STATUS");
+						break;
+
+					}
+					
+					
+					if (tableId.equalsIgnoreCase("IND_GL_CLASS")) {
+						IndGlClass indGlClass = new IndGlClass();
+						// IndCustomerNature indCustomerNature = indCustomerNatureServices.getAll();
+
+						model.addAttribute("sysTable", indGlClass);
+						model.addAttribute("tableId", "IND_GL_CLASS");
+						break;
+
+					}
+					
+					
+					
+
+				} while (false);
+
+			} else {
+				actionType = "tables_tableindex_create";
+
+				do
+
+				{
+					if (tableId.equalsIgnoreCase("IND_SOCIAL_STATUS")) {
+						indSocilStatus = indSocialStatusServices.findById((long) elementId);
+						model.addAttribute("sysTable", indSocilStatus);
+						model.addAttribute("tableId", "IND_SOCIAL_STATUS");
+						break;
+
+					}
+					
+		
+					
+					if (tableId.equalsIgnoreCase("IND_SIGNATURE_TYPE")) {
+						indSignatureType = indSignatureTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indSignatureType);
+						model.addAttribute("tableId", "IND_SIGNATURE_TYPE");
+						break;
+
+					}
+					
+					
+					if (tableId.equalsIgnoreCase("IND_ADDRESS_TYPE")) {
+						indAddressTypes = indAddressTypeService.findById((long) elementId);
+
+						model.addAttribute("sysTable", indAddressTypes);
+						model.addAttribute("tableId", "IND_ADDRESS_TYPE");
+						break;
+
+					}
+					
+					if (tableId.equalsIgnoreCase("IND_NATIONALITY")) {
+						indNationalities = indNationalityServices.findById((long) elementId);
+						model.addAttribute("sysTable", indNationalities);
+						model.addAttribute("tableId", "IND_NATIONALITY");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("IND_COUNTRY")) {
+						indCountry = indCountryServices.findById((long) elementId);
+						model.addAttribute("sysTable", indCountry);
+						model.addAttribute("tableId", "IND_COUNTRY");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("IND_CITY")) {
+						indCity = indCityServices.findById((long) elementId);
+						// System.err.println("pppppp: "+indCity.getIndCountry().getNameA());
+						List<IndCountry> indCountries = indCountryServices.getAll();
+						model.addAttribute("sysTable", indCity);
+						model.addAttribute("indCountries", indCountries);
+						model.addAttribute("tableId", "IND_CITY");
+						break;
+
+					}
+					
+					if (tableId.equalsIgnoreCase("IND_REGION")) {
+						indRegion = indRegionServices.findById((long) elementId);
+						List<IndCity> indCities = indCityServices.getAll();
+						model.addAttribute("sysTable", indRegion);
+						model.addAttribute("indCities", indCities);
+						model.addAttribute("tableId", "IND_REGION");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_BLACKLIST_DOC_STATUS")) {
+						IndBlacklistDocStatus indBlacklistDocStatus = indBlacklistDocStatusService
+								.findById((long) elementId);
+						model.addAttribute("sysTable", indBlacklistDocStatus);
+
+						// system.out.println("CREATE" + indBlacklistDocStatus);
+						model.addAttribute("tableId", "IND_BLACKLIST_DOC_STATUS");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_COMPANY_TYPE")) {
+						IndCompanyType indCompanyType = indCompanyTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indCompanyType);
+
+						// system.out.println("CREATE" + indCompanyType);
+						model.addAttribute("tableId", "IND_COMPANY_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_COUNTRY")) {
+						indCountry = indCountryServices.findById((long) elementId);
+						model.addAttribute("sysTable", indCountry);
+
+						// system.out.println("CREATE" + indCountry);
+						model.addAttribute("tableId", "IND_COUNTRY");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CUST_DOCUMENT")) {
+						IndCustDocument indCustDocument = indCustDocumentServices.findById((long) elementId);
+						model.addAttribute("sysTable", indCustDocument);
+
+						// system.out.println("CREATE" + indCustDocument);
+						model.addAttribute("tableId", "IND_CUST_DOCUMENT");
+						break;
+
+					}
+
+					// else if (tableId.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {
+					// IndCustomerNature indCustomerNature =
+					// indCustomerNatureKeyServices.findById((long) elementId);
+					// model.addAttribute("sysTable", indCustomerNature);
+
+					// //system.out.println("CREATE" + indCustomerNature);
+					// model.addAttribute("tableId", "IND_CUSTOMER_NATURE");
+					// }
+
+					if (tableId.equalsIgnoreCase("IND_CUSTOMER_TYPE")) {
+						IndCustomerType indCustomerType = indCustomerTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indCustomerType);
+
+						// system.out.println("CREATE" + indCustomerType);
+						model.addAttribute("tableId", "IND_CUSTOMER_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CUSTOMER_NATURE_KEY")) {
+						
+						////////////////////////////////////////
+						
+						
+						CResponse response=indCustomerNatureServices.getAll();
+					//	if (tableId.equalsIgnoreCase("IND_CUSTOMER_NATURE_KEY")) {
+							
+
+							IndCustomerNatureKey indCustomerNatureKey = new IndCustomerNatureKey();
+							
+
+							List<IndCustomerNature> indCustomerNature = (List<IndCustomerNature>)response.getReturnedObject();
+
+																														
+						/////////////////////////////////////////////
+							CResponse response1=indCustomerNatureServices.getAll();
+
+							IndCustomerNatureKey indCustomerNatureKey2 = new IndCustomerNatureKey();
+
+						
+						
+					IndCustomerNatureKey indCustomerNatureKey1 = indCustomerNatureKeyServices
+								.findById((long) elementId);
+						//List<IndCustomerNature>indCustomerNatures = indCustomerNatureServices.getAll();
+					List<IndCustomerNature> indCustomerNatures = (List<IndCustomerNature>)response1.getReturnedObject();
+
+						
+						model.addAttribute("sysTable", indCustomerNatureKey1);
+						model.addAttribute("tableId", "IND_CUSTOMER_NATURE_KEY");
+						model.addAttribute("indCustomerNature", indCustomerNatures);
+						/*
+						 * System.err.println("4545454:  "+elementId);
+						 * System.err.println(indCustomerNatureKeyServices.findById((long) elementId));
+						 * IndCustomerNatureKey indCustomerNatureKey =
+						 * indCustomerNatureKeyServices.findById((long) elementId);
+						 * System.err.println(indCustomerNatureKeyServices.findById((long) elementId));
+						 * model.addAttribute("sysTable", indCustomerNatureKey);
+						 * model.addAttribute("tableId", "IND_CUSTOMER_NATURE_KEY");
+						 */ break;
+
+					}
+
+					
+					if (tableId.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {
+						IndCustomerNature indCustomerNature = indCustomerNatureServices.findById((long) elementId);
+
+						model.addAttribute("sysTable", indCustomerNature);
+
+						// system.out.println("CREATE" + indCustomerNature);
+						model.addAttribute("tableId", "IND_CUSTOMER_NATURE");
+						break;
+
+					}
+				
+					if (tableId.equalsIgnoreCase("IND_ECONMIC_ACTIVITY")) {
+						IndEconmicActivity indEconmicActivity = indEconmicActivityServices.findById((long) elementId);
+						// ed
+						List<IndEconmicSector> indEconmicSector = indEconmicSectorServices.getAll();
+						List<IndSectorType> indSectorType = indSectorTypeServices.getAll();
+						model.addAttribute("sysTable", indEconmicActivity);
+
+						model.addAttribute("indEconmicSector", indEconmicSector);
+						model.addAttribute("indSectorType", indSectorType);
+						model.addAttribute("tableId", "IND_ECONMIC_ACTIVITY");
+
+						/*
+						 * model.addAttribute("indEconmicSector", indEconmicSector);
+						 * model.addAttribute("tableId", "IND_ECONMIC_ACTIVITY"); ${indEconmicSector}
+						 * 
+						 * model.addAttribute("sysTable", indEconmicSector);//indEconmicSector
+						 * model.addAttribute("sysTable", indSectorType);
+						 * 
+						 * model.addAttribute("indEconmicActivity", indEconmicActivity);
+						 * 
+						 * //system.out.println("CREATE" + indEconmicActivity);
+						 * model.addAttribute("tableId", "IND_ECONMIC_ACTIVITY");
+						 */
+						break;
+
+					}
+				
+					if (tableId.equalsIgnoreCase("IND_FAMILY_MEMBER_TYPE")) {
+						IndFamilyMemberType indFamilyMemberType = indFamilyMemberTypeServices
+								.findById((long) elementId);
+						model.addAttribute("sysTable", indFamilyMemberType);
+
+						// system.out.println("CREATE" + indFamilyMemberType);
+						model.addAttribute("tableId", "IND_FAMILY_MEMBER_TYPE");
+						break;
+
+					}
+
+					
+	if (tableId.equalsIgnoreCase("IND_ECONMIC_SECTOR")) {
+						IndEconmicSector indEconmicSector = indEconmicSectorServices.findById((long) elementId);
+						model.addAttribute("sysTable", indEconmicSector);
+
+						// system.out.println("CREATE" + indEconmicSector);
+						model.addAttribute("tableId", "IND_ECONMIC_SECTOR");
+						break;
+	}
+			
+					if (tableId.equalsIgnoreCase("IND_FILE_TYPE")) {
+						IndFileType indFileType = indFileTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indFileType);
+
+						// system.out.println("CREATE" + indFileType);
+						model.addAttribute("tableId", "IND_FILE_TYPE");
+						break;
+
+					}
+
+		if (tableId.equalsIgnoreCase("IND_GENDER")) {
+						IndGender indGender = indGenderServices.findById((long) elementId);
+						model.addAttribute("sysTable", indGender);
+
+						// system.out.println("CREATE" + indGender);
+						model.addAttribute("tableId", "IND_GENDER");
+						break;
+
+					}
+
+
+		
+					if (tableId.equalsIgnoreCase("IND_ID_TYPE")) {
+						IndIdType indIdType = indIdTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indIdType);
+
+						// system.out.println("CREATE" + indIdType);
+						model.addAttribute("tableId", "IND_ID_TYPE");
+						break;
+
+					}
+		
+			
+					
+					if (tableId.equalsIgnoreCase("IND_INCOME_TYPE")) {
+						IndIncomeType indIncomeType = indIncomeTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indIncomeType);
+
+						// system.out.println("CREATE" + indIncomeType);
+						model.addAttribute("tableId", "IND_INCOME_TYPE");
+						break;
+
+					}
+		
+					if (tableId.equalsIgnoreCase("IND_KINSHIP_ROLE")) {
+						IndKinshipRole indKinshipRole = indKinshipRoleServices.findById((long) elementId);
+						model.addAttribute("sysTable", indKinshipRole);
+
+						// system.out.println("CREATE" + indKinshipRole);
+						model.addAttribute("tableId", "IND_KINSHIP_ROLE");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("IND_LEGAL_STATUS")) {
+						IndLegalStatus indLegalStatus = indLegalStatusServices.findById((long) elementId);
+						model.addAttribute("sysTable", indLegalStatus);
+
+						// system.out.println("CREATE" + indLegalStatus);
+						model.addAttribute("tableId", "IND_LEGAL_STATUS");
+						break;
+
+					}
+		
+					if (tableId.equalsIgnoreCase("IND_NON_CUST_STATUS")) {
+						IndNonCustStatus indNonCustStatus = indNonCustStatusServices.findById((long) elementId);
+						model.addAttribute("sysTable", indNonCustStatus);
+
+						// system.out.println("CREATE" + indNonCustStatus);
+						model.addAttribute("tableId", "IND_NON_CUST_STATUS");
+						break;
+
+					}
+				
+					if (tableId.equalsIgnoreCase("IND_NON_CUST_DOCUMENT")) {
+					/////////////////////////////////////	
+						
+						CResponse response3=indFileTypeServices.getAll();
+
+
+						
+						
+						
+						
+						
+						
+						
+						////////////////////////////////////////////
+						
+						IndNonCustDocument indNonCustDocument = indNonCustDocumentServices.findById((long) elementId);
+						
+						List<IndFileType> indFileType = (List<IndFileType>)response3.getReturnedObject();
+
+					//	List<IndFileType> indFileType = indFileTypeServices.getAll();
+						model.addAttribute("sysTable", indNonCustDocument);
+						model.addAttribute("indFileType", indFileType);
+
+						// system.out.println("CREATE" + indNonCustDocument);
+						model.addAttribute("tableId", "IND_NON_CUST_DOCUMENT");
+						break;
+
+					}
+	
+					if (tableId.equalsIgnoreCase("ACC_IND_ACCOUNT_TYPE_CATEGORIES")) {
+						CResponse response=accIndAccountTypeCategoryServices
+								.findById((long) elementId);
+						AccIndAccountTypeCategories accIndAccountTypeCategory = (AccIndAccountTypeCategories) response.getReturnedObject();
+						model.addAttribute("sysTable", accIndAccountTypeCategory);
+
+						// system.out.println("CREATE" + accIndAccountTypeCategory);
+						model.addAttribute("tableId", "ACC_IND_ACCOUNT_TYPE_CATEGORIES");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("ACC_IND_CUST_ACC_STATUS")) {
+						AccIndCustAccStatus accIndCustAccStatus = accIndCustAccStatusServices
+								.findById((long) elementId);
+						model.addAttribute("sysTable", accIndCustAccStatus);
+
+						// system.out.println("CREATE" + accIndCustAccStatus);
+						model.addAttribute("tableId", "ACC_IND_CUST_ACC_STATUS");
+						break;
+
+					}
+
+//						if (tableId.equalsIgnoreCase("ACC_IND_DATE_UNIT")) {
+//						AccIndDateUnit accIndDateUnit = accIndDateUnitServices.findById((long) elementId);
+//						model.addAttribute("sysTable", accIndDateUnit);
+//
+//						// system.out.println("CREATE" + accIndDateUnit);
+//						model.addAttribute("tableId", "ACC_IND_DATE_UNIT");
+//						break;
+//
+//						}
+		
+					if (tableId.equalsIgnoreCase("ACC_IND_INTEREST_TYPE")) {
+						AccIndInterestType accIndInterestType = accIndInterestTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", accIndInterestType);
+
+						// system.out.println("CREATE" + accIndInterestType);
+						model.addAttribute("tableId", "ACC_IND_INTEREST_TYPE");
+						break;
+
+					}
+				
+		
+					if (tableId.equalsIgnoreCase("CUSTOMER_SITUATION")) {
+						CustomerSituation customerSituation = customerSituationServices.findById((long) elementId);
+						model.addAttribute("sysTable", customerSituation);
+
+						// system.out.println("CREATE" + customerSituation);
+						model.addAttribute("tableId", "CUSTOMER_SITUATION");
+						break;
+
+					}
+					if (tableId.equalsIgnoreCase("CUSTOMER_STAGE")) {
+						CustomerStage customerStage = customerStageServices.findById((long) elementId);
+						model.addAttribute("sysTable", customerStage);
+
+						// system.out.println("CREATE" + customerStage);
+						model.addAttribute("tableId", "CUSTOMER_STAGE");
+						break;
+
+					}
+		
+					if (tableId.equalsIgnoreCase("ACC_IND_PASS_BOOK_STATUS")) {
+						AccIndPassBookStatus accIndPassBookStatus = accIndPassBookStatusServices
+								.findById((long) elementId);
+						model.addAttribute("sysTable", accIndPassBookStatus);
+
+						// system.out.println("CREATE" + accIndPassBookStatus);
+						model.addAttribute("tableId", "ACC_IND_PASS_BOOK_STATUS");
+						break;
+
+					}
+					
+								if (tableId.equalsIgnoreCase("IND_COMMISSION_TYPE")) {
+						IndCommissionType indCommisionType = indCommisionTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indCommisionType);
+
+						// system.out.println("CREATE" + accIndWarningSign);
+						model.addAttribute("tableId", "IND_COMMISSION_TYPE");
+						break;
+
+					}
+				
+	
+					if (tableId.equalsIgnoreCase("ACC_IND_WARNING_SIGN")) {
+						AccIndWarningSign accIndWarningSign = accIndWarningSignServices.findById((long) elementId);
+						model.addAttribute("sysTable", accIndWarningSign);
+
+						// system.out.println("CREATE" + accIndWarningSign);
+						model.addAttribute("tableId", "ACC_IND_WARNING_SIGN");
+						break;
+
+					}
+								if (tableId.equalsIgnoreCase("ACC_IND_RESERVATION_RESOAN")) {
+						AccIndReservationResoan accIndReservationResoan = accIndReservationResoanServices
+								.findById((long) elementId);
+						model.addAttribute("sysTable", accIndReservationResoan);
+
+						// system.out.println("CREATE" + accIndReservationResoan);
+						model.addAttribute("tableId", "ACC_IND_RESERVATION_RESOAN");
+						break;
+
+					}
+				
+	
+					if (tableId.equalsIgnoreCase("IND_SUBPOENA_REQUEST")) {
+						IndSubpoenaRequest indSubpoenaRequest = indSubpoenaRequestServices.findById((long) elementId);
+						model.addAttribute("sysTable", indSubpoenaRequest);
+
+						// system.out.println("CREATE" + indSubpoenaRequest);
+						model.addAttribute("tableId", "IND_SUBPOENA_REQUEST");
+						break;
+
+					}
+
+					/*
+					 * 
+					 * else if (tableId.equalsIgnoreCase("SUBPOENA_REQUEST")) { SubpoenaRequest
+					 * sUBPOENA_REQUEST = subpoenaRequestServices.findById((long) elementId);
+					 * model.addAttribute("sysTable", sUBPOENA_REQUEST);
+					 * 
+					 * //system.out.println("CREATE" + sUBPOENA_REQUEST);
+					 * model.addAttribute("tableId", "IND_SUBPOENA_REQUEST");
+					 * model.addAttribute("indexId", indexId);
+					 * 
+					 * 
+					 * }
+					 */
+
+					if (tableId.equalsIgnoreCase("SUBPOENA_REQUEST")) {
+						SubpoenaRequest subpoenaRequest = subpoenaRequestServices.findById((long) elementId);
+						List<IndSubpoenaRequest> indSubpoenaRequest = indSubpoenaRequestServices.getAll();
+						model.addAttribute("sysTable", subpoenaRequest);
+						model.addAttribute("tableId", "SUBPOENA_REQUEST");
+						model.addAttribute("indSubpoenaRequest", indSubpoenaRequest);
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CUSTOMER_MEMBER_TYPE")) {
+						IndCustomerMemberType indCustomerMemberType = indCustomerMemberTypeServices
+								.findById((long) elementId);
+						model.addAttribute("sysTable", indCustomerMemberType);
+
+						// system.out.println("CREATE" + indEconmicSector);
+						model.addAttribute("tableId", "IND_CUSTOMER_MEMBER_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("Ind_Branch_Type")) {
+						IndBranchType indBranchType = indBranchTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indBranchType);
+
+						// system.out.println("CREATE" + indBranchType);
+						model.addAttribute("tableId", "Ind_Branch_Type");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("BRANCH")) {
+
+						Branch branch = bRANCHServices.findById((long) elementId);
+						List<IndCountry> indCountry1 = indCountryServices.getAll();
+						List<IndCity> indCity1 = indCityServices.getAll();
+						List<Branch> ListBranch = bRANCHServices.getAll();
+
+						List<IndBranchType> indBranchType = indBranchTypeServices.getAll();
+						model.addAttribute("sysTable", branch);
+						model.addAttribute("tableId", "BRANCH");
+						model.addAttribute("indBranchType", indBranchType);
+						model.addAttribute("indCountry1", indCountry1);
+						model.addAttribute("indCity1", indCity1);
+
+						model.addAttribute("ListBranch", ListBranch);
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_CERTIFICATE_TYPE")) {
+						IndCertificateType indCertificateType = indCertificateTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indCertificateType);
+
+						// system.out.println("CREATE" + indEconmicSector);
+						model.addAttribute("tableId", "IND_CERTIFICATE_TYPE");
+						break;
+
+					}
+
+					if (tableId.equalsIgnoreCase("IND_POSITION")) {
+						IndPosition indPosition = indPositionServices.findById((long) elementId);
+						model.addAttribute("sysTable", indPosition);
+
+						// system.out.println("CREATE" + indEconmicSector);
+						model.addAttribute("tableId", "IND_POSITION");
+						break;
+
+					}
+					
+					if (tableId.equalsIgnoreCase("IND_JOURNAL_STATUS")) {
+						IndJournalStatus indJournalStatus = indJournalStatusServices.findById((long) elementId);
+						model.addAttribute("sysTable", indJournalStatus);
+
+						// system.out.println("CREATE" + indEconmicSector);
+						model.addAttribute("tableId", "IND_JOURNAL_STATUS");
+						break;
+
+					}
+					
+					if (tableId.equalsIgnoreCase("IND_JOURNAL_TYPE")) {
+						IndJournalType indFiscalYearStatus = indJournalTypeServices.findById((long) elementId);
+						model.addAttribute("sysTable", indFiscalYearStatus);
+
+						// system.out.println("CREATE" + indEconmicSector);
+						model.addAttribute("tableId", "IND_JOURNAL_TYPE");
+						break;
+
+					}
+					
+					
+					
+					if (tableId.equalsIgnoreCase("IND_FISCAL_YEAR_STATUS")) {
+						IndFiscalYearStatus indFiscalYearStatus = indFiscalYearStatusServices.findById((long) elementId);
+						model.addAttribute("sysTable", indFiscalYearStatus);
+
+						// system.out.println("CREATE" + indEconmicSector);
+						model.addAttribute("tableId", "IND_FISCAL_YEAR_STATUS");
+						break;
+
+					}
+					
+					
+					
+					if (tableId.equalsIgnoreCase("IND_GL_CLASS")) {
+						IndGlClass indGlClass = indGlClassServices.findById((long) elementId);
+						model.addAttribute("sysTable", indGlClass);
+
+						// system.out.println("CREATE" + indEconmicSector);
+						model.addAttribute("tableId", "IND_GL_CLASS");
+						break;
+
+					}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+
+					if (tableId.equalsIgnoreCase("IND_KEY")) {
+						CResponse response =  indKeyService.findById((long) elementId);
+						indKey = (IndKey) response.getReturnedObject();
+						model.addAttribute("sysTable", indKey);
+						model.addAttribute("tableId", "IND_KEY");
+						break;
+
+					}
+					
+					if (tableId.equalsIgnoreCase("IND_PROFESSION")) {
+						IndProfession indProfession =  indProfessionService.findById((long) elementId);
+						model.addAttribute("sysTable", indProfession);
+						model.addAttribute("tableId", "IND_PROFESSION");
+						break;
+
+					}
+
+				} while (false);
+
+			}
+		} while (false);
+
+		// system.out.print("99999999") ;
+		return result;
+	}
+
+	@PostMapping("/save")
+	public String save(@ModelAttribute("indSocilStatus") IndSocialStatus indSocilStatus,
+			@ModelAttribute("indSignatureType") IndSignatureType indSignatureType,
+			@ModelAttribute("indAddressType") IndAddressType indAddressType,
+			@ModelAttribute("indCommisionType") IndCommissionType indCommisionType,
+			@ModelAttribute("indCompanyType") IndCompanyType indCompanyType, @ModelAttribute("indCity") IndCity indCity,
+			@ModelAttribute("indCountry") IndCountry indCountry,
+			@ModelAttribute("indCustDocument") IndCustDocument indCustDocument,
+			@ModelAttribute("indCustomerMemberType") IndCustomerMemberType indCustomerMemberType,
+			@ModelAttribute("indBlacklistDocStatus") IndBlacklistDocStatus indBlacklistDocStatus,
+			@ModelAttribute("indCustomerNature") IndCustomerNature indCustomerNature,
+			@ModelAttribute("indCustomerType") IndCustomerType indCustomerType,
+			@ModelAttribute("indCustomerNatureKey") IndCustomerNatureKey indCustomerNatureKey,
+			@ModelAttribute("indFamilyMemberType") IndFamilyMemberType indFamilyMemberType,
+			@ModelAttribute("indEconmicSector") IndEconmicSector indEconmicSector,
+			@ModelAttribute("indSectorType") IndSectorType indSectorType,
+
+			@ModelAttribute("IndFileType") IndFileType indFileType,
+			@ModelAttribute("IndLegalStatus") IndLegalStatus indLegalStatus,
+
+			@ModelAttribute("IndIncomeType") IndIncomeType indIncomeType,
+			@ModelAttribute("IndNonCustStatus") IndNonCustStatus indNonCustStatus,
+			@ModelAttribute("IndNonCustDocument") IndNonCustDocument indNonCustDocument,
+
+			@ModelAttribute("IndGender") IndGender indGender, @ModelAttribute("IndIdType") IndIdType indIdType,
+			@ModelAttribute("IndKinshipRole") IndKinshipRole indKinshipRole,
+			@ModelAttribute("accountTypeCategory") AccIndAccountTypeCategories accountTypeCategory,
+
+			@ModelAttribute("accIndCustAccStatus") AccIndCustAccStatus accIndCustAccStatus,
+
+			@ModelAttribute("accIndDateUnit") AccIndDateUnit accIndDateUnit,
+
+			@ModelAttribute("accIndInterestType") AccIndInterestType accIndInterestType,
+			@ModelAttribute("customerSituation") CustomerSituation customerSituation,
+			@ModelAttribute("customerStage") CustomerStage customerStage,
+			@ModelAttribute("accIndPassBookStatus") AccIndPassBookStatus accIndPassBookStatus,
+
+			@ModelAttribute("indEconmicActivity") IndEconmicActivity indEconmicActivity, HttpServletRequest request,
+			@RequestParam(value = "tableId", required = true) String name, Model model,
+
+			@ModelAttribute("indNationality") IndNationality indNationality,
+			@ModelAttribute("indRegion") IndRegion indRegion,
+
+			@ModelAttribute("accIndWarningSign") AccIndWarningSign accIndWarningSign,
+			@ModelAttribute("accIndReservationResoan") AccIndReservationResoan accIndReservationResoan,
+			@ModelAttribute("indSubpoenaRequest") IndSubpoenaRequest indSubpoenaRequest,
+
+			@ModelAttribute("subpoenaRequest") SubpoenaRequest subpoenaRequest,
+
+			@ModelAttribute("indBranchType") IndBranchType indBranchType,
+
+			@ModelAttribute("branch") Branch branch,
+			@ModelAttribute("indCertificateType") IndCertificateType indCertificateType,
+			@ModelAttribute("indPosition") IndPosition indPosition,
+
+			@ModelAttribute("actionCustomerNature") ActionCustomerNature actionCustomerNature,
+			
+			
+			
+			@ModelAttribute("indJournalStatus") IndJournalStatus indJournalStatus,
+
+			@ModelAttribute("indKey") IndKey indKey,
+			@ModelAttribute("indProfession") IndProfession indProfession,
+
+			@ModelAttribute("indJournalType") IndJournalType indJournalType,
+
+			@ModelAttribute("indFiscalYearStatus") IndFiscalYearStatus indFiscalYearStatus,
+
+			@ModelAttribute("indGlClass") IndGlClass indGlClass,
+
+			final RedirectAttributes redirectAttributes) throws Exception {
+
+		
+		
+		CResponse response = null;
+		
+		// System.err.println(indSocilStatus);
+
+		if (name.equalsIgnoreCase("IND_SOCIAL_STATUS")) {
+			model.addAttribute("tableId", "IND_SOCIAL_STATUS");
+			
+			
+			if(indSocilStatus.getId() == null)
+			{
+				response = indSocialStatusServices.createSocialStatus(indSocilStatus);
+				
+				if(response.isSuccess())
+				{
+					return "redirect:/HomeIndex/details?id=" + ((IndSocialStatus)response.getReturnedObject()).getId() + "&tableId=" + name;
+				}
+				
+				//else return error Msg
+			}
+			else
+			{
+				indSocialStatusServices.updateSocialStatus(indSocilStatus);
+			}
+				
+			return "redirect:/HomeIndex/details?id=" + indSocilStatus.getId() + "&tableId=" + name;
+
+		} else if (name.equalsIgnoreCase("IND_SIGNATURE_TYPE")) {
+			model.addAttribute("tableId", "IND_SIGNATURE_TYPE");
+			indSignatureTypeServices.save(indSignatureType);
+			return "redirect:/HomeIndex/details?id=" + indSignatureType.getId() + "&tableId=" + name;
+
+		} else if (name.equalsIgnoreCase("IND_ADDRESS_TYPE")) {
+			model.addAttribute("tableId", "IND_ADDRESS_TYPE");
+			indAddressTypeService.save(indAddressType);
+			return "redirect:/HomeIndex/details?id=" + indAddressType.getId() + "&tableId=" + name;
+
+		} else if (name.equalsIgnoreCase("IND_NATIONALITY")) {
+			model.addAttribute("tableId", "IND_NATIONALITY");
+			indNationalityServices.save(indNationality);
+			return "redirect:/HomeIndex/details?id=" + indNationality.getId() + "&tableId=" + name;
+
+		} else if (name.equalsIgnoreCase("IND_COUNTRY")) {
+			model.addAttribute("tableId", "IND_COUNTRY");
+			indCountryServices.save(indCountry);
+			return "redirect:/HomeIndex/details?id=" + indCountry.getId() + "&tableId=" + name;
+
+		} else if (name.equalsIgnoreCase("IND_CITY")) {
+			String countCity = request.getParameter("sysTable.indCountry");
+			if (countCity != null)
+				indCity.setIndCountry(indCountryServices.findById(Long.parseLong(countCity)));
+			model.addAttribute("tableId", "IND_CITY");
+			indCityServices.save(indCity);
+			return "redirect:/HomeIndex/details?id=" + indCity.getId() + "&tableId=" + name;
+
+		} else if (name.equalsIgnoreCase("IND_REGION")) {
+			String countCity = request.getParameter("sysTable.indCity");
+			if (countCity != null)
+				indRegion.setIndCity(indCityServices.findById(Long.parseLong(countCity)));
+			model.addAttribute("tableId", "IND_REGION");
+		//indRegionServices.save(indRegion);
+			return "redirect:/HomeIndex/details?id=" + indRegion.getId() + "&tableId=" + name;
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_COMMISSION_TYPE")) {
+			System.err.println(1212);
+			model.addAttribute("tableId", "IND_COMMISSION_TYPE");
+			indCommisionTypeServices.save(indCommisionType);
+			System.err.println("IDDDDDD" + indCommisionType.getId());
+			return "redirect:/HomeIndex/details?id=" + indCommisionType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_COUNTRY")) {
+			System.err.println(1212);
+			model.addAttribute("tableId", "IND_COUNTRY");
+			indCountryServices.save(indCountry);
+			System.err.println("IDDDDDD" + indCountry.getId());
+			return "redirect:/HomeIndex/details?id=" + indCountry.getId() + "&tableId=" + name;
+
+		}
+
+		/////////////////////
+		else if (name.equalsIgnoreCase("IND_COMPANY_TYPE")) {
+			System.err.println(1212);
+			model.addAttribute("tableId", "IND_COMPANY_TYPE");
+			indCompanyTypeServices.save(indCompanyType);
+			System.err.println("IDDDDDD" + indCompanyType.getId());
+			return "redirect:/HomeIndex/details?id=" + indCompanyType.getId() + "&tableId=" + name;
+		}
+
+		/*
+		 * else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {/////
+		 * System.err.println(1212); model.addAttribute("tableId",
+		 * "IND_CUSTOMER_NATURE");
+		 * 
+		 * // CResponse response4 =actionService.findAll();
+		 * 
+		 * 
+		 * // List<Action> actionlist = (List<Action>)response.getReturnedObject();
+		 * 
+		 * //List<Action> actionlist = actionService.findAll();
+		 * 
+		 * IndCustomerNature indCustomerNature2 =
+		 * indCustomerNatureServices.save(indCustomerNature); for (Action action :
+		 * actionlist)
+		 * 
+		 * {
+		 * 
+		 * actionCustomerNature = new ActionCustomerNature();
+		 * 
+		 * actionCustomerNature.setAction(action); actionCustomerNature.setInsertBy(0);
+		 * actionCustomerNature.setInsertDate(actionCustomerNatureService.getCurrentDate
+		 * ()); actionCustomerNature.setIsDeleted(0);
+		 * actionCustomerNature.setIndCustomerNature(indCustomerNature2);
+		 * //System.out.println("actionCustomerNature" + actionCustomerNature);
+		 * actionCustomerNatureService.save(actionCustomerNature);
+		 * 
+		 * }
+		 * 
+		 * System.err.println("IDDDDDD" + indCustomerNature.getId()); return
+		 * "redirect:/HomeIndex/details?id=" + indCustomerNature.getId() + "&tableId=" +
+		 * name;
+		 * 
+		 * }
+		 */
+		/* 
+		 else if (name.equalsIgnoreCase("IND_CITY")) { System.err.println(1212);
+		  model.addAttribute("tableId", "IND_CITY"); indCustomerNature.save(indCity);
+		  System.err.println("IDDDDDD"+indCustomerNature.getId()); return
+		  "redirect:/HomeIndex/details?id=" + indCompanyType.getId() + "&tableId=" +
+		  name; }
+		*/
+		
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {
+			System.err.println(1212);
+			model.addAttribute("tableId", "IND_CUSTOMER_NATURE");
+			indCustomerNatureServices.save(indCustomerNature);
+			System.err.println("IDDDDDD" + indCompanyType.getId());
+			//return "redirect:/HomeIndex/details?id=" + indCompanyType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_COUNTRY")) {
+			System.err.println(1212);
+			model.addAttribute("tableId", "IND_COUNTRY");
+			indCountryServices.save(indCountry);
+			System.err.println("IDDDDDD" + indCompanyType.getId());
+			//return "redirect:/HomeIndex/details?id=" + indCompanyType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUST_DOCUMENT")) {
+			System.err.println(1212);
+			model.addAttribute("tableId", "IND_CUST_DOCUMENT");
+			indCustDocumentServices.save(indCustDocument);
+			System.err.println("IDDDDDD" + indCustDocument.getId());
+			//return "redirect:/HomeIndex/details?id=" + indCustDocument.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_MEMBER_TYPE")) {
+			System.err.println(1212);
+			model.addAttribute("tableId", "IND_CUSTOMER_MEMBER_TYPE");
+			indCustomerMemberTypeServices.save(indCustomerMemberType);
+			System.err.println("IDDDDDD" + indCustDocument.getId());
+			//return "redirect:/HomeIndex/details?id=" + indCustomerMemberType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_BLACKLIST_DOC_STATUS")) {
+			model.addAttribute("tableId", "IndBlacklistDocStatus");
+			indBlacklistDocStatusService.save(indBlacklistDocStatus);
+			//return "redirect:/HomeIndex/details?id=" + indBlacklistDocStatus.getId() + "&tableId=" + name;
+		}
+
+		
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {
+			model.addAttribute("tableId", "IND_CUSTOMER_NATURE");
+			actionCustomerNatureService.save(actionCustomerNature);
+			//return "redirect:/HomeIndex/details?id=" + indBlacklistDocStatus.getId() + "&tableId=" + name;
+		}
+
+		
+		/*
+		 * else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {/
+		 * model.addAttribute("tableId", "IndCustomerNature");
+		 * System.err.println(indCustomerNature);
+		 * indCustomerNatureServices.save(indCustomerNature); return
+		 * "redirect:/HomeIndex/details?id=" + indCustDocument.getId() + "&tableId=" +
+		 * name; }
+		 */
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_TYPE")) {
+			model.addAttribute("tableId", "IndCustomerType");
+			// system.out.println("the data " + indCustomerType);
+
+			indCustomerTypeServices.save(indCustomerType);
+			return "redirect:/HomeIndex/details?id=" + indCustomerType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE_KEY")) {
+
+			String countCity = request.getParameter("sysTable.indCustomerNature");
+			if (countCity != null)
+				indCustomerNatureKey
+						.setIndCustomerNature(indCustomerNatureServices.findById(Long.parseLong(countCity)));// findById(Long.parseLong(countCity)));
+			model.addAttribute("tableId", "IndCustomerNatureKey");
+			indCustomerNatureKeyServices.save(indCustomerNatureKey);
+			return "redirect:/HomeIndex/details?id=" + indCustomerNatureKey.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_ECONMIC_ACTIVITY")) {
+			String countCity = request.getParameter("sysTable.indEconmicSector");
+			String countCity1 = request.getParameter("sysTable.indSectorType");
+
+			/*
+			 * System.err.println("countCity:"+ countCity);
+			 * System.err.println("countCity1:"+ countCity1);
+			 * System.err.println(indSectorTypeServices.findById(Long.parseLong(countCity1))
+			 * );
+			 */
+			System.out.println("countCity" + countCity);
+
+			System.out.println("countCity1" + countCity1);
+
+			if (countCity != null)
+				//// system.out.println("setECONOMIC_SECTOR_ID" + indSectorType);
+
+				// //system.out.println("indEconmicSector" + indEconmicSector);
+
+				// indCustomerNatureKey.setIndCustomerNature(indCustomerNatureServices.findById(Long.parseLong(countCity)));//
+				// findById(Long.parseLong(countCity)));
+
+				indEconmicActivity.setECONOMIC_SECTOR_ID(indEconmicSectorServices.findById(Long.parseLong(countCity)));// findById(Long.parseLong(countCity)));
+
+			if (countCity1 != null) {
+				indEconmicActivity.setIND_SECTOR_TYPE(indSectorTypeServices.findById(Long.parseLong(countCity1)));
+				System.err.println("0000000000");
+			}
+			//// system.out.println("the data " + indEconmicActivity);
+
+			model.addAttribute("tableId", "IndEconmicActivity");
+
+			indEconmicActivityServices.save(indEconmicActivity);
+			//return "redirect:/HomeIndex/details?id=" + indEconmicActivity.getId() + "&tableId=" + name;
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_FAMILY_MEMBER_TYPE")) {
+			model.addAttribute("tableId", "IndFamilyMemberType");
+			// system.out.println("the data " + indFamilyMemberType);
+
+			indFamilyMemberTypeServices.save(indFamilyMemberType);
+			//return "redirect:/HomeIndex/details?id=" + indFamilyMemberType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_ECONMIC_SECTOR")) {
+			model.addAttribute("tableId", "IndEconmicSector");
+			// system.out.println("the data " + indEconmicSector);
+
+			indEconmicSectorServices.save(indEconmicSector);
+			//return "redirect:/HomeIndex/details?id=" + indEconmicSector.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_FILE_TYPE")) {
+			model.addAttribute("tableId", "IndFileType");
+			// system.out.println("the data " + indFileType);
+
+			indFileTypeServices.save(indFileType);
+			//return "redirect:/HomeIndex/details?id=" + indFileType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_GENDER")) {
+			model.addAttribute("tableId", "IndGender");
+			// system.out.println("the data " + indGender);
+
+			indGenderServices.save(indGender);
+			//return "redirect:/HomeIndex/details?id=" + indGender.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_ID_TYPE")) {
+			model.addAttribute("tableId", "IND_ID_TYPE");
+			// system.out.println("the data " + indIdType);
+
+			indIdTypeServices.save(indIdType);
+			//return "redirect:/HomeIndex/details?id=" + indIdType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_INCOME_TYPE")) {
+			model.addAttribute("tableId", "IND_INCOME_TYPE");
+			// system.out.println("the data " + indIncomeType);
+
+			indIncomeTypeServices.save(indIncomeType);
+			//return "redirect:/HomeIndex/details?id=" + indIncomeType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_KINSHIP_ROLE")) {
+			model.addAttribute("tableId", "IND_KINSHIP_ROLE");
+			// system.out.println("the data " + indKinshipRole);
+
+			indKinshipRoleServices.save(indKinshipRole);
+			//return "redirect:/HomeIndex/details?id=" + indKinshipRole.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_LEGAL_STATUS")) {
+			model.addAttribute("tableId", "IND_LEGAL_STATUS");
+			// system.out.println("the data " + indLegalStatus);
+
+			indLegalStatusServices.save(indLegalStatus);
+			//return "redirect:/HomeIndex/details?id=" + indLegalStatus.getId() + "&tableId=" + name;
+		} else if (name.equalsIgnoreCase("IND_NON_CUST_STATUS")) {
+			model.addAttribute("tableId", "IND_NON_CUST_STATUS");
+			// system.out.println("the data " + indNonCustStatus);
+
+			//indNonCustStatusServices.save(indNonCustStatus);
+			//return "redirect:/HomeIndex/details?id=" + indNonCustStatus.getId() + "&tableId=" + name;
+		} else if (name.equalsIgnoreCase("IND_NON_CUST_DOCUMENT")) {
+
+			/////////////////////////////////////////////
+			String countCity = request.getParameter("sysTable.fileTypeId");
+
+			if (countCity != null)
+				indNonCustDocument.setFileTypeId(indFileTypeServices.findById(Long.parseLong(countCity)));// findById(Long.parseLong(countCity)));
+
+			model.addAttribute("tableId", "IND_NON_CUST_DOCUMENT");
+
+			// system.out.println("the data " + indNonCustDocument);
+
+			indNonCustDocumentServices.save(indNonCustDocument);
+			//return "redirect:/HomeIndex/details?id=" + indNonCustDocument.getId() + "&tableId=" + name;
+
+			// model.addAttribute("tableId", "IndCustomerNatureKey");
+			// indCustomerNatureKeyServices.save(indCustomerNatureKey);
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_ACCOUNT_TYPE_CATEGORIES")) {
+			model.addAttribute("tableId", "accountTypeCategory");
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+
+			accIndAccountTypeCategoryServices.save(accountTypeCategory);
+			//return "redirect:/HomeIndex/details?id=" + accountTypeCategory.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_CUST_ACC_STATUS")) {
+			model.addAttribute("tableId", "accIndCustAccStatus");
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+
+			accIndCustAccStatusServices.save(accIndCustAccStatus);
+			//return "redirect:/HomeIndex/details?id=" + accIndCustAccStatus.getId() + "&tableId=" + name;
+		}
+
+//		else if (name.equalsIgnoreCase("ACC_IND_DATE_UNIT")) {
+//			model.addAttribute("tableId", accIndDateUnit);
+//			//// system.out.println("the data " + accIndAccountTypeCategory);
+//			accIndDateUnitServices.save(accIndDateUnit);
+//			return "redirect:/HomeIndex/details?id=" + accIndDateUnit.getId() + "&tableId=" + name;
+//		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_INTEREST_TYPE")) {
+			model.addAttribute("tableId", accIndInterestType);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			accIndInterestTypeServices.save(accIndInterestType);
+			//return "redirect:/HomeIndex/details?id=" + accIndInterestType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("CUSTOMER_SITUATION")) {
+			model.addAttribute("tableId", customerSituation);
+			System.err.println("customerSituation: " + customerSituation);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			customerSituationServices.save(customerSituation);
+			//return "redirect:/HomeIndex/details?id=" + customerSituation.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("CUSTOMER_STAGE")) {
+			model.addAttribute("tableId", customerStage);
+			System.err.println("customerSituation: " + customerStage);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			customerStageServices.save(customerStage);
+			//return "redirect:/HomeIndex/details?id=" + customerStage.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_PASS_BOOK_STATUS")) {
+			model.addAttribute("tableId", accIndPassBookStatus);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			accIndPassBookStatusServices.save(accIndPassBookStatus);
+			//	return "redirect:/HomeIndex/details?id=" + accIndPassBookStatus.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_WARNING_SIGN")) {
+			model.addAttribute("tableId", accIndWarningSign);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			accIndWarningSignServices.save(accIndWarningSign);
+			//	return "redirect:/HomeIndex/details?id=" + accIndWarningSign.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_RESERVATION_RESOAN")) {
+			model.addAttribute("tableId", accIndReservationResoan);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			accIndReservationResoanServices.save(accIndReservationResoan);
+			//return "redirect:/HomeIndex/details?id=" + accIndReservationResoan.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_SUBPOENA_REQUEST")) {
+			model.addAttribute("tableId", indSubpoenaRequest);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			indSubpoenaRequestServices.save(indSubpoenaRequest);
+
+			// system.out.println("indSubpoenaRequest" + indSubpoenaRequest);
+			//return "redirect:/HomeIndex/details?id=" + indSubpoenaRequest.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("SUBPOENA_REQUEST")) {
+
+			String countCity = request.getParameter("sysTable.indSubpoenaRequest");
+			if (countCity != null)
+				subpoenaRequest.setIndSubpoenaRequest(indSubpoenaRequestServices.findById(Long.parseLong(countCity)));// findById(Long.parseLong(countCity)));
+			model.addAttribute("tableId", "SubpoenaRequest");
+			subpoenaRequestServices.save(subpoenaRequest);
+			// system.out.println("subpoenaRequest" + subpoenaRequest);
+			return "redirect:/HomeIndex/details?id=" + subpoenaRequest.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("Ind_Branch_Type")) {
+			model.addAttribute("tableId", indSubpoenaRequest);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			String type_id = request.getParameter("sysTable.indSubpoenaRequest");
+
+			indBranchTypeServices.save(indBranchType);
+
+			// system.out.println("indSubpoenaRequest" + indSubpoenaRequest);
+			//	return "redirect:/HomeIndex/details?id=" + indBranchType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("BRANCH")) {
+
+			String countCity = request.getParameter("sysTable.indBranchType");
+			String indCountry1 = request.getParameter("sysTable.indCountry1");
+			String indCity1 = request.getParameter("sysTable.indCity1");
+			String ListBranch = request.getParameter("sysTable.ListBranch");
+
+			// system.out.println("countCity" + countCity) ;
+
+			// system.out.println("indCountry1" + indCountry1) ;
+
+			// system.out.println("indCity1" + indCity1) ;
+			// system.out.println("Branche"+Branche) ;
+
+			if (countCity != null)
+				branch.setIndBranchType(indBranchTypeServices.findById(Long.parseLong(countCity)));// (indCustomerNatureServices.findById(Long.parseLong(countCity)));//
+																									// findById(Long.parseLong(countCity)));
+			branch.setCountry_id((indCountryServices.findById(Long.parseLong(indCountry1))));// (indCustomerNatureServices.findById(Long.parseLong(countCity)));//
+																								// findById(Long.parseLong(countCity)));
+			branch.setCity_id(indCityServices.findById(Long.parseLong(indCity1)));// )//(indCustomerNatureServices.findById(Long.parseLong(countCity)));//
+			System.out.print(branch);	
+			// findById(Long.parseLong(countCity)));
+			branch.setParent_id(bRANCHServices.findById(Long.parseLong(ListBranch)));// (indCustomerNatureServices.findById(Long.parseLong(countCity)));//
+																					// findById(Long.parseLong(countCity)));
+
+			model.addAttribute("tableId", "branch");
+			bRANCHServices.save(branch);
+			//return "redirect:/HomeIndex/details?id=" + branch.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_CERTIFICATE_TYPE")) {
+			model.addAttribute("tableId", indCertificateType);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			indCertificateTypeServices.save(indCertificateType);
+			//return "redirect:/HomeIndex/details?id=" + indCertificateType.getId() + "&tableId=" + name;
+		}
+
+		else if (name.equalsIgnoreCase("IND_POSITION")) {
+			model.addAttribute("tableId", indPosition);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			indPositionServices.save(indPosition);
+			//return "redirect:/HomeIndex/details?id=" + indPosition.getId() + "&tableId=" + name;
+		}
+		
+		
+		
+		
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_JOURNAL_TYPE")) {
+			model.addAttribute("tableId", indJournalType);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			indJournalTypeServices.save(indJournalType);
+			//return "redirect:/HomeIndex/details?id=" + indJournalType.getId() + "&tableId=" + name;
+		}
+		
+		
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_JOURNAL_STATUS")) {
+			model.addAttribute("tableId", indJournalStatus);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			indJournalStatusServices.save(indJournalStatus);
+			//return "redirect:/HomeIndex/details?id=" + indJournalStatus.getId() + "&tableId=" + name;
+		}
+		
+		
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_FISCAL_YEAR_STATUS")) {
+			model.addAttribute("tableId", indFiscalYearStatus);
+			//// system.out.println("the data " + accIndAccountTypeCategory);
+			indFiscalYearStatusServices.save(indFiscalYearStatus);
+			//return "redirect:/HomeIndex/details?id=" + indFiscalYearStatus.getId() + "&tableId=" + name;
+		}
+		
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_GL_CLASS")) {
+			model.addAttribute("tableId", indGlClass);
+		 System.out.println("the data " + indGlClass);
+			indGlClassServices.save(indGlClass);
+			//return "redirect:/HomeIndex/details?id=" + indGlClass.getId() + "&tableId=" + name;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_KEY")) {
+			String action = request.getParameter("sysTable.indKey");
+			if(action!=null) {
+				CResponse response2 = actionService.findActionById(Integer.parseInt(action));
+				Action action2 = (Action) response2.getReturnedObject();
+				indKey.setAction(action2);
+			}
+			model.addAttribute("tableId", "IND_KEY");
+			indKeyService.save(indKey);
+			return "redirect:/HomeIndex/details?id=" + indKey.getId() + "&tableId=" + name;
+
+		} else if (name.equalsIgnoreCase("IND_PROFESSION")) {
+			model.addAttribute("tableId", "IND_PROFESSION");
+			indProfessionService.save(indProfession); 
+			return "redirect:/HomeIndex/details?id=" + indProfession.getId() + "&tableId=" + name;
+
+		}
+
+		return "redirect:/HomeIndex/index";
+	}
+
+	@GetMapping("/details")
+	public String details(@RequestParam(value = "id") Long id,
+			@RequestParam(value = "tableId", required = true) String name, Model model) {
+		String result;
+
+		if (name.equalsIgnoreCase("IND_SOCIAL_STATUS")) {
+			IndSocialStatus indSocialStatus = indSocialStatusServices.findById(id);
+			if (indSocialStatus == null)
+				throw new NoDataFoundException(" no indSocialStatus found with id :" + id);
+			model.addAttribute("systable", indSocialStatus);
+			model.addAttribute("tableId", "IND_SOCIAL_STATUS");
+
+		} else if (name.equalsIgnoreCase("IND_SIGNATURE_TYPE")) {
+
+			IndSignatureType indSignatureType = indSignatureTypeServices.findById(id);
+			if (indSignatureType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indSignatureType);
+			model.addAttribute("tableId", "IND_SIGNATURE_TYPE");
+
+		} else if (name.equalsIgnoreCase("IND_COMMISSION_TYPE")) {
+
+			IndCommissionType indCommisionType = indCommisionTypeServices.findById(id);
+			if (indCommisionType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indCommisionType);
+			model.addAttribute("tableId", "IND_COMMISSION_TYPE");
+
+		} else if (name.equalsIgnoreCase("IND_NATIONALITY")) {
+
+			IndNationality indNationality = indNationalityServices.findById(id);
+			if (indNationality == null)
+				throw new NoDataFoundException(" no indNationality found with id :" + id);
+			model.addAttribute("systable", indNationality);
+			model.addAttribute("tableId", "IND_NATIONALITY");
+
+		} else if (name.equalsIgnoreCase("IND_COUNTRY")) {
+
+			IndCountry indCountry = indCountryServices.findById(id);
+			if (indCountry == null)
+				throw new NoDataFoundException(" no indNationality found with id :" + id);
+			model.addAttribute("systable", indCountry);
+			model.addAttribute("tableId", "IND_COUNTRY");
+
+		} else if (name.equalsIgnoreCase("IND_CITY")) {
+
+			IndCity indCity = indCityServices.findById(id);
+			if (indCity == null)
+				throw new NoDataFoundException(" no indCity found with id :" + id);
+			model.addAttribute("systable", indCity);
+			model.addAttribute("tableId", "IND_CITY");
+
+		} else if (name.equalsIgnoreCase("IND_REGION")) {
+
+			IndRegion indRegion = indRegionServices.findById(id);
+			if (indRegion == null)
+				throw new NoDataFoundException(" no indRegion found with id :" + id);
+			model.addAttribute("systable", indRegion);
+			model.addAttribute("tableId", "IND_REGION");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_BLACKLIST_DOC_STATUS")) {
+
+			IndBlacklistDocStatus indBlacklistDocStatus = indBlacklistDocStatusService.findById(id);
+			if (indBlacklistDocStatus == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indBlacklistDocStatus);
+			model.addAttribute("tableId", "IND_BLACKLIST_DOC_STATUS");
+		}
+
+		else if (name.equalsIgnoreCase("IND_COMPANY_TYPE")) {
+
+			IndCompanyType indCompanyType = indCompanyTypeServices.findById(id);
+			if (indCompanyType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indCompanyType);
+			model.addAttribute("tableId", "IND_COMPANY_TYPE");
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE_KEY")) {
+
+			IndCustomerNatureKey indCustomerNatureKey = indCustomerNatureKeyServices.findById(id);
+			if (indCustomerNatureKey == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indCustomerNatureKey);
+			model.addAttribute("tableId", "IND_CUSTOMER_NATURE_KEY");
+		}
+
+		else if (name.equalsIgnoreCase("IND_ECONMIC_ACTIVITY")) {
+
+			IndEconmicActivity indEconmicActivity = indEconmicActivityServices.findById(id);
+			if (indEconmicActivity == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indEconmicActivity);
+			model.addAttribute("tableId", "IND_ECONMIC_ACTIVITY");
+		}
+
+		else if (name.equalsIgnoreCase("IND_FAMILY_MEMBER_TYPE")) {
+
+			IndFamilyMemberType indFamilyMemberType = indFamilyMemberTypeServices.findById(id);
+			if (indFamilyMemberType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indFamilyMemberType);
+			model.addAttribute("tableId", "IND_FAMILY_MEMBER_TYPE");
+		}
+
+		else if (name.equalsIgnoreCase("IND_ECONMIC_SECTOR")) {
+
+			IndEconmicSector indEconmicSector = indEconmicSectorServices.findById(id);
+			if (indEconmicSector == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indEconmicSector);
+			model.addAttribute("tableId", "IND_ECONMIC_SECTOR");
+		}
+
+		else if (name.equalsIgnoreCase("IND_FILE_TYPE")) {
+
+			IndFileType indFileType = indFileTypeServices.findById(id);
+			if (indFileType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indFileType);
+			model.addAttribute("tableId", "IND_FILE_TYPE");
+		}
+
+		else if (name.equalsIgnoreCase("IND_GENDER")) {
+
+			IndGender indGender = indGenderServices.findById(id);
+			if (indGender == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indGender);
+			model.addAttribute("tableId", "IND_GENDER");
+		}
+
+		else if (name.equalsIgnoreCase("IND_ID_TYPE")) {
+
+			IndIdType indIdType = indIdTypeServices.findById(id);
+			if (indIdType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indIdType);
+			model.addAttribute("tableId", "IND_ID_TYPE");
+		}
+
+		else if (name.equalsIgnoreCase("IND_INCOME_TYPE")) {
+
+			IndIncomeType indIncomeType = indIncomeTypeServices.findById(id);
+			if (indIncomeType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indIncomeType);
+			model.addAttribute("tableId", "IND_INCOME_TYPE");
+		}
+
+		else if (name.equalsIgnoreCase("IND_KINSHIP_ROLE")) {
+
+			IndKinshipRole indKinshipRole = indKinshipRoleServices.findById(id);
+			if (indKinshipRole == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indKinshipRole);
+			model.addAttribute("tableId", "IND_KINSHIP_ROLE");
+		}
+
+		else if (name.equalsIgnoreCase("IND_LEGAL_STATUS")) {
+
+			IndLegalStatus indLegalStatus = indLegalStatusServices.findById(id);
+			if (indLegalStatus == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indLegalStatus);
+			model.addAttribute("tableId", "IND_LEGAL_STATUS");
+		}
+
+		else if (name.equalsIgnoreCase("IND_NON_CUST_STATUS")) {
+
+			IndNonCustStatus indNonCustStatus = indNonCustStatusServices.findById(id);
+			if (indNonCustStatus == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indNonCustStatus);
+			model.addAttribute("tableId", "IND_NON_CUST_STATUS");
+		} else if (name.equalsIgnoreCase("IND_NON_CUST_DOCUMENT")) {
+
+			IndNonCustDocument indNonCustDocument = indNonCustDocumentServices.findById(id);
+			if (indNonCustDocument == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", indNonCustDocument);
+			model.addAttribute("tableId", "IND_NON_CUST_DOCUMENT");
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_ACCOUNT_TYPE_CATEGORIES")) {
+
+			CResponse response=accIndAccountTypeCategoryServices.findById(id);
+			AccIndAccountTypeCategories accIndAccountTypeCategory =(AccIndAccountTypeCategories) response.getReturnedObject();
+			if (accIndAccountTypeCategory == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", accIndAccountTypeCategory);
+			model.addAttribute("tableId", "ACC_IND_ACCOUNT_TYPE_CATEGORIES");
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_CUST_ACC_STATUS")) {
+
+			AccIndCustAccStatus accIndCustAccStatus = accIndCustAccStatusServices.findById(id);
+			if (accIndCustAccStatus == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", accIndCustAccStatus);
+			model.addAttribute("tableId", "ACC_IND_CUST_ACC_STATUS");
+
+		}
+
+//		else if (name.equalsIgnoreCase("ACC_IND_DATE_UNIT")) {
+//
+//			AccIndDateUnit accIndDateUnit = accIndDateUnitServices.findById(id);
+//			if (accIndDateUnit == null)
+//				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+//			model.addAttribute("systable", accIndDateUnit);
+//			model.addAttribute("tableId", "ACC_IND_DATE_UNIT");
+//
+//		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_INTEREST_TYPE")) {
+
+			AccIndInterestType accIndInterestType = accIndInterestTypeServices.findById(id);
+			if (accIndInterestType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			model.addAttribute("systable", accIndInterestType);
+			model.addAttribute("tableId", "ACC_IND_INTEREST_TYPE");
+
+		} else if (name.equalsIgnoreCase("CUSTOMER_SITUATION")) {
+
+			CustomerSituation customerSituation = customerSituationServices.findById(id);
+			if (customerSituation == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + customerSituation);
+			model.addAttribute("systable", customerSituation);
+			model.addAttribute("tableId", "CUSTOMER_SITUATION");
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_PASS_BOOK_STATUS")) {
+
+			AccIndPassBookStatus accIndPassBookStatus = accIndPassBookStatusServices.findById(id);
+			if (accIndPassBookStatus == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + accIndPassBookStatus);
+			model.addAttribute("systable", accIndPassBookStatus);
+			model.addAttribute("tableId", "ACC_IND_PASS_BOOK_STATUS");
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_RESERVATION_RESOAN")) {
+
+			AccIndReservationResoan accIndReservationResoan = accIndReservationResoanServices.findById(id);
+			if (accIndReservationResoan == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + accIndReservationResoan);
+			model.addAttribute("systable", accIndReservationResoan);
+			model.addAttribute("tableId", "ACC_IND_RESERVATION_RESOAN");
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_RESERVATION_RESOAN")) {
+
+			AccIndReservationResoan accIndReservationResoan = accIndReservationResoanServices.findById(id);
+			if (accIndReservationResoan == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + accIndReservationResoan);
+			model.addAttribute("systable", accIndReservationResoan);
+			model.addAttribute("tableId", "ACC_IND_RESERVATION_RESOAN");
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_WARNING_SIGN")) {
+
+			AccIndWarningSign accIndWarningSign = accIndWarningSignServices.findById(id);
+			if (accIndWarningSign == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + accIndWarningSign);
+			model.addAttribute("systable", accIndWarningSign);
+			model.addAttribute("tableId", "ACC_IND_WARNING_SIGN");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_ADDRESS_TYPE")) {
+
+			IndAddressType indAddressType = indAddressTypeService.findById(id);
+			if (indAddressType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indAddressType);
+			model.addAttribute("systable", indAddressType);
+			model.addAttribute("tableId", "IND_ADDRESS_TYPE");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUST_DOCUMENT")) {
+
+			IndCustDocument indCustDocument = indCustDocumentServices.findById(id);
+			if (indCustDocument == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indCustDocument);
+			model.addAttribute("systable", indCustDocument);
+			model.addAttribute("tableId", "IND_CUST_DOCUMENT");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_MEMBER_TYPE")) {
+
+			IndCustomerMemberType indCustomerMemberType = indCustomerMemberTypeServices.findById(id);
+			if (indCustomerMemberType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indCustomerMemberType);
+			model.addAttribute("systable", indCustomerMemberType);
+			model.addAttribute("tableId", "IND_CUSTOMER_MEMBER_TYPE");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_TYPE")) {
+
+			IndCustomerType indCustomerType = indCustomerTypeServices.findById(id);
+			if (indCustomerType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indCustomerType);
+			model.addAttribute("systable", indCustomerType);
+			model.addAttribute("tableId", "IND_CUSTOMER_TYPE");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {
+
+			IndCustomerNature indCustomerNature = indCustomerNatureServices.findById(id);
+			if (indCustomerNature == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indCustomerNature);
+			model.addAttribute("systable", indCustomerNature);
+			model.addAttribute("tableId", "IND_CUSTOMER_NATURE");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_SECTOR_TYPE")) {
+
+			IndSectorType indSectorType = indSectorTypeServices.findById(id);
+			if (indSectorType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indSectorType);
+			model.addAttribute("systable", indSectorType);
+			model.addAttribute("tableId", "IND_SECTOR_TYPE");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_REGION")) {
+
+			IndRegion indRegion = indRegionServices.findById(id);
+			if (indRegion == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indRegion);
+			model.addAttribute("systable", indRegion);
+			model.addAttribute("tableId", "IND_REGION");
+
+		}
+
+		else if (name.equalsIgnoreCase("CUSTOMER_STAGE")) {
+
+			CustomerStage customerStage = customerStageServices.findById(id);
+			if (customerStage == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + customerStage);
+			model.addAttribute("systable", customerStage);
+			model.addAttribute("tableId", "CUSTOMER_STAGE");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_SUBPOENA_REQUEST")) {
+
+			IndSubpoenaRequest indSubpoenaRequest = indSubpoenaRequestServices.findById(id);
+			if (indSubpoenaRequest == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indSubpoenaRequest);
+			model.addAttribute("systable", indSubpoenaRequest);
+			model.addAttribute("tableId", "IND_SUBPOENA_REQUEST");
+
+		}
+
+		else if (name.equalsIgnoreCase("SUBPOENA_REQUEST")) {
+
+			SubpoenaRequest subpoenaRequest = subpoenaRequestServices.findById(id);
+			if (subpoenaRequest == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + subpoenaRequest);
+			model.addAttribute("systable", subpoenaRequest);
+			model.addAttribute("tableId", "SUBPOENA_REQUEST");
+
+		}
+
+		else if (name.equalsIgnoreCase("Ind_Branch_Type")) {
+
+			IndBranchType indBranchType = indBranchTypeServices.findById(id);
+			if (indBranchType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indBranchType);
+			model.addAttribute("systable", indBranchType);
+			model.addAttribute("tableId", "Ind_Branch_Type");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CERTIFICATE_TYPE")) {
+
+			IndCertificateType indCertificateType = indCertificateTypeServices.findById(id);
+			if (indCertificateType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indCertificateType);
+			model.addAttribute("systable", indCertificateType);
+			model.addAttribute("tableId", "IND_CERTIFICATE_TYPE");
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_POSITION")) {
+
+			IndPosition indPosition = indPositionServices.findById(id);
+			if (indPosition == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indPosition);
+			model.addAttribute("systable", indPosition);
+			model.addAttribute("tableId", "IND_POSITION");
+
+		} else if (name.equalsIgnoreCase("IND_KEY")) {
+			CResponse response = indKeyService.findById(id);
+			IndKey indKey = (IndKey) response.getReturnedObject();
+			if (indKey == null)
+				throw new NoDataFoundException(" no indKey found with id :" + id);
+			model.addAttribute("systable", indKey);
+			model.addAttribute("tableId", "IND_KEY");
+
+		} else if (name.equalsIgnoreCase("IND_PROFESSION")) {
+			IndProfession indProfession = indProfessionService.findById(id);
+			if (indProfession == null)
+				throw new NoDataFoundException(" no indProfession found with id :" + id);
+			model.addAttribute("systable", indProfession);
+			model.addAttribute("tableId", "IND_PROFESSION");
+
+		}
+		
+		
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_JOURNAL_STATUS")) {
+
+			IndJournalStatus indJournalStatus = indJournalStatusServices.findById(id);
+			if (indJournalStatus == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indJournalStatus);
+			model.addAttribute("systable", indJournalStatus);
+			model.addAttribute("tableId", "IND_JOURNAL_STATUS");
+
+		}
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_JOURNAL_TYPE")) {
+
+			IndJournalType indJournalType = indJournalTypeServices.findById(id);
+			if (indJournalType == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indJournalType);
+			model.addAttribute("systable", indJournalType);
+			model.addAttribute("tableId", "IND_JOURNAL_TYPE");
+
+		}
+		
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_FISCAL_YEAR_STATUS")) {
+
+			IndFiscalYearStatus indFiscalYearStatus = indFiscalYearStatusServices.findById(id);
+			if (indFiscalYearStatus == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indFiscalYearStatus);
+			model.addAttribute("systable", indFiscalYearStatus);
+			model.addAttribute("tableId", "IND_FISCAL_YEAR_STATUS");
+
+		}
+		
+		
+		
+		
+		else if (name.equalsIgnoreCase("IND_GL_CLASS")) {
+
+			IndGlClass indGlClass = indGlClassServices.findById(id);
+			if (indGlClass == null)
+				throw new NoDataFoundException(" no indSignatureType found with id :" + id);
+			System.err.println("******** " + indGlClass);
+			model.addAttribute("systable", indGlClass);
+			model.addAttribute("tableId", "IND_GL_CLASS");
+
+		}
+		
+		
+		
+		
+		
+		
+
+		result = "/index-management/detail";
+
+		return result;
+	}
+
+	@GetMapping("/delete")
+	public String deleteDocument(@RequestParam("tableId") String name, @RequestParam("elementId") Long elementId,
+			RedirectAttributes redirectAttribute, Model model) throws Exception {
+
+		System.err.println(111);
+
+		if (name.equalsIgnoreCase("IND_SOCIAL_STATUS")) {
+			System.err.println(22);
+			indSocialStatusServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("IND_SIGNATURE_TYPE")) {
+			System.err.println(33);
+			indSignatureTypeServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("IND_SIGNATURE_TYPE")) {
+			System.err.println(33);
+			indSignatureTypeServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_ADDRESS_TYPE")) {
+			System.err.println(33);
+			indAddressTypeService.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_COUNTRY")) {
+			System.err.println(33);
+			indCountryServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_BLACKLIST_DOC_STATUS")) {
+			System.err.println(33);
+			indBlacklistDocStatusService.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_COMPANY_TYPE")) {
+			System.err.println(33);
+			indCompanyTypeServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUST_DOCUMENT")) {
+			System.err.println(33);
+			indCustDocumentServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_MEMBER_TYPE")) {
+			System.err.println(33);
+			indCustomerMemberTypeServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE_KEY")) {
+			System.err.println(33);
+			indCustomerNatureKeyServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_ECONMIC_ACTIVITY")) {
+			System.err.println(33);
+			indEconmicActivityServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_FAMILY_MEMBER_TYPE")) {
+			System.err.println(33);
+			indFamilyMemberTypeServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_ECONMIC_SECTOR")) {
+			System.err.println(33);
+			indEconmicSectorServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_FILE_TYPE")) {
+			System.err.println(33);
+			indFileTypeServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_GENDER")) {
+			System.err.println(33);
+			indGenderServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_ID_TYPE")) {
+			System.err.println(33);
+			indIdTypeServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_INCOME_TYPE")) {
+			System.err.println(33);
+			indIncomeTypeServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_KINSHIP_ROLE")) {
+			System.err.println(33);
+			indKinshipRoleServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_LEGAL_STATUS")) {
+			System.err.println(33);
+			indLegalStatusServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_NON_CUST_STATUS")) {
+			System.err.println(33);
+			indNonCustStatusServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_NON_CUST_DOCUMENT")) {
+			System.err.println(33);
+			indNonCustDocumentServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_ACCOUNT_TYPE_CATEGORIES")) {
+			System.err.println(33);
+			accIndAccountTypeCategoryServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_CUST_ACC_STATUS")) {
+			System.err.println(33);
+			accIndCustAccStatusServices.delete(elementId);
+
+		}
+
+//		else if (name.equalsIgnoreCase("ACC_IND_DATE_UNIT")) {
+//			System.err.println(33);
+//			accIndDateUnitServices.delete(elementId);
+//
+//		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_INTEREST_TYPE")) {
+			System.err.println(33);
+			accIndInterestTypeServices.delete(elementId);
+		}
+
+		else if (name.equalsIgnoreCase("IND_SIGNATURE_TYPE")) {
+			indSignatureTypeServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("IND_NATIONALITY")) {
+			indNationalityServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("IND_COUNTRY")) {
+			indCountryServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("IND_CITY")) {
+			indCityServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("IND_REGION")) {
+			indRegionServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("CUSTOMER_SITUATION")) {
+			customerSituationServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("CUSTOMER_STAGE")) {
+			customerStageServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_CUSTOMER_NATURE")) {
+			customerStageServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("ACC_IND_RESERVATION_RESOAN")) {
+			accIndReservationResoanServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("ACC_IND_WARNING_SIGN")) {
+			accIndWarningSignServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_SUBPOENA_REQUEST")) {
+			indSubpoenaRequestServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("SUBPOENA_REQUEST")) {
+			subpoenaRequestServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("Ind_Branch_Type")) {
+			indBranchTypeServices.delete(elementId);
+
+		}
+		
+		
+		
+		
+	 else if (name.equalsIgnoreCase("IND_JOURNAL_TYPE")) {
+		 indJournalTypeServices.delete(elementId);
+
+	}
+
+	else if (name.equalsIgnoreCase("IND_JOURNAL_STATUS")) {
+		indJournalStatusServices.delete(elementId);
+
+	}
+
+	else if (name.equalsIgnoreCase("IND_FISCAL_YEAR_STATUS")) {
+		indFiscalYearStatusServices.delete(elementId);
+
+	}
+
+	else if (name.equalsIgnoreCase("IND_GL_CLASS")) {
+		indGlClassServices.delete(elementId);
+
+	}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		else if (name.equalsIgnoreCase("BRANCH")) {
+			bRANCHServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("IND_CERTIFICATE_TYPE")) {
+			indCertificateTypeServices.delete(elementId);
+
+		}
+
+		else if (name.equalsIgnoreCase("IND_POSITION")) {
+			indPositionServices.delete(elementId);
+
+		} else if (name.equalsIgnoreCase("IND_KEY")) {
+			indKeyService.delete(elementId);
+		} else if (name.equalsIgnoreCase("IND_PROFESSION")) {
+			indProfessionService.delete(elementId);
+		}
+
+		return "redirect:/HomeIndex/tableindex?tableId=" + name + "&elementId=" + elementId;
+
+	}
+
+	/*
+	 * @GetMapping("/Match_Page") public String index2(Model
+	 * model,@RequestParam(name="idexId") long idexId) {
+	 * //system.out.println("-----------------"+idexId);
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * SubpoenaRequest subpoenaRequest = subpoenaRequestServices.findById((long)
+	 * idexId); //system.out.println("subpoenaRequest" + subpoenaRequest);
+	 * List<IndSubpoenaRequest> indSubpoenaRequest =
+	 * indSubpoenaRequestServices.getAllDeleted();
+	 * //system.out.println("indSubpoenaRequest" + indSubpoenaRequest);
+	 * 
+	 * 
+	 * 
+	 * 
+	 * model.addAttribute("sysTable", subpoenaRequest);
+	 * model.addAttribute("sysTable", indSubpoenaRequest);
+	 * 
+	 * model.addAttribute("tableId", "SUBPOENA_REQUEST");
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * model.addAttribute("indexId", idexId);
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * String result = "/index-management/tableindex"; return result; }
+	 * 
+	 */
+
+	/*
+	 * public String save(
+	 * 
+	 * 
+	 * 
+	 * @ModelAttribute("subpoenaRequest") SubpoenaRequest subpoenaRequest,
+	 * HttpServletRequest request , Model model)
+	 * 
+	 * 
+	 * 
+	 * {
+	 * 
+	 * //System.err.println(indSocilStatus);
+	 * 
+	 * 
+	 * subpoenaRequestServices.save(subpoenaRequest); return
+	 * "redirect:/HomeIndex/details";
+	 * 
+	 * 
+	 * 
+	 * 
+	 * }
+	 */
+
+}

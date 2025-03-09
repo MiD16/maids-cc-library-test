@@ -1,0 +1,16 @@
+package com.template.Repository.Basic.SystemLog;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.SystemLog.SystemLog;
+
+@Repository
+public interface SystemLogRepository extends JpaRepository<SystemLog,Long>{
+	
+	@Query("Select a From SystemLog a order by a.id desc")
+	public Page<SystemLog> getAll(PageRequest pageRequest);
+}

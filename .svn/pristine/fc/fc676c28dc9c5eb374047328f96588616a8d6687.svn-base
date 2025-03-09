@@ -1,0 +1,184 @@
+package com.template.Class.Customer;
+
+import javax.persistence.*;
+
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import java.util.Date;
+
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class NonCustIndividual {
+
+
+	private Long id;
+
+	private String averageIncome;
+
+	private Integer branchId;
+
+	private Date brithDate;
+
+	private String brithPlace;
+
+	private String certificateIssuer;
+
+	private Long certificateTypeId;
+
+	private String commercialRegistrationNumber;
+
+	private String industryRegistrationNumber;
+
+	private String commercialRegistrationPlace;
+
+	private Integer deletedBy;
+
+	private Date deletedDate;
+
+	private Long economicSectorId;
+
+	private String fatherNameA;
+
+	private String fatherNameB;
+
+	private String fileNumber;
+
+	private String firstNameA;
+
+	private String firstNameB;
+
+	private Long indProfession;
+
+	private Long genderId;
+
+	private String idNumber;
+
+	private Long idTypeId;
+
+	private Integer insertBy;
+
+	private Date insertDate;
+
+	private Integer isDeleted;
+
+	private String job;
+
+	private String lastNameA;
+
+	private String lastNameB;
+
+	private String motherLastNameA;
+
+	private String motherLastNameB;
+
+	private String motherNameA;
+
+
+	private String motherNameB;
+
+
+	private String nationalNumber;
+
+
+	private Integer nationalityId;
+
+
+	private Long natureEconomicActivityId;
+
+	private String note;
+
+
+
+	private String partialSpecialization;
+
+	private String registrationNumber;
+
+	private Date expiryDate;
+
+
+	private Date issueDate;
+
+	private String issuePlace;
+
+	private String registrationPlace;
+
+	private String registrationPlaceNumber;
+
+	private Integer residentFlag;
+
+
+	private Date reviewDate;
+
+	private String secretariate;
+
+	private Long socialStatusId;
+
+	private String specialization;
+
+
+	private Date statusDate;
+
+	private Integer statusId;
+
+
+	private Integer updateBy;
+
+
+	private Date updateDate;
+
+
+//	private List<Address> addresses;
+//
+//
+//	private List<CompanyMember> companyMembers;
+//
+//
+//	private List<CustomerMember> customerMembers;
+//
+//
+//	private List<Family> families;
+
+
+	
+	
+
+	private String destenationjob;
+
+	private String titlejob;
+	
+
+	private Date industryRegistrationdate;
+
+	private Date commercialRegistrationdate;
+
+	private String industryRegistrationPlace;
+	
+
+	private String otherNationality;
+	
+
+	private String otherincome;
+	
+	private String politically_risk_flag;
+	  @Transient
+	  private String nameidtype; 
+	  
+	  @PrePersist
+	  void createdAt() {
+	    this.insertDate = this.updateDate = new Date();
+	    this.isDeleted = 0;
+	  }
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.updateDate = new Date();
+	  }
+
+}

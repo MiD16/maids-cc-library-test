@@ -1,0 +1,118 @@
+package com.Base.Configuration.Filter.jwt;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.Base.API.Response.DTO.CErrorDTO;
+import com.Base.Component.CTokenUtility;
+import com.Base.Constant.CAPIRequestHeaderConstant;
+import com.Base.Constant.CAuthorizationKeyConstant;
+import com.Base.Enum.EServletRequestAttribute;
+import com.Base.Helper.APIResponseHelper;
+import com.Base.Helper.GeneralHelper;
+import com.Shared.Enum.EError;
+import com.template.Service.Basic.UserService;
+
+
+//@Component(CFilterConstant.AUTH_FILTER)
+//@WebFilter("/api/*")
+//@Order(1)
+public class TokenAuthFilter extends OncePerRequestFilter 
+{
+	CTokenUtility tokenUtility;
+    UserService userService;
+    
+    public TokenAuthFilter(UserService userService, CTokenUtility tokenUtility)
+    {
+    	this.userService = userService;
+    	this.tokenUtility = tokenUtility;
+    }
+    
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException 
+    {
+        String header= null;
+        String token = null;
+        String userName = null;
+        UserDetails userDetails = null;
+        ArrayList<CErrorDTO> errors = null;
+        
+        try
+        {
+        	do
+            {
+            	header = request.getHeader(CAPIRequestHeaderConstant.AUTHORIZATION);
+                
+            	if(
+            			SecurityContextHolder.getContext().getAuthentication() != null || 
+            			GeneralHelper.isNullOrEmpty(header) ||
+            			!header.startsWith(CAuthorizationKeyConstant.BEARER)
+        		  ) break;
+            	
+            	token = header.substring(CAuthorizationKeyConstant.BEARER.length() + 1);
+           	 
+    	       	userName = tokenUtility.extractUsername(token);
+    	       	
+    	       	if(userName == null) 
+    	       	{
+    	       		errors = new ArrayList<CErrorDTO>();
+    	       		
+    	       		errors.add(new CErrorDTO().setError(EError.INVALID_TOKEN));
+    	       		
+    	       		request.setAttribute(EServletRequestAttribute.AUTH_FAILURE_ERRORS.toString(), errors);
+    	       		
+    	       		break;
+    	       	}
+    	       	
+    	       	userDetails = userService.loadUserByUsername(userName);
+    	
+    	       	if(userDetails == null)
+    	       	{
+    	       		errors = new ArrayList<CErrorDTO>();
+    	       		
+    	       		errors.add(new CErrorDTO().setError(EError.INVALID_TOKEN));
+    	       		
+    	       		request.setAttribute(EServletRequestAttribute.AUTH_FAILURE_ERRORS.toString(), errors);
+    	       		
+    	       		break;
+    	       	}
+    	       	
+    	       	if(tokenUtility.isTokenExpired(token))
+    	       	{
+    	       		errors = new ArrayList<CErrorDTO>();
+    	       		
+    	       		errors.add(new CErrorDTO().setError(EError.TOKEN_IS_EXPIRED));
+    	       		
+    	       		request.setAttribute(EServletRequestAttribute.AUTH_FAILURE_ERRORS.toString(), errors);
+    	       		
+    	       		break;
+    	       	}
+    	       	
+    	        UsernamePasswordAuthenticationToken authentication=new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                
+            }
+            while(false);
+
+            filterChain.doFilter(request,response);	
+        }
+        catch(Exception e)
+    	{
+    		APIResponseHelper.writeJsonResponse(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+    }
+
+}

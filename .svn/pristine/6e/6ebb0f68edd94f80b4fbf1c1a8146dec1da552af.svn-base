@@ -1,0 +1,31 @@
+//
+//package com.template.Class.Index;
+//
+//
+//
+//import lombok.Getter;
+//import lombok.NoArgsConstructor;
+//import lombok.Setter;
+//import lombok.ToString;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//import com.template.Model.Table.Address;
+//import com.template.Model.Table.Family;
+//import com.template.Model.Table.NonCustIndividual;
+//import com.template.Model.Table.NationalityDetail;
+//
+//import lombok.AccessLevel;
+//
+//@Getter(AccessLevel.PUBLIC)
+//@Setter(AccessLevel.PUBLIC)
+//@NoArgsConstructor
+//@ToString
+//public class NonCustIndividualForm {
+//	public NonCustIndividual nonCustIndividual =new NonCustIndividual();
+//	public List<Address> addressList=new ArrayList<Address>();
+//	public List<Family> familyList=new ArrayList<Family>();
+//	public List<NationalityDetail> NationalityDetailList=new ArrayList<NationalityDetail>();
+//	
+//}

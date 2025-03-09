@@ -1,0 +1,45 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:CoreAdmin >------------------------
+[INFO] Building CoreAdmin 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:resources (default-resources) @ CoreAdmin ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 161 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ CoreAdmin ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:testResources (default-testResources) @ CoreAdmin ---
+[INFO] Not copying test resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:testCompile (default-testCompile) @ CoreAdmin ---
+[INFO] Not compiling test sources
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.22.2:test (default-test) @ CoreAdmin ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-war-plugin:3.3.2:war (default-war) @ CoreAdmin ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [CoreAdmin] in [/home/milad_khnefes/Coding/KBS/DroolsProject/target/CoreAdmin]
+[INFO] Processing war project
+[INFO] Copying webapp resources [/home/milad_khnefes/Coding/KBS/DroolsProject/src/main/webapp]
+[INFO] Building war: /home/milad_khnefes/Coding/KBS/DroolsProject/target/CoreAdmin.war
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:2.7.4:repackage (repackage) @ CoreAdmin ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.086 s
+[INFO] Finished at: 2025-02-11T10:23:18+03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.7.4:repackage (repackage) on project CoreAdmin: Execution repackage of goal org.springframework.boot:spring-boot-maven-plugin:2.7.4:repackage failed: Unable to find a single main class from the following candidates [com.template.CoreAdminApplication, com.example.drools.DroolsApplication] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginExecutionException

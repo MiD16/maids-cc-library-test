@@ -1,0 +1,52 @@
+package com.template.Controller.Basic;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import com.template.Repository.Basic.RoleActionRep;
+import com.template.Class.UserInformation;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.User;
+import com.template.Repository.Basic.UsersRep;
+//import com.template.Service.Basic.LogService;
+
+@Controller
+@ControllerAdvice(assignableTypes = { ProfileController.class })
+public class ProfileController {
+	@Autowired
+	private UsersRep userRep;
+	
+//	@Autowired
+//	public LogService logActionService;
+	@Autowired
+	public RoleActionRep roleActionRep;
+
+	
+	@PreAuthorize("hasPermission('profile', 'details')")
+	@GetMapping(value = "/profile/details")
+	public String details(Authentication auth, Model model) throws Exception {
+		String result;
+		UserInformation userInformation = (UserInformation) auth.getPrincipal();
+		User user = userRep.findById(userInformation.getUser_id()).get();
+		if (user == null)
+			throw new NoDataFoundException("user With ID : " + userInformation.getUser_id() + " Not Found");
+	//	model.addAttribute("roleactionList", roleActionRep.getRoleActionByRoleId(user.getUser_role().getID()));
+		result = "/profile/details";
+		model.addAttribute("user",user);
+		model.addAttribute("id",user.getID());
+		
+		//logActionService.addLogAction("profile_details", "");
+		return result;
+	}
+
+	@ModelAttribute("title")
+	public String pageTitle() {
+		return "الملف الشخصي";
+	}
+}

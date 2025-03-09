@@ -1,0 +1,21 @@
+package com.template.Class.Commission;
+
+
+import java.util.List;
+
+import com.template.Model.Basic.Action;
+import com.template.Model.Table.Commission.ActionCommission;
+import com.template.Model.Table.Commission.Commission;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+public class ActionCommissionInfo {
+private List<ActionCommission> actionCommissions;
+private Commission commission;
+}

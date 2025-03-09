@@ -1,0 +1,21 @@
+package com.template.Action.IndCustomerType;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.UPDATE_Ind_Customer_Type)
+@Lazy
+public class CAIndCustomerTypeUpdate extends CAction {
+	public CAIndCustomerTypeUpdate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.Ind_Customer_Type_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.Ind_Customer_Type_IS_NOT_EXIST);
+	}
+}

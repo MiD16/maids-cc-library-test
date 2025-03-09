@@ -1,0 +1,27 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.AccIndAccountTypeCategories;
+import com.template.Model.Table.AllIndexes.IndBlacklistDocStatus;
+
+@Repository
+public interface AccIndAccountTypeCategoriesRepository extends JpaRepository <AccIndAccountTypeCategories, Long> {
+	
+	@Query("Select a from AccIndAccountTypeCategories a where a.isDeleted = 0 order by a.placeOrder asc")
+	public List<AccIndAccountTypeCategories> getAll();
+	
+	@Query("Select a From AccIndAccountTypeCategories a WHERE a.isDeleted = 1  order by a.placeOrder desc")
+	public List<AccIndAccountTypeCategories> getAllDeleted();
+	
+	
+	@Query("Select a from  AccIndAccountTypeCategories a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public AccIndAccountTypeCategories findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+
+}

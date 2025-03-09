@@ -1,0 +1,83 @@
+package com.template.BusinessRule.IndNonCustStatus;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndNonCustStatus;
+import com.template.Model.Table.AllIndexes.IndPosition;
+import com.template.Model.Table.AllIndexes.IndRegion;
+import com.template.Model.Table.AllIndexes.IndSocialStatus;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Service.Table.AllIndexes.IndNonCustStatusServices;
+import com.template.Service.Table.AllIndexes.IndPositionServices;
+import com.template.Service.Table.AllIndexes.IndRegionServices;
+import com.template.Service.Table.AllIndexes.IndSocialStatusServices;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+
+
+
+
+
+@Component(CBusinessRuleConstant.IND_NON_CUST_STATUS_IS_NOT_EXIST)
+@Lazy
+
+
+
+
+
+public class CBRIndNonCustStatusIsNotExist implements IBusinessRule{
+	@Autowired
+IndNonCustStatusServices indNonCustStatusServices;
+	
+	
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult indNonCustStatusValidationResult = null;
+		IndNonCustStatus indNonCustStatus = null;
+		IndNonCustStatus indNonCustStatusName = null;
+		long indNonCustStatusDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				indNonCustStatusValidationResult = new CActionValidationResult();
+				
+				indNonCustStatus = (IndNonCustStatus) parameters.getParameter(EKeyCode.IND_NON_CUST_STATUS.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				indNonCustStatusName = indNonCustStatusServices.findByNames(indNonCustStatus.getNameA(), indNonCustStatus.getNameB());
+				
+				if (indNonCustStatus != null) {
+			
+					if (indNonCustStatus.getId() == null || (indNonCustStatus.getId() != null && indNonCustStatus.getId()!=indNonCustStatus.getId())) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indNonCustStatusName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ indNonCustStatusName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						indNonCustStatusValidationResult.setValid(false);
+						indNonCustStatusValidationResult.setErrorMessage(messageString);
+						indNonCustStatusValidationResult.setErrorCode(EErrorCode.IND_POSITION_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return indNonCustStatusValidationResult;
+	}
+	}
+
+
+
+
+
+

@@ -1,0 +1,117 @@
+package com.template.Model.Table.Configuration;
+
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.template.Model.Basic.Action;
+import com.template.Model.Table.Products.AccPeriod;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name="SYS_CONFIGRATION")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class AllConfiguration {
+
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+
+
+
+	@Column(name="NAME_A")
+	private String nameA;
+
+	@Column(name="NAME_B")
+	private String nameB;
+	
+	@Column(name="value_number")
+	private String valuenumber;
+	
+	@Column(name="value_string")
+	private String valuestring;
+	
+	@Column(name="value_bool")
+	private Integer valuebool;
+	
+	@Column(name="is_enabled")
+	private Integer isenabled;
+	
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+	
+	@Column(name="IS_DELETED")
+	private Integer isDeleted;
+	
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+     
+	private String note;
+
+	@Column(name="PLACE_ORDER")
+	private Integer placeOrder;
+	
+	@Column(name="DATATYPE")
+	private Integer DATATYPE;
+	
+	@ManyToOne
+	@JoinColumn(name="PERIOD_ID")
+	private AccPeriod period_id;
+
+	@PrePersist
+	  void createdAt() {
+	    this.insertDate = this.lastUpdateDate = new Date();
+	    this.isDeleted = 0;
+	  }
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	    this.isDeleted = 0;
+	  }
+
+}

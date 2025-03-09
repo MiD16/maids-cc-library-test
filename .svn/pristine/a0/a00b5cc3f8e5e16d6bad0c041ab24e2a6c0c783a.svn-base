@@ -1,0 +1,79 @@
+package com.template.Model.Basic.SystemLog;
+
+import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema;
+import com.google.gson.annotations.Expose;
+import com.template.Class.Customer.NonCustIndividual;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.AllIndexes.Branch;
+import com.template.Model.Table.AllIndexes.IndTable;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "Commandar")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Commandar {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@ManyToOne
+	@JoinColumn(name = "systemLogId")
+	private SystemLog systemLogId;
+	
+	@Column(name = "NON_CUSTOMER_ID")
+	private Integer nonCustomerId;
+	
+	@Column(name = "FILE_NUMBER")
+	private String filenumber;
+	
+	@Column(name = "FULL_NAME_AR")
+	private String fullName_ar;
+	
+	@Column(name = "FULL_NAME_EN")
+	private String fullName_en;
+	
+	@Column(name = "National_Number")
+	private String national_number;
+	
+	@ManyToOne
+	@JoinColumn(name="INSERT_BY")
+	private User insertBy;
+	
+	@Column(name = "INSERT_DATE")
+	private Date insertDate;
+	
+
+	@Column(name = "NOTE")
+	private String note;
+
+	@PrePersist
+	void createdAt() {
+		this.insertDate = new Date();
+	}
+}

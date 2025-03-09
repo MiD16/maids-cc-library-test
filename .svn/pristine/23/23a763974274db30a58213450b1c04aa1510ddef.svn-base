@@ -1,0 +1,268 @@
+package com.template.Service.Table.Holiday;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.UserInformation;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.AllIndexes.Branch;
+import com.template.Model.Table.Holiday.BranchHoliday;
+import com.template.Model.Table.Holiday.Holidays;
+import com.template.Repository.Table.Holiday.BranchHolidayRep;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.BranchServices;
+@Service
+public class BranchHolidayService {
+
+	@Autowired
+	BranchHolidayRep branchHolidayRep;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	CActionHandler actionHandler;
+	
+	@Autowired
+	BranchServices branchServices;
+	
+	@Autowired
+	HolidaysService holidaysService;
+	
+	public Page<BranchHoliday> findAllBranchHoliday(PageRequest pageRequest) {
+		return branchHolidayRep.findAllBranchHoliday(pageRequest);
+	}
+
+	public CResponse findByHolidayId(PageRequest pageRequest, long holidayId) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(branchHolidayRep.findByHolidayId(holidayId, pageRequest));
+		return response;
+	}
+
+	public Page<BranchHoliday> findByBranchId(PageRequest pageRequest, long branchId) {
+		return branchHolidayRep.findByBranchId(branchId, pageRequest);
+	}
+	
+	
+	public BranchHoliday findByBranchIdAndHolidayId(long holidayId,long  branchId) {
+		return branchHolidayRep.findByBranchIdAndHolidayId(holidayId,branchId);
+	}
+	public CResponse findById(Long id) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(branchHolidayRep.findById(id).get());
+		return response;
+	}
+
+	public CResponse save(BranchHoliday branchHoliday, int flagAll) throws Exception {
+		CResponse response = null;
+		CResponse sub_response = null;
+		
+		if(flagAll == -1) //add all branches
+		{
+			response = new CResponse();
+			//get branches that are not in holiday
+			List<Branch> branchList = branchServices.findBranchNotInBranchHoliday(branchHoliday.getHoliday().getId());			
+			for (int i=0;i<branchList.size();i++) 
+			{
+				BranchHoliday branchHolidaytemp=new BranchHoliday();
+				branchHolidaytemp.setHoliday(branchHoliday.getHoliday());
+				branchHolidaytemp.setBranch(branchList.get(i));
+				sub_response = createBranchHoliday(branchHolidaytemp,branchList.get(i));
+				if(!sub_response.isSuccess())
+				{
+					response.setSuccess(false);
+					response.setErrorMessage(response.getErrorMessage()+sub_response.getErrorMessage()+" ");
+				}				
+			}
+		}
+		//else add one branch
+		else
+		{
+			Branch branch=branchServices.findById(branchHoliday.getBranch().getId());
+			response = createBranchHoliday(branchHoliday,branch);
+		}
+		if(response.isSuccess())
+			response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+
+	public CResponse delete(Long id) throws Exception {
+		BranchHoliday branchHoliday = branchHolidayRep.findById(id).get();
+		CResponse response = null;
+		CResponse response_get_user= null;
+		CResponse response_get_holiday= null;
+		response_get_user=new CResponse();
+		Branch branch=branchServices.findById(branchHoliday.getBranch().getId());
+		response_get_holiday=holidaysService.findById(branchHoliday.getHoliday().getId());
+		Holidays holidays=(Holidays)response_get_holiday.getReturnedObject();
+		response = validateBranchHolidayDelete(branchHoliday,holidays,branch);
+		if (!response.isSuccess()) {
+			response.setReturnedObject(branchHoliday);
+			return response;
+		}
+		//get current user that logged
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		response_get_user=  userService.getUserByID(userInformation.getUser_id());
+		User logedUser =(User) response_get_user.getReturnedObject();
+		branchHoliday.setDeletedDate(new Date());
+		branchHoliday.setDeletedBy(logedUser.getID());
+		branchHoliday.setIsDeleted(1);
+		response.setReturnedObject(branchHolidayRep.save(branchHoliday));
+		response.setSuccessMessage("تم الحذف بنجاح");
+		return response;
+	}
+	
+	public void saveAll(List<BranchHoliday> branchHolidays) {
+		branchHolidayRep.saveAll(branchHolidays);
+	}
+	
+	public void deletedAll(List<BranchHoliday> branchHolidays) {
+		CResponse response_get_user= null;
+		response_get_user=new CResponse();
+		//get current user that logged
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		response_get_user=  userService.getUserByID(userInformation.getUser_id());
+		User logedUser =(User) response_get_user.getReturnedObject();
+		List<BranchHoliday> branchHolidaystoDelete=new ArrayList<BranchHoliday>();
+		for(int i=0;i<branchHolidays.size();i++)
+		{
+			branchHolidays.get(i).setDeletedDate(new Date());
+			branchHolidays.get(i).setIsDeleted(1);
+			branchHolidays.get(i).setDeletedBy(logedUser.getID());
+			branchHolidaystoDelete.add(branchHolidays.get(i));
+		}
+		branchHolidayRep.saveAll(branchHolidaystoDelete);
+	}
+	
+	
+	public boolean checkBranchHolidayIsDeleted(long id) {
+		BranchHoliday branchHoliday = branchHolidayRep.findById(id).get();
+		if (branchHoliday.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	
+	public boolean checkBranchIsExist(long holidayId,long branchId) {
+		BranchHoliday branchHoliday = findByBranchIdAndHolidayId(holidayId, branchId);
+		if (branchHoliday== null)
+			return false;
+		return true;
+	}
+	
+	
+	
+	public CResponse validateBranchHolidayCreate(BranchHoliday branchHoliday,Holidays holidays,Branch branch) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (holidays == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.HOLIDAY_NOT_FOUND.toString());
+					response.setErrorMessage("يوم العطلة غير موجود");
+					break;
+				}
+				
+				if (branch == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.BRANCH_NOT_FOUND.toString());
+					response.setErrorMessage("الفرع غير موجود");
+					break;
+				}
+				
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.HOLIDAY.toString(), holidays);
+				parameters.addParameter(EKeyCode.BRANCH.toString(), branch);
+
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_BRANCH_HOLIDAY, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	public CResponse validateBranchHolidayDelete(BranchHoliday branchHoliday,Holidays holidays,Branch branch) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (branchHoliday == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.BRANCH_HOLIDAY_NOT_FOUND.toString());
+					response.setErrorMessage("فرع العطلة غير موجود");
+					break;
+				}
+				
+				if (holidays == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.HOLIDAY_NOT_FOUND.toString());
+					response.setErrorMessage("يوم العطلة غير موجود");
+					break;
+				}
+				
+				
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.HOLIDAY.toString(), holidays);
+				parameters.addParameter(EKeyCode.BRANCH.toString(), branch);
+
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_BRANCH_HOLIDAY, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	private CResponse createBranchHoliday(BranchHoliday branchHoliday,Branch branch ) throws Exception {
+		CResponse response = null;
+		CResponse responseHoliday = null;
+		Holidays holidays=null;
+		CResponse response_get_user= null;
+		response_get_user=new CResponse();
+		responseHoliday =holidaysService.findById(branchHoliday.getHoliday().getId());
+		holidays=(Holidays)responseHoliday.getReturnedObject();
+			response = validateBranchHolidayCreate(branchHoliday,holidays,branch);
+			if (!response.isSuccess()) {
+				return response;
+			}
+		
+	
+		//get current user that logged
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		response_get_user=  userService.getUserByID(userInformation.getUser_id());
+		User logedUser =(User) response_get_user.getReturnedObject();
+		branchHoliday.setInsertBy(logedUser.getID());
+		branchHolidayRep.save(branchHoliday);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+}

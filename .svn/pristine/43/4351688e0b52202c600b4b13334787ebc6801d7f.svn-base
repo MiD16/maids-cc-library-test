@@ -1,0 +1,442 @@
+package com.template.Service.Table.Commission;
+
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
+import javax.persistence.Convert;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+//import com.template.Service.Basic.LogService;
+import com.template.Service.Basic.UserService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.Commission.ActionCommissionInfo;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Commission.Commission;
+import com.template.Repository.Table.Commission.CommissionRepository;
+
+@Service
+public class CommissionService {
+
+	@PersistenceContext
+	public EntityManager em;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+//	@Autowired
+//	public LogService logActionService;
+	@Autowired
+	private CommissionRepository commissionRepository;
+	@Autowired
+	UserService userService;
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Lazy
+	@Autowired
+	ActionCommissionService actionCommissionService;
+
+	public List<Commission> findAll() {
+		List<Commission> commissions = commissionRepository.findAll();
+		return commissions;
+	}
+
+	public Page<Commission> findAllAsPage(PageRequest pageRequest) {
+		Page<Commission> comPage = commissionRepository.getAllCommissionAsPage(pageRequest);
+		return comPage;
+	}
+
+//	public Commission findById(Long id) {
+//		Optional<Commission> commission = commissionRepository.findById(id);
+//		if (commission.isEmpty())
+//			throw new NoDataFoundException("No commission with ID : " + id);
+//		return commission.get();
+//	}
+	public CResponse findById(Long id) {
+
+		CResponse response = new CResponse();
+		Commission commission = null;
+		if (id != null) {
+			commission = commissionRepository.findById(id).get();
+
+			String commissiomTypeStringName = commission.getIndCommissionType().getNameA();
+			commission.setCommissionTypeName(commissiomTypeStringName);
+		} else {
+			commission = new Commission();
+		}
+
+		ActionCommissionInfo actionCommissionInfo = new ActionCommissionInfo();
+		actionCommissionInfo.setCommission(commission);
+		if (commission.getActionCommissions() != null)
+			actionCommissionInfo.setActionCommissions(commission.getActionCommissions());
+		else {
+			actionCommissionInfo.setActionCommissions(new ArrayList<>() );
+		}
+		response.setReturnedObject(actionCommissionInfo);
+		return response;
+	}
+
+	public CResponse save(ActionCommissionInfo actionCommissionInfo, String path) throws Exception {
+		CResponse response = null;
+		String message = null;
+		Commission commission = actionCommissionInfo.getCommission();
+		if (commission.getId() == null) {
+			response = validateCommissionCreate(commission, path);
+			if (!response.isSuccess()) {
+				return response;
+			}
+
+		} else {
+			response = validateCommissionUpdate(commission, path);
+			if (!response.isSuccess()) {
+				return response;
+			}
+		}
+		//System.err.println("commission.getEffectiveTo()" + commission.getEffectiveTo());
+		//System.err.println("commission.getEffectiveFrom()" + commission.getEffectiveFrom());
+
+		response = new CResponse();
+		if (commission.getId() == null) {
+			commission.setIsDeleted(0);
+			commission.setInsertBy(userService.getAuthenticatedUser().getID());
+			commission.setIsEnableFlag(0);
+			if (commission.getEffectiveTo() != null) {
+				commission.setDisable_by(0);
+			}
+
+			message = " تم إنشاء العمولة بنجاح ";
+			if (commission.getEffectiveFrom() != null) {
+				SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+				String formattedDate = outputFormat.format(commission.getEffectiveFrom());
+				message = message + " وسيتم تفعيلها بتاريخ" + formattedDate;
+			}
+
+			if (commission.getEffectiveTo() != null) {
+				SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+				String formattedDate = outputFormat.format(commission.getEffectiveTo());
+				message = message + "وسيتم إلغاء تفعيلها بتاريخ " + formattedDate;
+			}
+
+			if (commission.getActivationFlag() == 0) {
+				message = message + "بدون تفعيل ";
+			}
+
+		} else {
+			Commission commission2 = commissionRepository.findById(commission.getId()).get();
+			commission.setInsertDate(commission2.getInsertDate());
+			if (commission.getEffectiveTo() != null) {
+				// System.err.println("1$$$$$$$$$$$$$$$$$$$$ "+ commission2.getEffectiveTo());
+
+				if (commission2.getEffectiveTo() != null
+						&& !commission2.getEffectiveTo().equals(commission.getEffectiveTo())) {
+					// System.err.println("2$$$$$$$$$$$$$$$$$$$$ ");
+					commission.setDisable_by(userService.getAuthenticatedUser().getID());
+				} else if (commission2.getEffectiveTo() == null) {
+					// System.err.println("2$$$$$$$$$$$$$$$$$$$$ ");
+
+					commission.setDisable_by(userService.getAuthenticatedUser().getID());
+				}
+				else 
+					commission.setDisable_by(commission2.getDisable_by());
+
+			} else {
+				commission.setDisable_by(null);
+			}
+			message = "  تم تعديل العمولة بنجاح ";
+			if (commission.getActivationFlag() == 1 && commission.getIsEnableFlag() == 0) {
+				SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+				String formattedDate = outputFormat.format(commission.getEffectiveFrom());
+				message = message + "  وسيتم تفعيلها بتاريخ" + formattedDate;
+			}
+
+			if (commission.getActivationFlag() == 1 && commission.getEffectiveTo() != null) {
+				SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+				String formattedDate = outputFormat.format(commission.getEffectiveTo());
+				message = message + " وسيتم إلغاء تفعيلها بتاريخ " + formattedDate;
+			}
+
+			if (commission.getActivationFlag() == 0) {
+				message = message + "بدون تفعيل ";
+			}
+		}
+		response.setSuccessMessage(message);
+
+		commissionRepository.save(commission);
+		actionCommissionService.setActivationAllActionCommission(actionCommissionInfo);
+
+		return response;
+	}
+
+	public CResponse delete(Long id) throws Exception {
+
+		Commission commission = commissionRepository.findById(id).get();
+		CResponse response = null;
+
+		response = validateCommissionDelete(commission);
+		if (!response.isSuccess()) {
+			return response;
+		}
+
+		commission.setIsDeleted(1);
+		commission.setActivationFlag(0);
+		commission.setIsEnableFlag(0);
+		commission.setDeletedDate(new Date());
+		commission.setDeletedBy(userService.getAuthenticatedUser().getID());
+		commissionRepository.save(commission);
+		actionCommissionService.deleteAllActionCommission(id);
+		response.setSuccessMessage("تم الحذف بنجاح");
+		return response;
+	}
+
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+
+	public boolean checkCommissionIsNotDeleted(long id) {
+		Commission commission = commissionRepository.findById(id).get();
+		if (commission.getIsDeleted() == 0)
+			return true;
+		return false;
+	}
+
+	/*
+	 * public List<Commission> searchCommission(CommissionClass commission) {
+	 * 
+	 * SqlParameterSource parameters = new MapSqlParameterSource()
+	 * .addValue("I_NAME_A", commission.getNameA()) .addValue("I_NAME_B",
+	 * commission.getNameB()) .addValue("I_PERCENTAGE_FLAG",
+	 * commission.getPrecentageFlag()) .addValue("I_IS_ENABLED_FLAG",
+	 * commission.getIsEnableFlag()) .addValue("I_COMMISSION_TYPE_ID",
+	 * commission.getIndCommissionType());
+	 * 
+	 * SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+	 * .withFunctionName("SEARCH_COMMISSION") .declareParameters( new
+	 * SqlParameter("I_NAME_A", Types.VARCHAR), new SqlParameter("I_NAME_B",
+	 * Types.VARCHAR), new SqlParameter("I_PERCENTAGE_FLAG", Types.INTEGER), new
+	 * SqlParameter("I_IS_ENABLED_FLAG", Types.INTEGER), new
+	 * SqlParameter("I_COMMISSION_TYPE_ID", Types.INTEGER) );
+	 * 
+	 * Map<String, Object> result = call.execute(parameters); List<Commission>
+	 * commissions = (List<Commission>) result.get("return");
+	 * System.err.println(commissions);
+	 * 
+	 * return commissions; }
+	 */
+
+	public Page<Commission> getSearchCommission(Commission commission, Pageable pageRequest) {
+
+		TypedQuery<Commission> q = em.createNamedQuery("SEARCH_COMMISSION", Commission.class);
+
+		q.setParameter(1, commission.getNameA());
+		q.setParameter(2, commission.getNameB());
+		q.setParameter(3, commission.getPrecentageFlag());
+		q.setParameter(4, commission.getIsEnableFlag());
+		q.setParameter(5, commission.getIndCommissionTypeId());
+
+		List<Commission> result = q.getResultList();
+
+		// pagination
+		final int start = (int) pageRequest.getOffset();
+		final int end = Math.min((start + pageRequest.getPageSize()), result.size());
+		final Page<Commission> page = new PageImpl<>(result.subList(start, end), pageRequest, result.size());
+
+		return page;
+	}
+
+	public Long checkCommissionIsNotExist(Commission commission) {
+		Commission commissionByName = findByNames(commission.getNameA(), commission.getNameB());
+		if (commissionByName != null) {
+			if (commission.getId() == null
+					|| (commission.getId() != null && !commission.getId().equals(commissionByName.getId()))) {
+				return commissionByName.getId();
+			}
+		}
+		return null;
+	}
+
+	public Commission findByNames(String nameA, String nameB) {
+		Commission commission = commissionRepository.findByNameA(nameA);
+		if (commission != null)
+			return commission;
+		commission = commissionRepository.findByNameB(nameB);
+		return commission;
+	}
+
+	public CResponse validateCommissionCreate(Commission commission, String path) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (commission == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.COMMISSION_NOT_FOUND.toString());
+					response.setErrorMessage("العملة  غير موجودة");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.COMMISSION.toString(), commission);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_COMMISSION, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	public CResponse validateCommissionUpdate(Commission commission, String path) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (commission == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.COMMISSION_NOT_FOUND.toString());
+					response.setErrorMessage("العملة غير موجودة");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.COMMISSION.toString(), commission);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_COMMISSION, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	public boolean checkCommissionEffectiveFromDateIsPassed(Commission commission) {
+		// Get the current date
+		Date currentDate = new Date();
+		currentDate.setHours(0);
+		currentDate.setMinutes(0);
+		currentDate.setSeconds(0);
+
+		if (commission.getActivationFlag() == 1) {
+			if (commission.getIsEnableFlag() != null && commission.getIsEnableFlag() == 1) {
+				return false;
+			} else if (commission.getEffectiveFrom() != null && (commission.getEffectiveFrom().after(currentDate)
+					|| compareDate(commission.getEffectiveFrom(), currentDate))) {
+				return false;
+			} else
+				return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public boolean checkCommissionEffectiveToDateIsPassed(Commission commission) {
+
+		// Get the current date
+		Date currentDate = new Date();
+		currentDate.setHours(0);
+		currentDate.setMinutes(0);
+		currentDate.setSeconds(0);
+		if (commission.getActivationFlag() == 1) {
+			if (commission.getEffectiveTo() != null && (commission.getEffectiveTo().after(currentDate)
+					|| compareDate(commission.getEffectiveTo(), currentDate))) {
+				{
+
+					return false;
+				}
+			} else if (commission.getEffectiveTo() == null) {
+
+				return false;
+			} else {
+
+				return true;
+			}
+		} else
+			return false;
+
+	}
+
+	public CResponse validateCommissionDelete(Commission commission) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (commission == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.COMMISSION_NOT_FOUND.toString());
+					response.setErrorMessage("العمولة غير موجودة غير موجودة");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.COMMISSION.toString(), commission);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_COMMISSION, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	public boolean compareDate(Date myDate, Date currentDate) {
+		String dateString1 = myDate.toString();
+		String dateString2 = currentDate.toString();
+
+		// Define the format of the original date string
+		DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+
+		// Define the format of the desired output
+		DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+		// Parse the original date string to a ZonedDateTime object
+		ZonedDateTime dateTime = ZonedDateTime.parse(dateString1, originalFormat.withZone(ZoneId.of("Europe/Moscow")));
+
+		// Format the ZonedDateTime object to the desired output format
+		String formattedDate1 = dateTime.format(outputFormat);
+
+		dateTime = ZonedDateTime.parse(dateString2, originalFormat.withZone(ZoneId.of("Europe/Moscow")));
+
+		// Format the ZonedDateTime object to the desired output format
+		String formattedDate2 = dateTime.format(outputFormat);
+
+		return formattedDate1.equals(formattedDate2);
+	}
+
+}

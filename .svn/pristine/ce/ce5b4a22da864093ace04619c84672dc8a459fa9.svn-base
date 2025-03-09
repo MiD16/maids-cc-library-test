@@ -1,0 +1,34 @@
+package com.template.Class.Commission;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class ActionClass {
+	private String action_name_en ;
+	
+	private String action_name_ar ;
+	
+	private String code;
+	
+	private Integer subpoenaReqFlag;
+	
+	private Integer isTransactionFlag;
+
+	private Integer indCatigoryModule;
+	
+
+	private Integer indCreditDebitCatigory;
+	
+}

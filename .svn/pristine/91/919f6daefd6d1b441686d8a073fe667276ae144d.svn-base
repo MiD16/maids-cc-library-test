@@ -1,0 +1,49 @@
+package com.template.BusinessRule.IndInstitution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndGlClass;
+import com.template.Model.Table.AllIndexes.IndInstitution;
+import com.template.Service.Table.AllIndexes.IndGlClassServices;
+import com.template.Service.Table.AllIndexes.IndInstitutionServices;
+
+@Component(CBusinessRuleConstant.IND_INSTITUTION_IS_NOT_EXIST)
+@Lazy
+
+
+
+public class CBRIndInstitutionIsNotDeleted implements IBusinessRule {
+
+	@Autowired
+	IndInstitutionServices indInstitutionServices;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		IndInstitution indInstitution= null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				indInstitution = (IndInstitution) parameters.getParameter(EKeyCode.IND_INSTITUTION.toString());
+				if (indInstitutionServices.checkIndInstitutionIsDeleted(indInstitution.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("نوع الفائدة محذوف");
+					actionValidationResult.setErrorCode(EErrorCode.IND_INSTITUTION_IS_DELETED.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+}

@@ -1,0 +1,45 @@
+package com.template.BusinessRule.Action;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.User;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.UserService;
+
+@Component(CBusinessRuleConstant.ACTION_IS_NOT_EXIST)
+@Lazy
+public class CBRActionIsNotExist implements IBusinessRule {
+	@Autowired
+	ActionService actionService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		Action action = null;
+	
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				action = (Action) parameters.getParameter(EKeyCode.ACTION.toString());
+				if(	actionService.checkActionIsExist(action))
+                 {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("الصلاحية  موجودة مسبقا");
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

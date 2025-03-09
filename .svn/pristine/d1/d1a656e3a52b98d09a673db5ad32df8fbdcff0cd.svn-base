@@ -1,0 +1,9 @@
+package com.Base.Interface;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+
+public interface IBusinessRule
+{
+	public CActionValidationResult validate(CActionValidationParameters parameters);
+}

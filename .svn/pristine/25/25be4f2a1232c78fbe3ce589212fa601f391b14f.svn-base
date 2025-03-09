@@ -1,0 +1,40 @@
+package com.template.Class.Index;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.NamedNativeQuery;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+
+public class IndGender {
+	private Long ID;
+	private String CB_CODE;
+	private Integer DELETED_BY;
+	private Date DELETED_DATE;
+	private Integer INSERT_BY;
+	private Date INSERT_DATE;
+	private Integer IS_DELETED;
+	private Integer IS_ENABLED_FLAG;
+	private Integer LAST_UPDATE_BY;
+	private Date LAST_UPDATE_DATE;
+	private String NAME_A;
+	private String  NAME_B;
+	private String NOTE;
+	private Integer PLACE_ORDER;
+
+}

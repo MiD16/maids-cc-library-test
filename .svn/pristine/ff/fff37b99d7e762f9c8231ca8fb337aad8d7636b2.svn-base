@@ -1,0 +1,115 @@
+package com.Base.Configuration.Filter.jwt;
+
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.Base.Class.CActionParameters;
+import com.Base.Class.CResponse;
+import com.Base.Constant.CAPIRequestHeaderConstant;
+import com.Base.Constant.CAuthorizationKeyConstant;
+import com.Base.Enum.EServletRequestAttribute;
+import com.Base.Helper.APIResponseHelper;
+import com.Base.Helper.GeneralHelper;
+import com.Shared.Enum.EParameter;
+import com.template.Class.UserInformation;
+import com.template.Model.Basic.User;
+import com.template.Service.Basic.UserService;
+
+//@Component(CFilterConstant.BASIC_AUTH_FILTER)
+//@WebFilter("/api/*")
+//@Order(1)
+public class BasicAuthFilter extends OncePerRequestFilter  
+{   
+    UserService userService;
+    
+//    public BasicAuthFilter(AuthenticationManager authenticationManager) {
+//        super(authenticationManager);
+//    }
+    
+    public BasicAuthFilter(UserService userService)
+    {
+    	this.userService = userService;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException 
+    {
+    	CActionParameters authUserParams = null;
+    	CResponse authResponse = null;
+    	UsernamePasswordAuthenticationToken authToken = null;
+    	UserInformation userInformation = null;
+    	
+    	String authHeader = null;
+    	String[] splitCredentials = null;
+    	String credentials = null;
+    	String userName = null;
+    	String password = null;
+    	
+    	try
+    	{
+    		do
+    		{
+    			authHeader = request.getHeader(CAPIRequestHeaderConstant.AUTHORIZATION);
+
+            	if (authHeader == null || !authHeader.startsWith(CAuthorizationKeyConstant.BASIC))  break;
+        		
+            	credentials = GeneralHelper.FromBase64String(authHeader.substring(CAuthorizationKeyConstant.BASIC.length() + 1)); 
+        	    
+            	if(GeneralHelper.isNullOrEmpty(credentials)) break;
+            	 
+            	splitCredentials = credentials.split(":");
+            	
+            	if(splitCredentials == null) break;
+            	
+            	userName = splitCredentials[0];
+        	    password = splitCredentials[1];
+
+        	    authUserParams = new CActionParameters();
+        	    
+        	    authUserParams.addParameter(EParameter.AUTH_TYPE.toString(), CAuthorizationKeyConstant.BASIC);
+        	    authUserParams.addParameter(EParameter.USER_NAME.toString(), userName);
+        	    authUserParams.addParameter(EParameter.PASSWORD.toString(), password);
+        	    
+        	    authResponse = userService.authneticateUser(authUserParams);
+        	    
+        	    if(!authResponse.isSuccess())
+        	    {
+        	    	//APIResponseHelper.writeJsonResponse(response, EAPIResponseStatus.UNAUTHORIZED, APIResponseHelper.parseErrors(authResponse.getErrors()));
+        	    	
+        	    	request.setAttribute(EServletRequestAttribute.AUTH_FAILURE_ERRORS.toString(), APIResponseHelper.parseErrors(authResponse.getErrors()));
+        	    	
+        	    	break;
+        	    }
+
+        	    userInformation = (UserInformation)authResponse.getReturnedObject();
+    	    	
+    	    	authToken = new UsernamePasswordAuthenticationToken(userInformation, null, ((UserInformation)authResponse.getReturnedObject()).getAuthorities());
+    	    	
+    	    	authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    	    	
+    	    	SecurityContextHolder.getContext().setAuthentication(authToken);
+    	    	
+    	    	request.setAttribute(EServletRequestAttribute.USER.toString(), (User)userService.getUserByID(userInformation.getUser_id()).getReturnedObject());
+    		}
+    		while(false);
+    		
+    		filterChain.doFilter(request, response);
+    	}
+    	catch(Exception e)
+    	{
+    		APIResponseHelper.writeJsonResponse(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+    	 
+    }
+
+}

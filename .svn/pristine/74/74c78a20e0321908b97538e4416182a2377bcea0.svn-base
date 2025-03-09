@@ -1,0 +1,48 @@
+package com.template.BusinessRule.AccountTypeNature;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Products.AccountTypeNature;
+import com.template.Service.Table.Product.AccountTypeNatureService;
+
+@Component(CBusinessRuleConstant.ACCOUNT_TYPE_NATURE_IS_NOT_DELTED)
+@Lazy
+public class CBRAccountTypeNatureIsNotDeleted implements IBusinessRule {
+	
+	@Autowired
+	AccountTypeNatureService accountTypeNatureService;
+
+	@Override
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccountTypeNature accountTypeNature = null;
+		
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				accountTypeNature =  (AccountTypeNature) parameters.getParameter(EKeyCode.ACCOUNT_TYPE_NATURE.toString());
+				if (accountTypeNatureService.checkAccountTypeNatureIsDeleted(accountTypeNature.getId())) {	
+					
+					String messageString = "<div style='margin-bottom: 12px'>" +" طبيعة عميل المنتج "+ accountTypeNature.getCustomerNatureId().getNameA()+ " محذوفة"+ "</div> ";
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage(messageString);
+					actionValidationResult.setErrorCode(EErrorCode.ACCOUNT_TYPE_NATURE_IS_DELTED.toString());
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

@@ -1,0 +1,51 @@
+package com.template.BusinessRule.BranchHoliday;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.Branch;
+import com.template.Model.Table.Holiday.Holidays;
+import com.template.Service.Table.AllIndexes.BranchServices;
+import com.template.Service.Table.Holiday.BranchHolidayService;
+
+@Component(CBusinessRuleConstant.BRANCH_HOLIDAY_IS_NOT_EXIST)
+@Lazy
+public class CBRBranchHolidayIsNotExist implements IBusinessRule {
+
+	@Autowired
+	BranchHolidayService branchHolidayService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		Branch branch = null;
+		Holidays holiday = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				branch = (Branch) parameters.getParameter(EKeyCode.BRANCH.toString());
+				holiday = (Holidays) parameters.getParameter(EKeyCode.HOLIDAY.toString());
+
+				if (branchHolidayService.checkBranchIsExist(holiday.getId(),branch.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("الفرع "+branch.getNameA() + " مضاف للعطلة ");
+
+					actionValidationResult.setErrorCode(EErrorCode.BRANCH_HOLIDAY_IS_EXISTS.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

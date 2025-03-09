@@ -1,0 +1,29 @@
+package com.template.Action.IndexPosition;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+
+@Component(CActionConstant.UPDATE_IND_POSITION)
+@Lazy
+public class CAIndPositionUpdate extends CAction {
+	public CAIndPositionUpdate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.IND_POSITION_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.IND_POSITION_IS_NOT_EXIST);
+	}
+}
+
+
+
+
+
+

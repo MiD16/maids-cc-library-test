@@ -1,0 +1,44 @@
+package com.template.Class;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import com.template.Model.Table.Products.AccPeriod;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor 
+@ToString
+public class SearchForAccountType {
+
+	private Long id;
+	
+	private String nameA;
+	
+	private String nameB;
+	
+	private String accTypeName1A;
+	
+	private String accTypeName1B;
+	
+	private String categoryName;
+	
+	private Integer categoryId;
+	
+	private String accTypeCode;
+	
+	private Integer isEnabled;
+	
+	
+}

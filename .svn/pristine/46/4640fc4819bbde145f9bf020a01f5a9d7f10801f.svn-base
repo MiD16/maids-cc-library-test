@@ -1,0 +1,209 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+
+import com.template.Repository.Table.AllIndexes.IndCustomerNatureRepository;
+import com.template.Repository.Table.AllIndexes.IndCustomerNatureKeyRepository;
+import com.template.Repository.Table.AllIndexes.IndCustomerNatureRepository;
+
+
+@Service
+public class IndCustomerNatureKeyServices {
+
+	
+	
+
+	@Autowired
+	IndCustomerNatureKeyRepository indCustomerNatureKeyRepository;
+	/////////////////////////
+
+	@Autowired CActionHandler actionHandler;
+	
+	public CResponse createIndCustomerNatureKey(IndCustomerNatureKey indCustomerNatureKey) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.Ind_Customer_Nature_Key.toString(), indCustomerNatureKey);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_Ind_Customer_Nature_Key, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indCustomerNatureKey.setInsertBy(0);
+			indCustomerNatureKey.setIsDeleted(0);
+			indCustomerNatureKey.setInsertDate(new Date());
+			indCustomerNatureKeyRepository.save(indCustomerNatureKey);
+			
+			response.setReturnedObject(indCustomerNatureKey);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+	public IndCustomerNatureKey updateIndCustomerNatureKey (IndCustomerNatureKey indCustomerNatureKey) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(indCustomerNatureKey.getId() == null) 
+		{
+			
+			indCustomerNatureKey.setInsertBy(0);
+		}
+		
+		
+		
+		else if(indCustomerNatureKey.getId() != null)
+		{
+			IndCustomerNatureKey temSocialStatus = indCustomerNatureKeyRepository.findById(indCustomerNatureKey.getId()).get();
+			indCustomerNatureKey.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indCustomerNatureKeyRepository.save(indCustomerNatureKey);
+		return indCustomerNatureKey;
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public IndCustomerNatureKey findByNames(String nameA, String nameB) {
+		return indCustomerNatureKeyRepository.findByNames(nameA, nameB);
+	}
+	
+
+
+	public IndCustomerNatureKey save(IndCustomerNatureKey indCustomerNatureKey) {
+		if(indCustomerNatureKey.getId() == null)
+		{
+			
+				 indCustomerNatureKey.setInsertBy(0);
+				  indCustomerNatureKey.setInsertDate(getCurrentDate());
+				  indCustomerNatureKey.setIsDeleted(0); }
+		else if(indCustomerNatureKey.getId() != null){ System.err.println(2121);
+				  indCustomerNatureKey.setInsertDate(getCurrentDate());
+				  indCustomerNatureKey.setLastUpdateDate(getCurrentDate());
+				  indCustomerNatureKey.setLastUpdateBy(1); 
+			
+			
+			
+			
+			
+			
+		}else if(indCustomerNatureKey.getId() != null){
+			IndCustomerNatureKey temSignatureType=indCustomerNatureKeyRepository.findById(indCustomerNatureKey.getId()).get();
+			indCustomerNatureKey.setInsertDate(temSignatureType.getInsertDate());
+		}
+		indCustomerNatureKeyRepository.save(indCustomerNatureKey);
+		return indCustomerNatureKey;
+	}
+
+	/*
+	 * public IndCustomerNatureKey save(IndCustomerNatureKey indCustomerNatureKey) {
+	 * if(indCustomerNatureKey.getId() == null) {
+	 * indCustomerNatureKey.setInsertBy(0);
+	 * indCustomerNatureKey.setInsertDate(getCurrentDate());
+	 * indCustomerNatureKey.setIsDeleted(0); }else if(indCustomerNatureKey.getId()
+	 * != null){ System.err.println(2121);
+	 * indCustomerNatureKey.setInsertDate(getCurrentDate());
+	 * indCustomerNatureKey.setLastUpdateDate(getCurrentDate());
+	 * indCustomerNatureKey.setLastUpdateBy(1); }
+	 * indCustomerNatureKeyRepository.save(indCustomerNatureKey); return
+	 * indCustomerNatureKey; }
+	 */
+	
+	public void update(IndCustomerNatureKey indCustomerNatureKey) {
+		indCustomerNatureKeyRepository.save(indCustomerNatureKey);
+	}
+	
+	public IndCustomerNatureKey findById(Long id) {
+		System.err.println("54546445400");
+		return indCustomerNatureKeyRepository.getById(id);
+	}
+	
+	public List<IndCustomerNatureKey> getAll(){
+		List<IndCustomerNatureKey> all = indCustomerNatureKeyRepository.getAll();
+		return all;
+	}
+	
+	public List<IndCustomerNatureKey> getAllDeleted(){
+		List<IndCustomerNatureKey> allDeleted = indCustomerNatureKeyRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	
+	public IndCustomerNatureKey delete(Long id) {
+		IndCustomerNatureKey indCustomerNatureKey = indCustomerNatureKeyRepository.findById(id).get();
+		if (indCustomerNatureKey == null) {
+			throw new NoDataFoundException("indCustDocument With ID : " + id + " Not Found");
+		}
+		indCustomerNatureKey.setIsDeleted(1);
+		return indCustomerNatureKeyRepository.save(indCustomerNatureKey);
+	}
+	
+	
+	
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+

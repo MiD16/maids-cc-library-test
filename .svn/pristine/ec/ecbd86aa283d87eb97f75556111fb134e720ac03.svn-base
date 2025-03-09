@@ -1,0 +1,72 @@
+
+
+
+
+package com.template.Service.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+import com.template.Repository.Table.AllIndexes.IndCommisionTypeRepository;
+
+@Service
+public class IndCommisionTypeServices {
+
+
+	
+	
+	@Autowired
+IndCommisionTypeRepository indCommisionTypeRepository;
+	
+	public IndCommissionType save(IndCommissionType indCommisionType) {
+		if(indCommisionType.getId() == null)
+		{
+			indCommisionType.setInsertBy(0);
+			indCommisionType.setInsertDate(getCurrentDate());
+			indCommisionType.setIsDeleted(0);
+		}else if(indCommisionType.getId() != null){
+			System.err.println(2121);
+			indCommisionType.setInsertDate(getCurrentDate());
+			indCommisionType.setLastUpdateDate(getCurrentDate());
+			indCommisionType.setLastUpdateBy(1);
+		}
+		indCommisionTypeRepository.save(indCommisionType);
+		return indCommisionType;
+	}
+	
+	public void update(IndCommissionType indCommisionType) {
+		indCommisionTypeRepository.save(indCommisionType);
+	}
+	
+	public IndCommissionType findById(Long id) {
+		return indCommisionTypeRepository.getById(id);
+	}
+	
+	public List<IndCommissionType> getAll(){
+		List<IndCommissionType> all = indCommisionTypeRepository.getAll();
+		return all;
+	}
+	
+	public List<IndCommissionType> getAllDeleted(){
+		List<IndCommissionType> allDeleted = indCommisionTypeRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndCommissionType delete(Long id) {
+		IndCommissionType indCommisionType = indCommisionTypeRepository.findById(id).get();
+		if (indCommisionType == null) {
+			throw new NoDataFoundException("indCommisionType With ID : " + id + " Not Found");
+		}
+		indCommisionType.setIsDeleted(1);
+		return indCommisionTypeRepository.save(indCommisionType);
+	}
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+}

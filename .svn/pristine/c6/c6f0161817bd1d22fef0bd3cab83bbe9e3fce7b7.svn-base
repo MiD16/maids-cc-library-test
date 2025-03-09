@@ -1,0 +1,9 @@
+package com.template.Exception;
+
+public class UniqueConstraintViolationException extends RuntimeException{
+	// what is serial version uid
+	private static final long serialVersionUID = 2L;
+	public UniqueConstraintViolationException(String message) {
+        super(message);
+    }
+}

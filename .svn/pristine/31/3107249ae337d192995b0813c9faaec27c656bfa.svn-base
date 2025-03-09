@@ -1,0 +1,33 @@
+
+package com.template.Repository.Table.Holiday;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.Holiday.IndHolidays;
+
+@Repository
+public interface IndHolidaysRep extends JpaRepository<IndHolidays, Long> {
+
+	@Query("Select a from  IndHolidays a where a.isDeleted=0")
+	public Page<IndHolidays> findAllIndHolidays(PageRequest pageRequest);
+
+	@Query("Select a from  IndHolidays a where a.indMonth.id=:id and  a.isDeleted=0 ")
+	public Page<IndHolidays> findByMonthId(@Param("id") long id, PageRequest pageRequest);
+
+	@Query("Select a from  IndHolidays a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public IndHolidays findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+
+	
+	@Query("Select a from  IndHolidays a where a.nameA=:nameA and a.isDeleted=0 ")
+	public IndHolidays findByNameA(@Param("nameA") String nameA);
+
+	
+	@Query("Select a from  IndHolidays a where  a.nameB=:nameB and a.isDeleted=0 ")
+	public IndHolidays findByNameB( @Param("nameB") String nameB);
+
+}

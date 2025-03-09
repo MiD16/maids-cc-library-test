@@ -1,0 +1,7 @@
+package com.Base.Enum;
+
+public enum EServletRequestAttribute 
+{
+	USER,
+	AUTH_FAILURE_ERRORS
+}

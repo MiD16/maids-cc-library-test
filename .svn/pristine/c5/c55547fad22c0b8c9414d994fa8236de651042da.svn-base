@@ -1,0 +1,49 @@
+package com.template.BusinessRule.AccountTypeCurrency;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Products.AccountTypeCurrency;
+import com.template.Service.Table.Product.AccountTypeCurrencyService;
+
+@Component(CBusinessRuleConstant.ACCOUNT_TYPE_CURRENCY_IS_NOT_DELETED)
+@Lazy
+public class CBRAccountTypeCurrencyIsNotDeleted implements IBusinessRule {
+	
+	@Autowired
+	AccountTypeCurrencyService accountTypeCurrencyService;
+
+	@Override
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccountTypeCurrency accountTypeCurrency = null;
+
+		
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				accountTypeCurrency =  (AccountTypeCurrency) parameters.getParameter(EKeyCode.ACCOUNT_TYPE_CURRENCY.toString());
+				if (accountTypeCurrencyService.checkAccountTypeCurrencyIsDeleted(accountTypeCurrency.getId())) {	
+					
+					String messageString = "<div style='margin-bottom: 12px'>" +" عملة المنتج "+ accountTypeCurrency.getCurrencyNameA()+ " محذوفة"+ "</div> ";
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage(messageString);
+					actionValidationResult.setErrorCode(EErrorCode.ACCOUNT_TYPE_CURRENCY_IS_DELETED.toString());
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

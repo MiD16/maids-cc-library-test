@@ -1,0 +1,65 @@
+package com.Base.Configuration.Filter.HttpMethodOverride;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.Base.Constant.CFilterConstant;
+import com.Base.Helper.APIResponseHelper;
+import com.Base.Helper.GeneralHelper; 
+
+@Component(CFilterConstant.HTTP_METHOD_OVERRIDE_FILTER)
+@WebFilter("/api/*")
+@Order(2)
+public class HttpMethodOverrideFilter extends OncePerRequestFilter  
+{
+	 private ArrayList<String> methodsOverride = new ArrayList<String>(Arrays.asList(HttpMethod.GET.toString()));
+     
+	@Override 
+	    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) 
+	                    throws ServletException, IOException 
+	 	{
+			String originalMethod = null;
+		 	String methodOverride = null;
+		 	
+		 	try
+		 	{
+			 	originalMethod = request.getMethod().toUpperCase();
+		 		
+			 	methodOverride = request.getHeader("X-HTTP-Method-Override");
+		 		
+		 		methodOverride = methodOverride != null ? methodOverride.toUpperCase() : null; 
+		 		
+		 		if (GeneralHelper.isNullOrEmpty(methodOverride))
+		 		{
+		 			filterChain.doFilter(request, response);
+		 		}
+		 		
+		 		else if(!methodsOverride.contains(methodOverride) || !originalMethod.equals(HttpMethod.POST.toString()))
+		 		{
+		 		    APIResponseHelper.writeJsonResponse(response, HttpStatus.METHOD_NOT_ALLOWED);
+		 		}
+		 			
+		 		else
+		 		{
+		 			HttpServletRequest wrappedRequest = new HttpMethodOverrideRequestWrapper(request, methodOverride);
+		 			filterChain.doFilter(wrappedRequest, response);
+		 		}
+		 	}
+		 	catch(Exception e)
+		 	{
+		 		APIResponseHelper.writeJsonResponse(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		 	}
+	 	}
+}

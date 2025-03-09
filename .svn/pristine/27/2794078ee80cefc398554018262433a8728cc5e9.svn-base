@@ -1,0 +1,19 @@
+package com.template.Repository.Table.ElectronicOperation;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.ElectronicOperation.InwardMsgDetails;
+import com.template.Model.Table.ElectronicOperation.OutwardMsgFile;
+@Repository
+public interface OutwardMsgFileRepository extends JpaRepository <OutwardMsgFile, Long> {
+	 
+	  @Query("Select a from OutwardMsgFile a where a.IsDeleted != 1") 
+	  public  List<OutwardMsgFile> getAll();
+	  
+	  @Query("Select a From OutwardMsgFile a WHERE a.IsDeleted = 1 order by a.id desc"
+	  ) public List<OutwardMsgFile> getAllDeleted();
+}

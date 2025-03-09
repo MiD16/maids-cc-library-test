@@ -1,0 +1,21 @@
+
+package com.template.Repository.Table.AllIndexes;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.*;
+
+
+
+public interface IndKinshipRoleRepository extends JpaRepository <IndKinshipRole, Long>{
+
+	
+	@Query("Select a from IndKinshipRole a where a.isDeleted != 1")
+	public List<IndKinshipRole> getAll();
+	
+	@Query("Select a From IndKinshipRole a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<IndKinshipRole> getAllDeleted();
+}

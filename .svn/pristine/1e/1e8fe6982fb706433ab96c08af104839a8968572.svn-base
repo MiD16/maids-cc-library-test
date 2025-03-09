@@ -1,0 +1,43 @@
+package com.template.Repository.Basic;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.User;
+
+@Repository 
+public interface UsersRep extends JpaRepository<User,Integer>{
+
+
+	@Query("Select u from User u where u.username=:username and  u.isDeleted = 0")
+	public User findUserByUserName(@Param("username")String username);
+	// without current user 
+	@Query("Select u from User u where u.isDeleted!=1 and u.ID!=:id ORDER BY u.username DESC")
+	public User getAllUsers(@Param("id")  int id);
+	@Query("Select u from User u where u.isDeleted!=1  ORDER BY u.username DESC")
+	public List<User> getAllUsers();
+	@Query("Select count(*) from User u where u.username=:username")
+	public int getNumberWithUserName(@Param("username") String name);
+	
+	
+	
+//	@Query("Select u from User u where u.user_role.role_name_b=:role_name_b")
+//	public User getByRolename(@Param("role_name_b") String role_name);
+	
+//	@Query("Select u from User u where u.user_role.role_name_b=:role_name_b and u.status!=1")
+//	public List<User> getListByRolename(@Param("role_name_b") String role_name);
+//	
+	@Query("Select u from User u where u.email=:email")
+	public User findByEmail(@Param("email")String email);
+	
+	
+	@Query("Select u from User u where u.isDeleted!=1  ORDER BY u.username DESC")
+	public Page<User> getAllUserAsPage(PageRequest pageRequest);
+	
+}

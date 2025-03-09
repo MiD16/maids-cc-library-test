@@ -1,0 +1,84 @@
+package com.template.Class.Customer;
+
+
+import javax.persistence.*;
+
+import org.springframework.data.annotation.LastModifiedDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Date;
+
+
+
+
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+
+public class Family {
+
+	
+	private Long id;
+
+	private Date birthDate;
+
+	private Integer deletedBy;
+
+
+	private Date deletedDate;
+
+
+	private Integer genderId;
+
+
+	private Integer insertBy;
+
+	
+	private Date insertDate;
+
+
+	private Integer isDeleted;
+
+	
+	private Integer lastUpdateBy;
+
+
+	private Date lastUpdateDate;
+
+
+	private Long memberType;
+
+
+	private String firstname;
+	
+	
+     private String fathername;
+	
+	
+	private String lastname;
+	
+	
+	private String nationalNumber;
+
+
+
+	private String note;
+
+
+
+	  @Transient
+	  private String nameType; 
+	  @Transient
+	  private String nameGender; 
+	  
+
+}

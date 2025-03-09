@@ -1,0 +1,118 @@
+//package com.template.Controller.Basic;
+//import java.util.List;
+//import javax.servlet.http.HttpServletRequest;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.data.domain.Page;
+//import org.springframework.data.domain.PageRequest;
+//import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.ui.Model;
+//import org.springframework.web.bind.annotation.ControllerAdvice;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.ModelAttribute;
+//import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+//import com.template.Class.LogActionSearchCriteria;
+//import com.template.Class.Pageing.PageInfo;
+//import com.template.Repository.Basic.ActionsRep;
+//import com.template.Repository.Basic.UsersRep;
+//import com.template.Repository.Basic.SystemLog.ExceptionLogActionRep;
+//import com.template.Repository.View.Log_Actions_viewRep;
+//import com.template.Service.Basic.LogService;
+//import com.template.Model.Basic.SystemLog.ExceptionLogAction;
+//import com.template.Model.Basic.LogAction;
+//import com.template.Model.View.Log_Actions_view;
+//
+//import com.template.Repository.Basic.LogActionRep;
+//
+//@Controller
+//@ControllerAdvice(assignableTypes = {LogController.class})
+//
+//public class LogController {
+//	@Autowired
+//	private ExceptionLogActionRep exceptionLogActionRep;
+//	@Autowired
+//	private	LogActionRep logActionRep;
+//	@Autowired
+//	private UsersRep userRep;
+//	@Autowired
+//	private ActionsRep actionsRep;
+//	@Autowired
+//	private Log_Actions_viewRep log_Actions_viewRep;
+//	@Autowired
+//	public LogService logActionService;
+//	@Value("${page.size}")
+//	int itemCountInPage;
+//	
+//	
+//	//@PreAuthorize("hasPermission('log', 'logaction_index')")
+//	@GetMapping("/log/logaction/index")
+//	public String indexLogAction(Model model, final RedirectAttributes redirectAttributes,@RequestParam(name = "page", required = false) Integer page) {
+//		String result;
+//		if(page== null)
+//			page = 0;
+//		Page<LogAction> logactionPage = logActionRep.findAll(PageRequest.of(page,itemCountInPage));
+//		logActionService.addLogAction("log_logaction_index", "");
+//		model.addAttribute("logactionList", logactionPage.getContent());
+//		model.addAttribute("pageInfo", PageInfo.getPageInfo(logactionPage));
+//		result = "/log/index";
+//		return result;
+//	}
+//	@GetMapping("/logaction/search")
+//	public String searchget(Model model) {
+//		String result;
+//		model.addAttribute("user", userRep.getAllUsers());
+//		model.addAttribute("action", actionsRep.findAll());
+//		model.addAttribute("log", new LogActionSearchCriteria());
+//		result = "/log/search";
+//		return result;
+//	}
+//	
+//	@PostMapping("/logaction/search")
+//	public String searchpost(@RequestParam(name = "page", required = false) Integer page,
+//			@ModelAttribute("log") LogActionSearchCriteria p, Model model, HttpServletRequest request) {
+//		String result;
+//		if (p.getUser_id() != 0 || p.getAction_id() != 0 || p.getDate_from() != null || p.getDate_to() != null
+//				|| p.getDescription() != null) {
+//			List<Log_Actions_view> searchResult = null;
+//			String date_from = "", date_to = "", value = "";
+//			if (!p.getDate_from().isEmpty())
+//				date_from = p.getDate_from();
+//			if (!p.getDate_to().isEmpty())
+//				date_to = p.getDate_to();
+//			if (!p.getDescription().isEmpty())
+//				value = p.getDescription();
+//			if(page == null)
+//				page=1;
+//			searchResult = log_Actions_viewRep.searchlogs(p.getUser_id(), p.getAction_id(), date_from, date_to, value, page-1,
+//					20);
+//			if (searchResult.size() != 0) {
+//				int lastPage = searchResult.get(0).getTotal_count() ;
+//				model.addAttribute("page", page);
+//				model.addAttribute("allsize", lastPage);
+//				model.addAttribute("lastPage", lastPage);
+//				model.addAttribute("searchResult", searchResult);
+//				model.addAttribute("size", 20);
+//			}
+//				model.addAttribute("log", p);
+//			}
+//		model.addAttribute("user", userRep.getAllUsers());
+//		model.addAttribute("action", actionsRep.findAll());
+//		result = "/log/search";
+//		return result;
+//	}
+//	@GetMapping("/log/exclogaction/index")
+//	public String indexExceptionLogAction(Model model, final RedirectAttributes redirectAttributes) {
+//		String result;
+//		List<ExceptionLogAction> exclogaction = exceptionLogActionRep.findAll();
+//		model.addAttribute("exclogaction", exclogaction);
+//		result = "/log/indexExceptionLogAction";
+//		return result;
+//	}
+//	@ModelAttribute("title")
+//	public String pageTitle() {
+//		return "التتبع";
+//	}
+//}

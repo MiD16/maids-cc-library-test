@@ -1,0 +1,10 @@
+package com.Base.Constant;
+
+public class CFilterConstant 
+{
+	public static final String AUTH_FILTER = "AUTH_FILTER";
+	public static final String BASIC_AUTH_FILTER = "BASIC_AUTH_FILTER";
+	public static final String XSS_FILTER = "XSS_FILTER";
+	public static final String HTTP_METHOD_FILTER = "HTTP_METHOD_FILTER";
+	public static final String HTTP_METHOD_OVERRIDE_FILTER = "HTTP_METHOD_OVERRIDE_FILTER";
+}

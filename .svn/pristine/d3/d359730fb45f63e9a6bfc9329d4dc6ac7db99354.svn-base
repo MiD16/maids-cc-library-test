@@ -1,0 +1,23 @@
+package com.template.Repository.Table.Product;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import com.template.Model.Table.Products.AccountTypeNature;
+
+@Repository
+public interface AccountTypeNatureRepository extends JpaRepository <AccountTypeNature, Long> {
+	
+	@Query("Select a from AccountTypeNature a where a.isDeleted = 0")
+	public List<AccountTypeNature> getAll();
+	
+	@Query("Select a From AccountTypeNature a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<AccountTypeNature> getAllDeleted();
+	
+	@Query("Select a From AccountTypeNature a WHERE a.isDeleted = 0 and a.accountTypeId.id=:accountTypeId order by a.id desc")
+	public List<AccountTypeNature> getAllAccountTypeNature(@Param("accountTypeId") long accountTypeId);
+
+}

@@ -1,0 +1,56 @@
+package com.template.Class.OneInSession;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+
+import com.template.Class.UserInformation;
+
+public class CustomLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler
+{
+
+
+    @Override
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException
+    {        
+    	
+
+    	try {
+//    		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+//    				.getPrincipal();
+//    		
+//    		for(int i=0;i<activeUserStore.getUsers().size();i++)
+//    		{
+//    			if(activeUserStore.getUsers().get(i).getName().equals(userInformation.getUsername())&& activeUserStore.getUsers().get(i).getValue().equals(request.getRemoteAddr()))
+//    				{
+//    				activeUserStore.users.remove(i);
+//    				break;
+//    				}
+//    				
+//    		}
+    		
+    		
+    		
+    	} catch (Exception e) {
+    		// TODO: handle exception
+    	}
+    	
+        if(request.getParameter("param")!=null&&request.getParameter("param").equals("message"))
+        {
+            response.sendRedirect(request.getContextPath()+"/login?message=repeat");
+        }
+        else
+        {
+            response.sendRedirect(request.getContextPath() + "/login");
+        }
+    }
+}
+

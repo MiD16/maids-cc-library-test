@@ -1,0 +1,32 @@
+package com.template.Repository.Basic;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.RoleAction;
+import com.template.Model.Basic.UserRole;
+
+@Repository
+public interface RoleActionRep extends JpaRepository<RoleAction, Integer> {
+
+	@Query("Select a from RoleAction a where a.role.ID=:id  and a.is_deleted !=1")
+	public Page<RoleAction> getRoleActionByRoleId(@Param("id") int id,PageRequest pageRequest);
+
+    //#{principal.getRole_id()}  to access userDetails object and get current user principal
+	@Query("Select a from RoleAction a where a.role.ID= ?#{principal.getRole_id()}  and a.is_deleted!=1")
+	public List<RoleAction> getRoleActionByuser();
+	
+	@Query("Select a from RoleAction a where a.role.ID=:id  and a.is_deleted!=1")
+	public List<RoleAction> getRoleActionByRoleId(@Param("id") int id);
+	
+	@Query("Select a from RoleAction a where  a.role.ID=:roleid and a.action.ID=:actionid   ")
+	public List<RoleAction> getRoleActionByRoleIdandActionId(@Param("actionid") int actionid,@Param("roleid") int roleid);
+	
+
+}

@@ -1,0 +1,27 @@
+package com.template.Action.SubpoenaRequestDetails;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.UPDATE_SUBPOENA_REQUEST_DETAILS)
+@Lazy
+public class CASubpoenaRequestDetailsUpdate extends CAction {
+	public CASubpoenaRequestDetailsUpdate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.SUBPONEA_REQUEST_DETAILS_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.SUBPONEA_REQUEST_DETAILS_IS_NOT_EXIST);
+		addBusinessnRule(CBusinessRuleConstant.IND_SUBPONEA_REQUEST_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.SUBPONEA_REQUEST_IS_NOT_DELETED);
+	}
+}

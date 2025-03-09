@@ -1,0 +1,169 @@
+package com.template.Service.Table.AllIndexes;
+
+//package com.template.Service.Table.Commission;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.template.Class.Commission.*;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.Action;
+import com.template.Model.Table.AllIndexes.ActionCustomerNatureInfo;
+import com.template.Repository.Basic.ActionsRep;
+import com.template.Repository.Table.AllIndexes.IndCustomerNatureRepository;
+import com.template.Service.Basic.ActionService;
+
+
+
+
+
+
+@Service
+public class ActionCustomerNaureService {
+	
+	/*
+	
+	@Autowired
+	private ActionsRep actionsRep;
+
+	@Autowired
+	ActionCustomerNatureRepository actionCustomerNatureRepository;
+
+	@Autowired
+	ActionService actionService;
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	public class ActionCommissionService {
+		
+		public List<Action> findAll(Long id) {
+			List<Action>  action = actionsRep.getAllActionCommissions(id);
+			return actionCommissions;
+		}
+
+		public ActionCommission findById(Long id) {
+			Optional<ActionCommission> optional = actionCommissionRepository.findById(id);
+			if (optional.isEmpty())
+				throw new NoDataFoundException("No ActionCommission with ID : " + id);
+			return optional.get();
+		}
+
+		public List<ActionCommission> save(ActionCommissionInfo actionCommissionInfo) {
+			List<ActionCommission> actionCommissions = findAll(actionCommissionInfo.getCommission().getId());
+
+			// if actionCommissions list is empty => no actions for this commission
+			if (actionCommissions.isEmpty()) {
+				actionCommissions = new ArrayList<ActionCommission>();
+			}
+			// if actionCommissions list have data and the list from JSP don't have data
+			// then delete all data from actionCommissions
+			if (!actionCommissions.isEmpty() && actionCommissionInfo.getActionCommissions() == null) {
+				for (int i = 0; i < actionCommissions.size(); i++) {
+					actionCommissions.get(i).setIsDeleted(1);
+					actionCommissions.get(i).setDeletedDate(getCurrentDate());
+					actionCommissions.get(i).setDeletedBy(0);
+				}
+			}
+
+			// if list actionCommissionInfo.getActionCommissions() from JSP has data
+			else if (actionCommissionInfo.getActionCommissions() != null) {
+				for (int i = 0; i < actionCommissionInfo.getActionCommissions().size(); i++) {
+					int id = actionCommissionInfo.getActionCommissions().get(i).getAction().getID();
+					Optional<ActionCommission> cOptional = actionCommissions.stream()
+							.filter(actionCommission -> actionCommission.getAction().getID() == id).findFirst();
+
+					if (cOptional.isEmpty()) {
+						ActionCommission actionCommission = new ActionCommission();
+						actionCommission.setAction(actionCommissionInfo.getActionCommissions().get(i).getAction());
+						actionCommission.setIsDeleted(0);
+						actionCommission.setInsertBy(0);
+						actionCommission.setIsEnableFlag(0);
+						actionCommission.setCommission(actionCommissionInfo.getCommission());
+						actionCommission.setActivationFlag(0);
+						actionCommissions.add(actionCommission);
+					}
+				}
+				for (int i = 0; i < actionCommissions.size(); i++) {
+					int id = actionCommissions.get(i).getAction().getID();
+
+					Optional<ActionCommission> cOptional = actionCommissionInfo.getActionCommissions().stream()
+							.filter(actionCommission -> actionCommission.getAction().getID() == id).findFirst();
+					if (cOptional.isEmpty()) {
+						actionCommissions.get(i).setIsDeleted(1);
+						actionCommissions.get(i).setDeletedDate(getCurrentDate());
+						actionCommissions.get(i).setDeletedBy(0);
+						actionCommissions.get(i).setIsEnableFlag(0);
+						actionCommissions.get(i).setActivationFlag(0);
+					}
+
+				}
+			}
+
+
+			return actionCommissionRepository.saveAll(actionCommissions);
+		}
+
+		public List<ActionCommission> deleteAllActionCommission(Long id) {
+			List<ActionCommission> actionCommissions = findAll(id);
+			for (int i = 0; i < actionCommissions.size(); i++) {
+				actionCommissions.get(i).setDeletedBy(0);
+				actionCommissions.get(i).setIsDeleted(1);
+				actionCommissions.get(i).setDeletedDate(getCurrentDate());
+			}
+			return actionCommissionRepository.saveAll(actionCommissions);
+		}
+
+		public List<ActionCommission> setActivationAllActionCommission(ActionCommissionInfo actionCommissionInfo) {
+			List<ActionCommission> actionCommissions = findAll(actionCommissionInfo.getCommission().getId());
+
+			// activate all action from jsp in database
+			for (int i = 0; i < actionCommissions.size(); i++) {
+				Long id = actionCommissions.get(i).getId();
+
+				Optional<ActionCommission> cOptional = actionCommissionInfo.getActionCommissions().stream()
+						.filter(actionCommission -> actionCommission.getId() == id).findFirst();
+				actionCommissions.get(i).setActivationFlag(cOptional.get().getActivationFlag());
+				//if commission is enabled and activationFlag in action commission = 1 then set IsEnableFlag in actionCommission = 1 
+				if (actionCommissionInfo.getCommission().getIsEnableFlag() == 1 && cOptional.get().getActivationFlag() == 1)
+					actionCommissions.get(i).setIsEnableFlag(1);
+				//else IsEnableFlag = 0
+				else if (cOptional.get().getActivationFlag() == 0)
+					actionCommissions.get(i).setIsEnableFlag(0);
+			}
+			return actionCommissionRepository.saveAll(actionCommissions);
+		}
+
+		public ActionCommission delete(Long id) {
+			Optional<ActionCommission> aOptional = actionCommissionRepository.findById(id);
+			if (aOptional.isEmpty()) {
+				throw new NoDataFoundException("ActionCommission With ID : " + id + " Not Found");
+			}
+
+			aOptional.get().setIsDeleted(1);
+			aOptional.get().setDeletedDate(getCurrentDate());
+			aOptional.get().setIsEnableFlag(0);
+
+			return actionCommissionRepository.save(aOptional.get());
+		}
+
+		private static java.sql.Date getCurrentDate() {
+			java.util.Date today = new java.util.Date();
+			return new java.sql.Date(today.getTime());
+		}
+
+}*/}

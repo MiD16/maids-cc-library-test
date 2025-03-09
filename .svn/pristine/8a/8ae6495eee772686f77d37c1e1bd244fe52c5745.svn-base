@@ -1,0 +1,195 @@
+package com.template.Controller.Table.Interset;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.Base.Class.CResponse;
+import com.Base.DTO.CResponseDTO;
+import com.template.Class.Pageing.PageInfo;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.Interests.CurrencySegments;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+import com.template.Service.Table.Interest.CurrencySegmentsService;
+import com.template.Service.Table.Product.AccCurrencyService;
+
+@Controller
+@RequestMapping("currencySegments")
+public class CurrencySegmentsController {
+
+	@Value("${page.size}")
+	int itemCountInPage;
+
+	@Autowired
+	CurrencySegmentsService currencySegmentsService;
+
+	@Autowired
+	AccIndInterestTypeService accIndInterestTypeService;
+	
+	@Autowired
+	AccCurrencyService accCurrencyService;
+	
+	@GetMapping("/index")
+	public String index(Model model, final RedirectAttributes redirectAttributes,
+			@RequestParam(name = "page", required = false) Integer page) {
+		String result;
+		CResponse response = new CResponse();
+		if (page == null)
+			page = 0;
+		//get list of currency segments
+		response = currencySegmentsService.findAllCurrencySegments(PageRequest.of(page, itemCountInPage));
+		Page<CurrencySegments> currencySegmentsList = (Page<CurrencySegments>) response.getReturnedObject();
+		//add to model
+		model.addAttribute("currencySegmentsList", currencySegmentsList.getContent());
+		model.addAttribute("pageInfo", PageInfo.getPageInfo(currencySegmentsList));
+		result = "/currency-segments/index";
+		return result;
+	}
+
+	@GetMapping("/create")
+	public String create(Model model,
+			final RedirectAttributes redirectAttributes) {
+		String result;
+		CResponse response = null;
+		//init object
+		CurrencySegments currencySegment= new CurrencySegments();
+		//get list of interest types
+		response=accIndInterestTypeService.findAllIndInterestType();
+		List<AccIndInterestType> indInterestTypes =(List<AccIndInterestType>) response.getReturnedObject();
+		//get list of currencies
+		response=accCurrencyService.getAll();
+		List<AccCurrency> currencies =(List<AccCurrency>) response.getReturnedObject();
+		//add to model
+		model.addAttribute("currencySegment", currencySegment);
+		model.addAttribute("indInterestTypes", indInterestTypes);
+		model.addAttribute("currencies", currencies);
+		result = "/currency-segments/create";
+		return result;
+	}
+	
+	
+	@GetMapping("/update")
+	public String update(@RequestParam(value = "id", required = false) Long id, Model model,
+			final RedirectAttributes redirectAttributes) {
+		String result;
+		CResponse response = null;
+		CurrencySegments currencySegment=null;
+		//get currency segment from database
+		response = currencySegmentsService.findById(id);
+		currencySegment = (CurrencySegments) response.getReturnedObject();
+		//get list of interest types
+		response=accIndInterestTypeService.findAllIndInterestType();
+		List<AccIndInterestType> indInterestTypes =(List<AccIndInterestType>) response.getReturnedObject();
+		//get list of currencies
+		response=accCurrencyService.getAll();
+		List<AccCurrency> currencies =(List<AccCurrency>) response.getReturnedObject();
+		//add to model
+		model.addAttribute("currencySegment", currencySegment);
+		model.addAttribute("indInterestTypes", indInterestTypes);
+		model.addAttribute("currencies", currencies);
+		result = "/currency-segments/create";
+		return result;
+	}
+
+	@PostMapping("/create/save")
+	public String saveCreate(@Valid @ModelAttribute("currencySegment") CurrencySegments currencySegment,
+			Model model, final RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		//save in database
+		response = currencySegmentsService.saveCreate(currencySegment, request.getContextPath());
+		responseDTO = new CResponseDTO();
+		//get result
+		responseDTO.setSuccess(response.isSuccess());
+		if (response.isSuccess()) {
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+		} else {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		result = "redirect:/currencySegments/index";
+		return result;
+	}
+	
+	@PostMapping("/update/save")
+	public String saveUpdate(@Valid @ModelAttribute("currencySegment") CurrencySegments currencySegment,
+			Model model, final RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		//save in database
+		response = currencySegmentsService.saveUpdate(currencySegment, request.getContextPath());
+		responseDTO = new CResponseDTO();
+		//get result
+		responseDTO.setSuccess(response.isSuccess());
+		if (response.isSuccess()) {
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+		} else {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		result = "redirect:/currencySegments/index";
+		return result;
+	}
+	@GetMapping("/details")
+	public String details(@RequestParam(value = "id", required = true) Long id, Model model,
+			final RedirectAttributes redirectAttributes) {
+		String result;
+		CResponse response = new CResponse();
+		//get currency segment from database
+		response = currencySegmentsService.findById(id);
+		CurrencySegments currencySegment= (CurrencySegments) response.getReturnedObject();
+		//add to model
+		model.addAttribute("currencySegment", currencySegment);
+		result = "/currency-segments/details";
+		return result;
+	}
+
+	@GetMapping("/delete")
+	public String delete(@RequestParam(value = "id", required = true) Long id, Model model,
+			final RedirectAttributes redirectAttributes) {
+		String result;
+		CResponse response = new CResponse();
+		//get currency segment from database
+		response = currencySegmentsService.findById(id);
+		CurrencySegments currencySegment= (CurrencySegments) response.getReturnedObject();
+		//add to model
+		model.addAttribute("currencySegment", currencySegment);
+		result = "/currency-segments/delete";
+		return result;
+	}
+
+	@GetMapping("/save/delete")
+	public String saveDelete(@RequestParam(value = "id", required = true) Long id, Model model,
+			final RedirectAttributes redirectAttributes) throws Exception {
+		String result;
+		CResponse response = null;
+		CResponseDTO responseDTO = null;
+		//save in database
+		response = currencySegmentsService.delete(id);
+		responseDTO = new CResponseDTO();
+		//get result
+		responseDTO.setSuccess(response.isSuccess());
+		if (response.isSuccess()) {
+			responseDTO.setSuccessMessage(response.getSuccessMessage());
+		} else {
+			responseDTO.setErrorMessage(response.getErrorMessage());
+		}
+		redirectAttributes.addFlashAttribute("response", responseDTO);
+		result = "redirect:/currencySegments/index";
+		return result;
+	}
+
+}

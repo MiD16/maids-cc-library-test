@@ -1,0 +1,23 @@
+package com.template;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+
+@SpringBootApplication
+@EnableAspectJAutoProxy(proxyTargetClass=true) 
+@EnableScheduling
+@ComponentScan({"com.Base", "com.template"})
+@EnableFeignClients
+public class  CoreAdminApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(CoreAdminApplication.class, args);
+	}
+	  
+
+}

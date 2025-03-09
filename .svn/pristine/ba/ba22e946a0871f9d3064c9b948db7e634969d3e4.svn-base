@@ -1,0 +1,107 @@
+package com.template.Model.Table.Holiday;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.template.Model.Table.AllIndexes.IndMonth;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Date;
+
+
+/**
+ * The persistent class for the CUSTOMER_ACCOUNT database table.
+ * 
+ */
+@Entity
+@Table(name="IND_HOLIDAYS")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@ToString
+@NoArgsConstructor
+
+public class IndHolidays  {
+
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name="NAME_A")
+	private String nameA;
+
+	@Column(name="NAME_B")
+	private String nameB;
+
+	@Column(name="HOLIDAY_DAY")
+	private int holidayDay;
+	
+	@Column(name="IS_ENABLED_FLAG")
+	private int isEnableFlag;
+	
+	@Column(name="IS_GENERETED_DAYS")
+	private int isGeneratedDays;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="HOLIDAY_MONTH_ID")
+	private IndMonth indMonth;
+
+	
+
+	
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+	
+	
+
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	
+	@Column(name="IS_DELETED")
+	private Integer isDeleted;
+	
+	
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+
+
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+	
+	
+	@Column(name="NOTE")
+	private String note;
+	  @PrePersist
+	  void createdAt() {
+	    this.insertDate = this.lastUpdateDate = new Date();
+	    this.isDeleted = this.isGeneratedDays= this.isEnableFlag= 0;
+	    
+	  }
+	  
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	  }
+
+
+
+
+}

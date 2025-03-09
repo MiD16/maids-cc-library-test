@@ -1,0 +1,27 @@
+package com.template.Repository.View;
+
+
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.View.RoleActionOpposite;
+
+@Repository
+public interface RoleActionOppositeRep  extends JpaRepository<RoleActionOpposite,Integer>{
+	
+
+	
+	@Query("Select a from RoleActionOpposite a where a.role_id=:id")
+	public List<RoleActionOpposite> getActionByRoleID(@Param("id") int id);
+
+
+	
+
+
+}
+

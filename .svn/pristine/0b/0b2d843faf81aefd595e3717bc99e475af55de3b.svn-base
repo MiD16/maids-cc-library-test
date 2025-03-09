@@ -1,0 +1,47 @@
+//package com.template.Service.Table;
+//
+//import java.util.List;
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.data.domain.Page;
+//import org.springframework.data.domain.PageRequest;
+//import org.springframework.stereotype.Service;
+//
+//import com.template.Class.Pageing.PageInfo;
+//import com.template.Class.Pageing.PageResponse;
+//import com.template.API.Response.DTO.Data.UserDTO;
+//import com.template.API.Response.DTO.Mapper.UserMapper;
+//import com.template.Model.Basic.User;
+//import com.template.Repository.Basic.UsersRep;
+//import com.template.API.Request.Request;
+//
+//
+//@Service
+//public class DemoService {
+//	@Autowired
+//	UsersRep usersRep;
+//	@Autowired
+//	UserMapper userMapper;
+//	PageRequest pageRequest  = null;
+//	PageResponse pageResponse = null;
+//	
+//	
+//	public PageResponse<UserDTO> getAllUser(Request request) {
+//		Page<User> userPage;
+//		PageInfo<User> pageInfo = null;
+//		List<UserDTO> userDTOList ;
+//		pageRequest = PageRequest.of(request.getPage(),request.getSize());
+//		userPage = usersRep.getAllUserAsPage(pageRequest);
+//		if (userPage.getContent() != null && userPage.getContent().size() > 0) {
+//			pageInfo = PageInfo.getPageInfo(userPage);
+//			userDTOList = userMapper.convertUserListToUserDTOList(userPage.getContent());
+//			pageResponse = new PageResponse<UserDTO>(userDTOList, pageInfo);
+//		}
+//		return pageResponse;
+//		
+//		
+//		
+//		
+//	}
+//
+//}

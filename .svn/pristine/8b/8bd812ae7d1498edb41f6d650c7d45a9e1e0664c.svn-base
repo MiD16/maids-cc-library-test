@@ -1,0 +1,19 @@
+package com.template.API.Response.DTO;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+
+public class CTestEntityDTO {
+	
+	private Long id;
+
+	private String name;
+
+	private String description;
+}

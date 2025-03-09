@@ -1,0 +1,192 @@
+package com.template.Service.Table.Commission;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.Commission.*;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.Commission.ActionCommission;
+import com.template.Model.Table.Commission.Commission;
+import com.template.Repository.Table.Commission.ActionCommissionRepository;
+import com.template.Repository.Table.Commission.CommissionRepository;
+//import com.template.Service.Basic.LogService;
+import com.template.Service.Basic.UserService;
+
+@Service
+public class ActionCommissionService {
+//	@Autowired
+//	public LogService logActionService;
+	@Autowired
+	private CommissionRepository commissionRepository;
+	@Autowired
+	CActionHandler actionHandler;
+	@Autowired
+	ActionCommissionRepository actionCommissionRepository;
+
+	@Autowired
+	UserService userService;
+
+	public List<ActionCommission> findAll(Long id) {
+		List<ActionCommission> actionCommissions = actionCommissionRepository.getAllActionCommissions(id);
+		return actionCommissions;
+	}
+
+	public ActionCommission findById(Long id) {
+		Optional<ActionCommission> optional = actionCommissionRepository.findById(id);
+		if (optional.isEmpty())
+			throw new NoDataFoundException("No ActionCommission with ID : " + id);
+		return optional.get();
+	}
+
+	public CResponse save(ActionCommissionInfo actionCommissionInfo) throws Exception {
+		List<ActionCommission> actionCommissions = findAll(actionCommissionInfo.getCommission().getId());
+		CResponse response = new CResponse();
+		Commission commission=actionCommissionInfo.getCommission();
+		response = validateActionCommissionAdd(commission);
+		response.setSuccessMessage("تم تعديل العمليات على العمولات بنجاح");
+		System.err.println(response.getErrorMessage());
+		System.err.println(response.getSuccessMessage());
+
+		// if actionCommissions list is empty => no actions for this commission
+		if (actionCommissions.isEmpty()) {
+			actionCommissions = new ArrayList<ActionCommission>();
+		}
+		// if actionCommissions list have data and the list from JSP don't have data
+		// then delete all data from actionCommissions
+		if (!actionCommissions.isEmpty() && actionCommissionInfo.getActionCommissions() == null) {
+			for (int i = 0; i < actionCommissions.size(); i++) {
+				actionCommissions.get(i).setIsDeleted(1);
+				actionCommissions.get(i).setDeletedDate(getCurrentDate());
+				actionCommissions.get(i).setDeletedBy(0);
+			}
+		}
+
+		// if list actionCommissionInfo.getActionCommissions() from JSP has data
+		else if (actionCommissionInfo.getActionCommissions() != null) {
+			for (int i = 0; i < actionCommissionInfo.getActionCommissions().size(); i++) {
+				int id = actionCommissionInfo.getActionCommissions().get(i).getAction().getID();
+				Optional<ActionCommission> cOptional = actionCommissions.stream()
+						.filter(actionCommission -> actionCommission.getAction().getID() == id).findFirst();
+
+				if (cOptional.isEmpty()) {
+					ActionCommission actionCommission = new ActionCommission();
+					actionCommission.setAction(actionCommissionInfo.getActionCommissions().get(i).getAction());
+					actionCommission.setIsDeleted(0);
+					actionCommission.setInsertBy(0);
+					actionCommission.setIsEnableFlag(0);
+					actionCommission.setCommission(actionCommissionInfo.getCommission());
+					actionCommission.setActivationFlag(0);
+					actionCommissions.add(actionCommission);
+				}
+			}
+			for (int i = 0; i < actionCommissions.size(); i++) {
+				int id = actionCommissions.get(i).getAction().getID();
+
+				Optional<ActionCommission> cOptional = actionCommissionInfo.getActionCommissions().stream()
+						.filter(actionCommission -> actionCommission.getAction().getID() == id).findFirst();
+				if (cOptional.isEmpty()) {
+					actionCommissions.get(i).setIsDeleted(1);
+					actionCommissions.get(i).setDeletedDate(getCurrentDate());
+					actionCommissions.get(i).setDeletedBy(userService.getAuthenticatedUser().getID());
+					actionCommissions.get(i).setIsEnableFlag(0);
+					actionCommissions.get(i).setActivationFlag(0);
+				}
+
+			}
+		}
+
+
+		 actionCommissionRepository.saveAll(actionCommissions);
+		 return response;
+	}
+
+	public List<ActionCommission> deleteAllActionCommission(Long id) {
+		List<ActionCommission> actionCommissions = findAll(id);
+		for (int i = 0; i < actionCommissions.size(); i++) {
+			actionCommissions.get(i).setDeletedBy(0);
+			actionCommissions.get(i).setIsDeleted(1);
+			actionCommissions.get(i).setDeletedDate(getCurrentDate());
+		}
+		return actionCommissionRepository.saveAll(actionCommissions);
+	}
+
+	public List<ActionCommission> setActivationAllActionCommission(ActionCommissionInfo actionCommissionInfo) throws Exception {
+		List<ActionCommission> actionCommissions = findAll(actionCommissionInfo.getCommission().getId());
+
+		// activate all action from jsp in database
+		for (int i = 0; i < actionCommissions.size(); i++) {
+			Long id = actionCommissions.get(i).getId();
+
+			Optional<ActionCommission> cOptional = actionCommissionInfo.getActionCommissions().stream()
+					.filter(actionCommission -> actionCommission.getId() == id).findFirst();
+			if(!actionCommissions.get(i).getActivationFlag().equals(cOptional.get().getActivationFlag())) {
+				actionCommissions.get(i).setActivationFlag(cOptional.get().getActivationFlag());
+				actionCommissions.get(i).setLastUpdateBy(userService.getAuthenticatedUser().getID());
+			}
+			//if commission is enabled and activationFlag in action commission = 1 then set IsEnableFlag in actionCommission = 1 
+			//if (actionCommissionInfo.getCommission().getIsEnableFlag() == 1 && cOptional.get().getActivationFlag() == 1)
+				//actionCommissions.get(i).setIsEnableFlag(1);
+			//else IsEnableFlag = 0
+//			else if (cOptional.get().getActivationFlag() == 0)
+//				actionCommissions.get(i).setIsEnableFlag(0);
+		}
+		return actionCommissionRepository.saveAll(actionCommissions);
+	}
+
+	public ActionCommission delete(Long id) {
+		Optional<ActionCommission> aOptional = actionCommissionRepository.findById(id);
+		if (aOptional.isEmpty()) {
+			throw new NoDataFoundException("ActionCommission With ID : " + id + " Not Found");
+		}
+
+		aOptional.get().setIsDeleted(1);
+		aOptional.get().setDeletedDate(getCurrentDate());
+		aOptional.get().setIsEnableFlag(0);
+
+		return actionCommissionRepository.save(aOptional.get());
+	}
+
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+	public CResponse validateActionCommissionAdd(Commission commission) throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				if (commission == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.COMMISSION_NOT_FOUND.toString());
+					response.setErrorMessage("العملة  غير موجودة");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.COMMISSION.toString(), commission);
+				actionValidationResult = actionHandler.validate(CActionConstant.ACTION_COMMISSION_ADD, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+}

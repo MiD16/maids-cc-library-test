@@ -1,0 +1,21 @@
+package com.template.Action.IndCustomerNature;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.UPDATE_Ind_Customer_Nature)
+@Lazy
+public class CAIndCustomerNatureUpdate extends CAction {
+	public CAIndCustomerNatureUpdate(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.Ind_Customer_Nature_IS_NOT_DELETE);
+		addBusinessnRule(CBusinessRuleConstant.Ind_Customer_Nature_IS_NOT_EXIST);
+	}
+}

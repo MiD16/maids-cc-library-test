@@ -1,0 +1,26 @@
+package com.Base.API.Response.DTO.Mapper;
+
+import com.Base.API.Response.DTO.CErrorDTO;
+import com.Base.Class.CError;
+
+public class CErrorMapper
+{
+	public static CErrorDTO parse(CError error)
+	{
+		CErrorDTO errorDTO = null;
+		
+		do 
+		{
+			if(error == null) break;
+			
+			errorDTO = new CErrorDTO();	
+			
+			errorDTO.setErrorCode(error.getErrorCode());
+			errorDTO.setErrorDescription(error.getErrorDescription());
+			errorDTO.setErrorMessage(error.getErrorMessage());
+		} 
+		while (false);
+		
+		return errorDTO;	
+	}
+}

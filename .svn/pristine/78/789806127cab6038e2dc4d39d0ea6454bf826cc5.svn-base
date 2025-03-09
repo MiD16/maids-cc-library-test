@@ -1,0 +1,285 @@
+package com.template.Service.Table.Interest;
+
+import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.UserInformation;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.AllIndexes.IndSubpoenaRequest;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.Interests.AccInterest;
+import com.template.Model.Table.Interests.CurrencySegments;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Repository.Table.Interest.CurrencySegmentsRepository;
+import com.template.Repository.Table.SubpoenaRequest.SubpoenaRequestDetailsRep;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+import com.template.Service.Table.AllIndexes.IndSubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.Product.AccCurrencyService;
+
+@Service
+public class CurrencySegmentsService {
+
+
+	@Autowired
+	CurrencySegmentsRepository currencySegmentsRepository;
+	
+	@Autowired
+	AccIndInterestTypeService accIndInterestTypeService;
+	
+	@Autowired
+	AccCurrencyService accCurrencyService;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	//find all not deleted
+	public CResponse findAllCurrencySegments(PageRequest pageRequest) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(currencySegmentsRepository.getAll(pageRequest));
+		return response;
+	}
+
+	//find object by id
+	public CResponse findById(Long id) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(currencySegmentsRepository.findById(id).get());
+		return response;
+	}
+
+	public CResponse saveCreate(CurrencySegments currencySegments, String path) throws Exception {
+		CResponse response = null;
+		//get interest type from database
+	//	AccIndInterestType accIndInterestType = accIndInterestTypeService.findById(currencySegments.getInterestType().getId());
+		//get currency from database
+		AccCurrency currency = accCurrencyService
+				.findById(currencySegments.getCurrency().getId());
+		// call validate for create object
+		response = validateCurrencySegmentCreate(currencySegments,currency, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//set user that created
+		currencySegments.setInsertBy(userService.getAuthenticatedUser().getID());
+		currencySegmentsRepository.save(currencySegments);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+	
+	public CResponse saveUpdate(CurrencySegments currencySegments,  String path) throws Exception {
+		CResponse response = null;
+		//get interest type from database
+		//AccIndInterestType accIndInterestType = accIndInterestTypeService
+	//			.findById(currencySegments.getInterestType().getId());
+		//get currency from database
+		AccCurrency currency = accCurrencyService
+				.findById(currencySegments.getCurrency().getId());
+		// call validate for update object
+		response = validateCurrencySegmentUpdate(currencySegments,currency, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//to get insert date from object in database
+		CurrencySegments tem = currencySegmentsRepository.findById(currencySegments.getId()).get();
+		currencySegments.setInsertDate(tem.getInsertDate());
+		currencySegments.setInsertBy(tem.getInsertBy());
+		//set user that updated 
+		currencySegments.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		currencySegmentsRepository.save(currencySegments);
+		response.setSuccessMessage("تم التعديل بنجاح");
+		return response;
+	}
+	
+	public CResponse delete(Long id) throws Exception {
+		CurrencySegments currencySegments = currencySegmentsRepository.findById(id).get();
+		CResponse response=null;
+		// call validate for delete object
+		response = validateCurrencySegmentDelete(currencySegments);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//soft delete
+		currencySegments.setIsDeleted(1);
+		//set deleted date
+		currencySegments.setDeletedDate(new Date());
+		//set user that deleted 
+		currencySegments.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(currencySegmentsRepository.save(currencySegments));
+		return response;
+	}
+	
+	
+	// validate if can create Currency Segment
+	public CResponse validateCurrencySegmentCreate(CurrencySegments currencySegments,AccCurrency currency,String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The currency Segments exists
+				if (currencySegments == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_SEGMENT_NOT_FOUND.toString());
+					response.setErrorMessage("الشريحة غير موجودة");
+					break;
+				}
+				// check if The interest type exists
+				/*if (accIndInterestType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.IND_INTEREST_TYPE_NOT_FOUND.toString());
+					response.setErrorMessage("نوع الفائدة غير موجود");
+					break;
+				}*/
+				
+				// check if The currency  exists
+				if (currency == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_NOT_FOUND.toString());
+					response.setErrorMessage("العملة غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.CURRENCY_SEGMENTS.toString(), currencySegments);
+				//parameters.addParameter(EKeyCode.IND_INTEREST_TYPE.toString(), accIndInterestType);
+				parameters.addParameter(EKeyCode.CURRENCY.toString(), currency);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_CURRENCY_SEGMENT, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	
+	// validate if can update Currency Segment
+	public CResponse validateCurrencySegmentUpdate(CurrencySegments currencySegments,AccCurrency currency,String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The currency Segments exists
+				if (currencySegments == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_SEGMENT_NOT_FOUND.toString());
+					response.setErrorMessage("الشريحة غير موجودة");
+					break;
+				}
+				// check if The interest type exists
+				/*if (accIndInterestType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.IND_INTEREST_TYPE_NOT_FOUND.toString());
+					response.setErrorMessage("نوع الفائدة غير موجود");
+					break;
+				}*/
+				
+				// check if The currency  exists
+				if (currency == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_NOT_FOUND.toString());
+					response.setErrorMessage("العملة غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.CURRENCY_SEGMENTS.toString(), currencySegments);
+				//parameters.addParameter(EKeyCode.IND_INTEREST_TYPE.toString(), accIndInterestType);
+				parameters.addParameter(EKeyCode.CURRENCY.toString(), currency);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_CURRENCY_SEGMENT.toString(), parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	
+	// validate if can delete Currency Segment
+	public CResponse validateCurrencySegmentDelete(CurrencySegments currencySegments)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The currency Segments exists
+				if (currencySegments == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.CURRENCY_SEGMENT_NOT_FOUND.toString());
+					response.setErrorMessage("الشريحة غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.CURRENCY_SEGMENTS.toString(), currencySegments);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_CURRENCY_SEGMENT.toString(), parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	//check if currency Segment is deleted
+	//return true if deleted
+	//return false if not deleted
+	public boolean checkCurrencySegmentIsDeleted(long id) {
+		CurrencySegments currencySegments= currencySegmentsRepository.findById(id).get();
+		if (currencySegments.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	//check if currency segment is exist
+	//return id if exist
+	//return null if not exist
+	public Long checkCurrencySegmentIsExist(CurrencySegments currencySegments) {
+		CurrencySegments CurrencySegmentFromDB= currencySegmentsRepository.getCurrencySegment(currencySegments.getCurrency().getId(),
+				currencySegments.getFromSeg(),
+				currencySegments.getToSeg()
+				);
+		if (CurrencySegmentFromDB!= null) {
+			if (currencySegments.getId() == null
+					|| (currencySegments.getId() != null && !currencySegments.getId().equals(CurrencySegmentFromDB.getId()) )) {
+				return CurrencySegmentFromDB.getId();
+			}
+		}
+		return null;
+	}
+
+}

@@ -1,0 +1,61 @@
+package com.template.Class.Index;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+
+@ToString
+public class SearchCustomer {
+	
+	private String nationalNumber;
+	
+	private String firstNameA;
+	
+	private String fatherNameA;
+	
+	private String lastNameA;
+	
+	private String motherNameA;
+	
+	private String firstNameB;
+	
+	private String fatherNameB;
+	
+	private String lastNameB;
+	
+	private String motherNameB;
+	
+	private String nameCompanyA;
+	
+	private String nameCompanyB;
+	
+	private Integer ecoActiv;
+	
+	private Integer compType;
+	
+	private Integer comprRsidCountry;
+	
+	private String cif;
+	
+	private Integer customerTypeId;
+	
+	private String customerTypeName;
+	
+	private String custNameA;
+	
+	private Integer branchId;
+	
+	private Integer id;
+	
+	private Integer dormant_flag;
+	
+	private Integer suspend_flag;
+	
+
+}

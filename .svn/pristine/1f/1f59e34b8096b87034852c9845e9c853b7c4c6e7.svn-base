@@ -1,0 +1,37 @@
+package com.template.BusinessRule.InterestRateSegments;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Interests.AccInterestRateSegments;
+import com.template.Service.Table.Interest.InterestRateSegmentsService;
+@Component(CBusinessRuleConstant.INTEREST_RATE_SEGMENT_IS_NOT_DELETED)
+@Lazy
+public class CBRInterestRateSegmentIsNotDeleted implements IBusinessRule {
+	@Autowired
+	InterestRateSegmentsService interestRateSegmentsService;
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccInterestRateSegments interestRateSegments = null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				interestRateSegments= (AccInterestRateSegments) parameters.getParameter(EKeyCode.INTEREST_RATE_SEGMENT.toString());
+				if (interestRateSegmentsService.checkInterestRateSegmentIsDeleted(interestRateSegments.getId())) {		
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage("نسبة الفائدة  للشريحة محذوفة");
+						actionValidationResult.setErrorCode(EErrorCode.INTEREST_RATE_SEGMENT_IS_DELETED.toString());
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		return actionValidationResult;
+	}
+}

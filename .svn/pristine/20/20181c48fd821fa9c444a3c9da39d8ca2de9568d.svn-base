@@ -1,0 +1,30 @@
+package com.template.Action.User;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.CHANGE_PASSWORD_USER)
+@Lazy
+public class CAChangePasswordUser extends CAction 
+{
+	public CAChangePasswordUser(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		addBusinessnRule(CBusinessRuleConstant.USER_IS_NOT_DELETED);
+		addBusinessnRule(CBusinessRuleConstant.USER_IS_NOT_LOCK);
+		addBusinessnRule(CBusinessRuleConstant.USER_IS_VALIDATE_PASSWORD);
+		
+	}
+}

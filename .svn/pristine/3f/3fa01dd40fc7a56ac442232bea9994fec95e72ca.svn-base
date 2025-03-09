@@ -1,0 +1,19 @@
+package com.template.Action.InterestRate;
+import javax.annotation.PostConstruct;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+@Component(CActionConstant.DELETE_INTEREST_RATE)
+@Lazy
+public class CAInterestRateDelete extends CAction {
+	public CAInterestRateDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.INTEREST_RATE_IS_NOT_DELETED);
+	}
+}

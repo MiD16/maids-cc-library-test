@@ -1,0 +1,25 @@
+package com.template.Action.IndexPosition;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+@Component(CActionConstant.DELETE_IND_POSITION)
+@Lazy
+public class CAIndPositionDelete extends CAction {
+	public CAIndPositionDelete(ApplicationContext applicationContext) {
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init() {
+		addBusinessnRule(CBusinessRuleConstant.IND_POSITION_IS_NOT_DELETED);
+	}
+}
+ 

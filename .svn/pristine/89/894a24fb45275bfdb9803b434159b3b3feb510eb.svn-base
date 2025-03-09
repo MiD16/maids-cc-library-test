@@ -1,0 +1,93 @@
+package com.template.Service.Basic;
+
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import com.template.Class.UserInformation;
+import com.template.Enum.NotificationType;
+import com.template.Model.Basic.Notification;
+import com.template.Model.Basic.User;
+import com.template.Repository.Basic.NotificationsRep;
+import com.template.Repository.Basic.UsersRep;
+
+
+@Service
+public class NotificationsService {
+	@Autowired
+	private UsersRep userRep;
+	@Autowired
+	private NotificationsRep notificationsRep;
+	
+	public List<Notification> getTopCertNotif(int user_id) {
+
+		List<Notification> notifList = new ArrayList<Notification>();
+		notifList = notificationsRep.getLastTenNotificationsByUserId(user_id);
+		return notifList;
+	}
+
+	public Notification changeStatus(int user_id, int id) {
+		Notification notif = notificationsRep.findById(id).get();
+		notif.setSeen(1);
+		return notificationsRep.save(notif);
+	}
+
+	public void changeStatusAll(int user_id) {
+
+		List<Notification> notifList = new ArrayList<Notification>();
+		notifList = notificationsRep.getLastTenNotificationsByUserId(user_id);
+		Iterator<Notification> it = notifList.iterator();
+		Notification not;
+		while (it.hasNext()) {
+			not = it.next();
+			not.setSeen(1);
+			notificationsRep.save(not);
+		}
+	}
+
+	public void addNotification(User user_to_id, NotificationType notificationType, String nav, String navLink) {
+		Notification notification = new Notification();
+
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		notification.setUser_from(userRep.findById(userInformation.getUser_id()).get());
+		notification.setNotif_date(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+		notification.setUser_to(user_to_id);
+		notification.setType(notificationType.ordinal());
+		notification.setNav(nav);
+		notification.setNavLink(navLink);
+		notificationsRep.save(notification);
+
+	}
+	public void addNotificationFromAnonymous(User user_to_id, NotificationType notificationType, String nav, String navLink) {
+		Notification notification = new Notification();
+
+		
+		notification.setNotif_date(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+		//notification.setUser_from(userRep.getByRolename("visitor"));
+		notification.setUser_to(user_to_id);
+		notification.setType(notificationType.ordinal());
+		notification.setNav(nav);
+		notification.setNavLink(navLink);
+		notificationsRep.save(notification);
+
+	}
+	
+	public List<Notification> getAllNotification(Authentication auth){
+		
+		UserInformation userInformation = (UserInformation) auth.getPrincipal();
+		List<Notification> notifiList = notificationsRep.getAllNotificationsByUserId(userInformation.getUser_id());
+		return notifiList;
+	}
+	
+	
+	
+}

@@ -1,0 +1,22 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.*;
+
+@Repository
+public interface IndProfessionRepository extends JpaRepository <IndProfession, Long> {
+	
+	@Query("Select a from IndProfession a where a.isDeleted != 1")
+	public List<IndProfession> getAll();
+	
+	@Query("Select a From IndProfession a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<IndProfession> getAllDeleted();
+	
+	
+	
+	
+}

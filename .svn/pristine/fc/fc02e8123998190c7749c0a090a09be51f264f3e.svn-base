@@ -1,0 +1,21 @@
+package com.template.Class.Commission;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class CommissionClass {
+	
+	private String nameA;
+	private String nameB;
+	private Integer precentageFlag;
+	private Integer isEnableFlag;
+	private Integer indCommissionType;
+
+}

@@ -1,0 +1,48 @@
+package com.template.BusinessRule.User;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+import com.template.Enum.EKeyCode;
+
+import com.template.Model.Basic.User;
+
+import com.template.Service.Basic.UserRoleService;
+
+@Component(CBusinessRuleConstant.USER_IS_NOT_LINKED_WITH_USER_ROLE)
+@Lazy
+public class CBRUserIsNotLinkedWithUserRole implements IBusinessRule {
+
+	@Autowired
+	UserRoleService userRoleService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		User user = null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+
+				user = (User) parameters.getParameter(EKeyCode.USER.toString());
+
+				if (userRoleService.check_user_is_linked_with_user_role(user)) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage(" لا يمكن حذف المستخدم بسبب وجود  أدوار   مرتبطة به   ");
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

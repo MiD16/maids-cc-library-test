@@ -1,0 +1,28 @@
+package com.template.Action.ActionCustomerNature;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+
+@Component(CActionConstant.CREATE_Customer_NAture)
+@Lazy
+public class CAIActionCustomerNAtureCreate extends CAction 
+{
+	public CAIActionCustomerNAtureCreate(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		//addBusinessnRule(CBusinessRuleConstant.IND_SOCIAL_STATUS_IS_VALID);
+		addBusinessnRule(CBusinessRuleConstant.Customer_NAture_IS_NOT_EXIST);
+	}}

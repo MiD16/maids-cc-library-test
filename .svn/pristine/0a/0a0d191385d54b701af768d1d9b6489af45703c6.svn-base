@@ -1,0 +1,130 @@
+package com.template.Model.Table.Products;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.template.Model.Table.Tax.Tax;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "ACCOUNT_TYPE_CURRENCY")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class AccountTypeCurrency {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "CURRENCY_ID")
+	private AccCurrency currencyId;
+	
+	@ManyToOne
+	@JoinColumn(name = "ACCOUNT_TYPE_ID")
+	private AccountType accountTypeId;
+	
+	@Column(name = "CURRENCY_NAME_A")
+	private String currencyNameA;
+	
+	@Column(name = "CURRENCY_NAME_B")
+	private String currencyNameB;
+
+	@Column(name = "GL_FEES_ID")
+	private Integer glFeesId;
+
+	@Column(name = "LED_CURR_MIN_COM")
+	private Integer ledCurrMinCom;
+
+	@Column(name = "LED_CURR_MAX_COM")
+	private Integer ledCurrMaxCom;
+
+	@Column(name = "LED_CURR_MIN")
+	private Integer ledCurrMin;
+	
+	@Column(name = "FEES_FLAG")
+	private Integer feesFlag;
+
+	@Column(name = "FEES_AMOUNT")
+	private Integer feesAmount;
+
+	@Column(name = "OPERATION_COUNT")
+	private Integer operationCount;
+
+	@Column(name = "MIN_AMOUNT")
+	private Integer minAmount;
+
+	@Column(name = "MAX_AMOUNT")
+	private Integer maxAmount;
+	
+	@ManyToOne
+	@JoinColumn(name="TAX_ID")
+	private Tax taxId;
+	
+	@Column(name="GL_TAX_ID")
+	private Integer glTaxId;
+	
+	@Column(name = "GL_COMMISSIONS_ID")
+	private Integer glCommissionsId;
+	
+	@ManyToOne
+	@JoinColumn(name="FEES_PERIOD")
+	private AccPeriod feesPeriodId;
+
+	@Column(name = "INSERT_BY")
+	private Integer insertBy;
+
+	@Column(name = "INSERT_DATE")
+	private Date insertDate;
+
+	@Column(name = "LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Column(name = "LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+
+	@Column(name = "IS_DELETED")
+	private Integer isDeleted;
+
+	@Column(name = "DELETED_BY")
+	private Integer deletedBy;
+
+	@Column(name = "DELETED_DATE")
+	private Date deletedDate;
+
+	@Column(name = "NOTE")
+	private String note;
+
+	@PrePersist
+	void createdAt() {
+		this.insertDate = this.lastUpdateDate = new Date();
+		this.isDeleted = 0;
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.lastUpdateDate = new Date();
+	}
+
+}

@@ -1,0 +1,30 @@
+
+
+
+
+package com.template.Repository.Table.AllIndexes;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.*;
+
+@Repository
+public interface IndCityRepositry extends JpaRepository <IndCity, Long>{
+
+	@Query("Select a from IndCity a where a.isDeleted != 1")
+	public List<IndCity> getAll();
+	
+	@Query("Select a From IndCity a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<IndCity> getAllDeleted();
+	
+	
+	
+	@Query("Select a from  IndCity a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public IndCity findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+	
+	
+}

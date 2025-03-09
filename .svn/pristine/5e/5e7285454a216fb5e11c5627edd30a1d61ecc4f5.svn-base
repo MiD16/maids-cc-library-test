@@ -1,0 +1,17 @@
+package com.template.API.Request.ActionRequest.TestEntity;
+
+import com.Base.API.Request.CAPIRequest;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class CCreateTestEntityRequest extends CAPIRequest
+{
+	private String name;
+
+	private String description;
+}

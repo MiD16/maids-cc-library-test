@@ -1,0 +1,69 @@
+package com.template.Service.Table.Product;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CResponse;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.Interests.CurrencySegments;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Repository.Table.Product.AccCurrencyRepository;
+
+@Service
+public class AccCurrencyService {
+	
+	@Autowired
+	AccCurrencyRepository accCurrencyRepository;
+	
+	public AccCurrency save(AccCurrency accCurrency) {
+		if(accCurrency.getId() == null)
+		{
+			accCurrency.setInsertBy(0);
+		}else if(accCurrency.getId() != null){
+			AccCurrency temCompany=accCurrencyRepository.findById(accCurrency.getId()).get();
+			accCurrency.setInsertDate(temCompany.getInsertDate());
+		}
+		accCurrencyRepository.save(accCurrency);
+		return accCurrency;
+	}
+	
+	public void update(AccCurrency accCurrency) {
+		accCurrencyRepository.save(accCurrency);
+	}
+	
+	public AccCurrency findById(Long id) {
+		return accCurrencyRepository.findById(id).get();
+	}
+	
+	public CResponse getAll(){
+		CResponse response=new CResponse();
+		response.setReturnedObject(accCurrencyRepository.getAll());
+		return response;
+	}
+	
+	public List<AccCurrency> getAllDeleted(){
+		List<AccCurrency> allDeleted = accCurrencyRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public AccCurrency delete(Long id) {
+		AccCurrency accCurrency = accCurrencyRepository.findById(id).get();
+		if (accCurrency == null) {
+			throw new NoDataFoundException("accCurrency With ID : " + id + " Not Found");
+		}
+		accCurrency.setIsDeleted(1);
+		return accCurrencyRepository.save(accCurrency);
+	}
+	
+	//check if currency  is deleted
+	//return true if deleted
+	//return false if not deleted
+	public boolean checkCurrencyIsDeleted(long id) {
+		AccCurrency accCurrency= accCurrencyRepository.findById(id).get();
+		if (accCurrency.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+}

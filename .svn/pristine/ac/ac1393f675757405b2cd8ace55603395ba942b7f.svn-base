@@ -1,0 +1,27 @@
+package com.template.Class;
+
+import java.io.Serializable;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@ToString
+public class UserRoleOppositeId implements Serializable {
+	
+	 private int role_id;
+	 private int user_id;
+	
+	public UserRoleOppositeId(int user_id, int role_id) {
+        this.role_id = role_id;
+        this.user_id =user_id;
+    }
+	
+
+}

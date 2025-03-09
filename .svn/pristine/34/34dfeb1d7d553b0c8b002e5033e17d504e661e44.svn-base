@@ -1,0 +1,56 @@
+package com.template.BusinessRule.RoleAction;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.RoleAction;
+import com.template.Model.Basic.User;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.RoleActionService;
+import com.template.Service.Basic.UserService;
+
+@Component(CBusinessRuleConstant.ROLE_ACTION_IS_NOT_DELETE)
+@Lazy
+public class CBRRoleActionIsNotDeleted implements IBusinessRule
+{
+	@Autowired RoleActionService roleActionService;
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters)
+	{
+		CActionValidationResult actionValidationResult = null;
+		RoleAction roleaction = null;
+	
+		try
+		{
+			do
+			{
+				actionValidationResult = new CActionValidationResult();
+				
+				roleaction = (RoleAction)parameters.getParameter(EKeyCode.ROLEACTION.toString());
+		
+				if(roleActionService.check_role_action_is_deleted(roleaction))
+				{
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("صلاحية الدور   محذوفة مسبقا");
+					break;
+				}
+			}
+			while(false);
+		}
+		catch(Exception e) {throw new RuntimeException(e.getMessage());}
+		
+		return actionValidationResult;
+	}
+	
+}

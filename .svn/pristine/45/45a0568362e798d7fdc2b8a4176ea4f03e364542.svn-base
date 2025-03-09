@@ -1,0 +1,108 @@
+package com.template.Model.Table.SubpoenaRequest;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Date;
+
+
+/**
+ * The persistent class for the CUSTOMER_ACCOUNT database table.
+ * 
+ */
+@Entity
+@Table(name="SUBPOENA_REQUEST_DETAILS")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@ToString
+@NoArgsConstructor
+
+public class SubpoenaRequestDetails  {
+
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name="NAME_A")
+	private String nameA;
+
+	@Column(name="NAME_B")
+	private String nameB;
+
+	@ManyToOne
+	@JoinColumn(name="SUBPOENA_REQUEST_ID")
+	private SubpoenaRequest subpoenaRequest;
+
+	@Column(name="INTRO")
+	private String intro;
+	
+	@Column(name="CONTENT")
+	private String content;
+	
+	@Column(name="ACCOUNT_NUM_FLAG")
+	private int accountNumFlag;
+	
+	@Column(name="CUSTOMER_FLAG")
+	private int customerFlag;
+	
+	@Column(name="BRANCH_FLAG")
+	private int branchFlag;
+	
+	@Column(name="INSERT_BY")
+	private Integer insertBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="INSERT_DATE")
+	private Date insertDate;
+	
+	
+
+	@Column(name="LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	
+	@Column(name="IS_DELETED")
+	private Integer isDeleted;
+	
+	
+	@Column(name="DELETED_BY")
+	private Integer deletedBy;
+
+
+	@Column(name="IS_ENABLED_FLAG")
+	private int isEnableFlag;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="DELETED_DATE")
+	private Date deletedDate;
+	
+	  @PrePersist
+	  void createdAt() {
+	    this.insertDate = this.lastUpdateDate = new Date();
+	    this.isDeleted = 0;
+	    this.isEnableFlag = 1;
+	  }
+	  
+	  
+	  @PreUpdate
+	  protected void onUpdate() {
+	    this.lastUpdateDate = new Date();
+	  }
+
+
+
+
+}

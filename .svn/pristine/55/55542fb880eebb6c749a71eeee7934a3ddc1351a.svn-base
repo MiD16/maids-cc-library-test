@@ -1,0 +1,260 @@
+package com.template.Service.Table.Interest;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.Interests.AccInterest;
+import com.template.Repository.Table.Interest.AccInterestRepository;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+
+@Service
+public class AccInterestService {
+
+	@Autowired
+	AccInterestRepository accInterestRepository;
+
+	@Autowired
+	AccIndInterestTypeService accIndInterestTypeService;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	UserService userService;
+	
+	//find all not deleted
+	public CResponse findAllIndInterest(PageRequest pageRequest) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(accInterestRepository.getAll(pageRequest));
+		return response;
+	}
+
+	//create Interest
+	public CResponse saveCreate(AccInterest accInterest, String path) throws Exception {
+		CResponse response = null;
+		AccIndInterestType accIndInterestType = accIndInterestTypeService
+				.findById(accInterest.getAccInterestTypeId().getId());
+		// call validate for create object
+		response = validateInterestCreate(accInterest, accIndInterestType, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		accInterest.setInsertBy(userService.getAuthenticatedUser().getID());
+		accInterestRepository.save(accInterest);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+	//update Interest
+	public CResponse saveUpdate(AccInterest accInterest, String path) throws Exception {
+		CResponse response = null;
+		AccIndInterestType accIndInterestType = accIndInterestTypeService
+				.findById(accInterest.getAccInterestTypeId().getId());
+		// call validate for update object
+		response = validateInterestUpdate(accInterest, accIndInterestType, path);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//to get insert date from object in database
+		AccInterest tem = accInterestRepository.findById(accInterest.getId()).get();
+		accInterest.setInsertDate(tem.getInsertDate());
+		accInterest.setInsertBy(tem.getInsertBy());
+		//set user that updated 
+		accInterest.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		accInterestRepository.save(accInterest);
+		response.setSuccessMessage("تم التعديل بنجاح");
+		return response;
+	}
+
+	//get object by id
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(accInterestRepository.findById(id).get());
+		return response;
+	}
+	
+	
+	
+	//get all deleted
+
+	public List<AccInterest> getAllDeleted() {
+		List<AccInterest> allDeleted = accInterestRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	//delete interest
+	public CResponse delete(Long id) throws Exception {
+		AccInterest accInterest = accInterestRepository.findById(id).get();
+		CResponse response=null;
+		// call validate for delete object
+		response = validateInterestDelete(accInterest);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		//soft delete
+		accInterest.setIsDeleted(1);
+		//set deleted date
+		accInterest.setDeletedDate(new Date());
+		//set user that deleted 
+		accInterest.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(accInterestRepository.save(accInterest));
+		return response;
+	}
+
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+
+	// validate if can create Interest
+	public CResponse validateInterestCreate(AccInterest interest, AccIndInterestType accIndInterestType, String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The interest exists
+				if (interest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_NOT_FOUND.toString());
+					response.setErrorMessage("الفائدة غير موجودة");
+					break;
+				}
+				// check if The interest type exists
+				if (accIndInterestType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.IND_INTEREST_TYPE_NOT_FOUND.toString());
+					response.setErrorMessage("نوع الفائدة غير موجود");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.INTEREST.toString(), interest);
+				parameters.addParameter(EKeyCode.IND_INTEREST_TYPE.toString(), accIndInterestType);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_INTEREST, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	// validate if can update Interest
+	public CResponse validateInterestUpdate(AccInterest interest, AccIndInterestType accIndInterestType, String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+
+				// check if The interest exists
+				if (interest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_NOT_FOUND.toString());
+					response.setErrorMessage("الفائدة غير موجودة");
+					break;
+				}
+				// check if The interest type exists
+				if (accIndInterestType == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.IND_INTEREST_TYPE_NOT_FOUND.toString());
+					response.setErrorMessage("نوع الفائدة غير موجود");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.INTEREST.toString(), interest);
+				parameters.addParameter(EKeyCode.IND_INTEREST_TYPE.toString(), accIndInterestType);
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_INTEREST, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	// validate if can delete Interest
+	public CResponse validateInterestDelete(AccInterest interest)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The Interest exists
+				if (interest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.INTEREST_NOT_FOUND.toString());
+					response.setErrorMessage("الفائدة غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.INTEREST.toString(), interest);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_INTEREST, parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+
+	//check if Interest is deleted
+	//return true if deleted
+	//return false if not deleted
+	public boolean checkInterestIsDeleted(long id) {
+		AccInterest interest= accInterestRepository.findById(id).get();
+		if (interest.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	//check if Interest is exist
+	//return id if exist
+	//return null if not exist
+	public Long checkInterestIsExist(AccInterest interest) {
+		AccInterest interestByCode= accInterestRepository.findByCode(interest.getAccInterestCode());
+		if (interestByCode!= null) {
+			if (interest.getId() == null
+					|| (interest.getId() != null && !interest.getId().equals(interestByCode.getId()) )) {
+				return interestByCode.getId();
+			}
+		}
+		return null;
+	}
+	
+	//get interest by interest type
+	public CResponse getAllByType(String name){
+		CResponse response = null;	
+		response= new CResponse();
+		response.setReturnedObject(accInterestRepository.getAllByType(name));
+		return response;
+	}
+}

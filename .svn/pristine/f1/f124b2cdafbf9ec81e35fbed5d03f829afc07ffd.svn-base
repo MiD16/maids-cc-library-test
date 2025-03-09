@@ -1,0 +1,380 @@
+package com.template.Service.Table.SubpoenaRequest;
+
+import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Class.UserInformation;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Basic.User;
+import com.template.Model.Table.AllIndexes.IndSubpoenaRequest;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Repository.Table.SubpoenaRequest.SubpoenaRequestDetailsRep;
+import com.template.Service.Basic.UserService;
+import com.template.Service.Table.AllIndexes.IndSubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+
+@Service
+public class SubpoenaRequestDetailsService {
+
+	@Autowired
+	SubpoenaRequestDetailsRep subpoenaRequestDetailsRep;
+	
+	@Autowired
+	IndSubpoenaRequestServices indSubpoenaRequestServices;
+	
+	@Autowired
+	SubpoenaRequestServices subpoenaRequestServices;;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	//find all not deleted
+	public CResponse findAllSubpoenaRequestDetails(PageRequest pageRequest) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(subpoenaRequestDetailsRep.findAllSubpoenaRequestDetails(pageRequest));
+		return response;
+	}
+
+	//find object by id
+	public CResponse findById(Long id) {
+		CResponse response=new CResponse();
+		response.setReturnedObject(subpoenaRequestDetailsRep.findById(id).get());
+		return response;
+	}
+
+	//save Subpoena Request Details
+	public CResponse save(SubpoenaRequestDetails subpoenaRequestDetails, String path) throws Exception {
+		CResponse response = null;
+		SubpoenaRequest subpoenaRequest=subpoenaRequestServices.findById(subpoenaRequestDetails.getSubpoenaRequest().getId());
+		IndSubpoenaRequest indSubpoenaRequest=indSubpoenaRequestServices.findById(subpoenaRequest.getIndSubpoenaRequest().getId());		
+		//if create : call validate for create object
+		if (subpoenaRequestDetails.getId() == null) {
+			response = validateSubpoenaRequestDetailsCreate(subpoenaRequestDetails,indSubpoenaRequest,subpoenaRequest, path);
+			if (response.isSuccess() == false) {
+				return response;
+			}
+		}
+		//if update : call validate for update object
+		else {
+			response = validateSubpoenaRequestDetailsUpdate(subpoenaRequestDetails,indSubpoenaRequest,subpoenaRequest, path);
+			if (response.isSuccess() == false) {
+				return response;
+			}
+		}
+
+		response = new CResponse();
+
+	
+		subpoenaRequestDetails.setNameA(subpoenaRequestDetails.getSubpoenaRequest().getIndSubpoenaRequest().getNameA()
+				+ "/" + subpoenaRequestDetails.getSubpoenaRequest().getNameA());
+		subpoenaRequestDetails.setNameB(subpoenaRequestDetails.getSubpoenaRequest().getIndSubpoenaRequest().getNameB()
+				+ "/" + subpoenaRequestDetails.getSubpoenaRequest().getNameB());
+		// if update : set old insert date
+		if (subpoenaRequestDetails.getId() != null) {
+			SubpoenaRequestDetails tem = subpoenaRequestDetailsRep.findById(subpoenaRequestDetails.getId()).get();
+			subpoenaRequestDetails.setInsertDate(tem.getInsertDate());
+			subpoenaRequestDetails.setInsertBy(tem.getInsertBy());
+			subpoenaRequestDetails.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+			response.setSuccessMessage("تم التعديل بنجاح");
+		} else {
+			subpoenaRequestDetails.setInsertBy(userService.getAuthenticatedUser().getID());
+			response.setSuccessMessage("تم الإضافة بنجاح");
+		}
+
+		response.setSuccess(true);
+		response.setReturnedObject(subpoenaRequestDetailsRep.save(subpoenaRequestDetails));
+		return response;
+
+	}
+
+	public CResponse delete(Long id) throws Exception {
+		CResponse response = null;	
+		SubpoenaRequestDetails subpoenaRequestDetails = subpoenaRequestDetailsRep.findById(id).get();
+		//validate if can delete object
+		response = validateSubpoenaRequestDetailsDelete(subpoenaRequestDetails);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		response = new CResponse();
+		//soft delete
+		subpoenaRequestDetails.setIsDeleted(1);
+		subpoenaRequestDetails.setDeletedDate(new Date());
+		subpoenaRequestDetails.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(subpoenaRequestDetailsRep.save(subpoenaRequestDetails));
+		return response;
+	}
+
+	public SubpoenaRequestDetails findBySubpoenaRequestId(Long id) {
+		return subpoenaRequestDetailsRep.findBySubpoenaRequestId(id);
+	}
+
+	public CResponse changeEnableFlag(Long id,int enable) throws Exception {
+		CResponse response;
+	
+		
+		SubpoenaRequestDetails subpoenaRequestDetails = subpoenaRequestDetailsRep.findById(id).get();
+
+		//if need Activate
+		if(enable==1)
+		{
+			response=validateSubpoenaRequestDetailsActivate(subpoenaRequestDetails);
+			if(!response.isSuccess())
+				return response;
+			else 
+				{
+				subpoenaRequestDetails.setIsEnableFlag(1);
+				response.setSuccessMessage("تم تفعيل تفاصيل طلب الاستدعاء");
+				}
+		}
+		//if need DeActivate
+		else {
+			response=validateSubpoenaRequestDetailsDeActivate(subpoenaRequestDetails);
+			if(!response.isSuccess())
+				return response;
+			else 
+				{
+				subpoenaRequestDetails.setIsEnableFlag(0);
+				response.setSuccessMessage("تم إلغاء تفعيل تفاصيل طلب الاستدعاء بنجاح");
+				}
+		}		
+		// get current user that logged
+		UserInformation userInformation = (UserInformation) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		
+
+		subpoenaRequestDetails.setLastUpdateBy(userService.getAuthenticatedUser().getID());
+		subpoenaRequestDetailsRep.save(subpoenaRequestDetails);
+		return response;
+	}
+
+	
+	// validate if can create Subpoena Request Details
+	public CResponse validateSubpoenaRequestDetailsCreate(SubpoenaRequestDetails subpoenaRequestDetails,
+			IndSubpoenaRequest indSubpoenaRequest,SubpoenaRequest subpoenaRequest, String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The subpoenaRequestDetails exists
+				if (subpoenaRequestDetails == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.SUBPOENA_REQUEST_DETAILS_NOT_FOUND.toString());
+					response.setErrorMessage("تفاصيب طلب الاستدعاء غير موجودة");
+					break;
+				}
+				// check if The SubpoenaRequest exists
+				if (subpoenaRequest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.SUBPOENA_REQUEST_NOT_FOUND.toString());
+					response.setErrorMessage("طلب الاستدعاء غير موجود");
+					break;
+				}
+				// check if The IndSubpoenaRequest exists
+				if (indSubpoenaRequest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.IND_SUBPOENA_REQUEST_NOT_FOUND.toString());
+					response.setErrorMessage("نوع طلب الاستدعاء غير موجود");
+					break;
+				}
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.SUBPOENA_REQUEST_DETAILS.toString(), subpoenaRequestDetails);
+				parameters.addParameter(EKeyCode.IND_SUBPOENA_REQUEST.toString(),
+						indSubpoenaRequest);
+				parameters.addParameter(EKeyCode.SUBPOENA_REQUEST.toString(),
+						subpoenaRequest);
+
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.CREATE_SUBPOENA_REQUEST_DETAILS,
+						parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	// validate if can update Subpoena Request Details
+	public CResponse validateSubpoenaRequestDetailsUpdate(SubpoenaRequestDetails subpoenaRequestDetails,
+			IndSubpoenaRequest indSubpoenaRequest,SubpoenaRequest subpoenaRequest, String path)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The subpoenaRequestDetails exists
+				if (subpoenaRequestDetails == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.SUBPOENA_REQUEST_DETAILS_NOT_FOUND.toString());
+					response.setErrorMessage("تفاصيب طلب الاستدعاء غير موجودة");
+					break;
+				}
+				// check if The SubpoenaRequest exists
+				if (subpoenaRequest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.SUBPOENA_REQUEST_NOT_FOUND.toString());
+					response.setErrorMessage("طلب الاستدعاء غير موجود");
+					break;
+				}
+				// check if The IndSubpoenaRequest exists
+				if (indSubpoenaRequest == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.IND_SUBPOENA_REQUEST_NOT_FOUND.toString());
+					response.setErrorMessage("نوع طلب الاستدعاء غير موجود");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.SUBPOENA_REQUEST_DETAILS.toString(), subpoenaRequestDetails);
+				parameters.addParameter(EKeyCode.IND_SUBPOENA_REQUEST.toString(),
+						indSubpoenaRequest);
+				parameters.addParameter(EKeyCode.SUBPOENA_REQUEST.toString(),
+						subpoenaRequest);
+
+				parameters.addParameter(EKeyCode.PATH.toString(), path);
+				actionValidationResult = actionHandler.validate(CActionConstant.UPDATE_SUBPOENA_REQUEST_DETAILS,
+						parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	// validate if can delete Subpoena Request Details
+	public CResponse validateSubpoenaRequestDetailsDelete(SubpoenaRequestDetails subpoenaRequestDetails)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The subpoenaRequestDetails exists
+				if (subpoenaRequestDetails == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.SUBPOENA_REQUEST_DETAILS_NOT_FOUND.toString());
+					response.setErrorMessage("تفاصيب طلب الاستدعاء غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.SUBPOENA_REQUEST_DETAILS.toString(), subpoenaRequestDetails);
+				actionValidationResult = actionHandler.validate(CActionConstant.DELETE_SUBPOENA_REQUEST_DETAILS,
+						parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	// validate if can activate Subpoena Request Details
+	public CResponse validateSubpoenaRequestDetailsActivate(SubpoenaRequestDetails subpoenaRequestDetails)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The subpoenaRequestDetails exists
+				if (subpoenaRequestDetails == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.SUBPOENA_REQUEST_DETAILS_NOT_FOUND.toString());
+					response.setErrorMessage("تفاصيب طلب الاستدعاء غير موجودة");
+					break;
+				}
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.SUBPOENA_REQUEST_DETAILS.toString(), subpoenaRequestDetails);
+				actionValidationResult = actionHandler.validate(CActionConstant.ACTIVATE_SUBPOENA_REQUEST_DETAILS,
+						parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	// validate if can deActivate Subpoena Request Details
+	public CResponse validateSubpoenaRequestDetailsDeActivate(SubpoenaRequestDetails subpoenaRequestDetails)
+			throws Exception {
+		CActionValidationParameters parameters = null;
+		CActionValidationResult actionValidationResult = null;
+		CResponse response = null;
+		try {
+			do {
+				response = new CResponse();
+				// check if The subpoenaRequestDetails exists
+				if (subpoenaRequestDetails == null) {
+					response.setSuccess(false);
+					response.setErrorCode(EErrorCode.SUBPOENA_REQUEST_DETAILS_NOT_FOUND.toString());
+					response.setErrorMessage("تفاصيب طلب الاستدعاء غير موجودة");
+					break;
+				}
+
+				//set parameters
+				parameters = new CActionValidationParameters();
+				parameters.addParameter(EKeyCode.SUBPOENA_REQUEST_DETAILS.toString(), subpoenaRequestDetails);
+				actionValidationResult = actionHandler.validate(CActionConstant.DEACTIVATE_SUBPOENA_REQUEST_DETAILS,
+						parameters);
+				response.setSuccess(actionValidationResult.isValid());
+				response.setErrorCode(actionValidationResult.getErrorCode());
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+			} while (false);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return response;
+	}
+	
+	//check if Subpoena Request Details is deleted
+	//return true if deleted
+	//return false if not deleted
+	public boolean checkSubpoenaRequestDetailsIsDeleted(long id) {
+		SubpoenaRequestDetails subpoenaRequestDetails = subpoenaRequestDetailsRep.findById(id).get();
+		if (subpoenaRequestDetails.getIsDeleted() == 1)
+			return true;
+		return false;
+	}
+	
+	public Long checkSubpoenaRequestDetailsIsExist(SubpoenaRequestDetails subpoenaRequestDetails) {
+		SubpoenaRequestDetails subpoenaRequestDetailsBySubpoenaRequest =findBySubpoenaRequestId(subpoenaRequestDetails.getSubpoenaRequest().getId());
+		if (subpoenaRequestDetailsBySubpoenaRequest != null) {					 
+			if (subpoenaRequestDetails.getId() == null || (subpoenaRequestDetails.getId() != null && !subpoenaRequestDetailsBySubpoenaRequest.getId().equals(subpoenaRequestDetails.getId()))) {
+			return subpoenaRequestDetailsBySubpoenaRequest.getId();
+			}
+		}
+		return null;
+	
+	}
+}

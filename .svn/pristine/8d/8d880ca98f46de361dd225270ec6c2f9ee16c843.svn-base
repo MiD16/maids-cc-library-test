@@ -1,0 +1,187 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.AccIndReservationResoan;
+import com.template.Model.Table.AllIndexes.AccIndWarningSign;
+import com.template.Repository.Table.AllIndexes.AccIndReservationResoanRepository;
+
+@Service
+public class AccIndReservationResoanServices {
+
+	@Autowired
+	AccIndReservationResoanRepository accIndReservationResoanRepository;
+	/////////////////////////
+
+	
+	
+	@Autowired CActionHandler actionHandler;
+
+	
+	
+	
+
+
+	
+	public CResponse createAccIndReservationResoan( AccIndReservationResoan accIndReservationResoan) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.Acc_Ind_Reservation_Resoan.toString(), accIndReservationResoan);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_Acc_Ind_Reservation_Resoan, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			accIndReservationResoan.setInsertBy(0);
+			accIndReservationResoan.setIsDeleted(0);
+			accIndReservationResoan.setInsertDate(new Date());
+			accIndReservationResoanRepository.save(accIndReservationResoan);
+			
+			response.setReturnedObject(accIndReservationResoan);
+		}
+		while(false);
+		
+		return response;
+	}
+	
+	public  AccIndReservationResoan updateAccIndReservationResoan ( AccIndReservationResoan accIndReservationResoan) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(accIndReservationResoan.getId() == null) 
+		{
+			
+			accIndReservationResoan.setInsertBy(0);
+		}
+		
+		
+		
+		else if(accIndReservationResoan.getId() != null)
+		{
+			AccIndReservationResoan temSocialStatus = accIndReservationResoanRepository.findById(accIndReservationResoan.getId()).get();
+			accIndReservationResoan.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		accIndReservationResoanRepository.save(accIndReservationResoan);
+		return accIndReservationResoan;
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public  AccIndReservationResoan findByNames(String nameA, String nameB) {
+		return accIndReservationResoanRepository.findByNames(nameA, nameB);
+	}
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public AccIndReservationResoan save(AccIndReservationResoan accIndReservationResoan) {
+		if (accIndReservationResoan.getId() == null) {
+			accIndReservationResoan.setInsertBy(0);
+			accIndReservationResoan.setInsertDate(getCurrentDate());
+			accIndReservationResoan.setIsDeleted(0);
+		} else if (accIndReservationResoan.getId() != null) {
+			System.err.println(2121);
+			accIndReservationResoan.setInsertDate(getCurrentDate());
+			accIndReservationResoan.setLastUpdateDate(getCurrentDate());
+			accIndReservationResoan.setLastUpdateBy(1);
+		}
+		accIndReservationResoanRepository.save(accIndReservationResoan);
+		return accIndReservationResoan;
+	}
+
+	public void update(AccIndReservationResoan accIndReservationResoan) {
+		accIndReservationResoanRepository.save(accIndReservationResoan);
+	}
+
+	public AccIndReservationResoan findById(Long id) {
+		return accIndReservationResoanRepository.getById(id);
+	}
+
+	public List<AccIndReservationResoan> getAll() {
+		List<AccIndReservationResoan> all = accIndReservationResoanRepository.getAll();
+		return all;
+	}
+
+	public List<AccIndReservationResoan> getAllDeleted() {
+		List<AccIndReservationResoan> allDeleted = accIndReservationResoanRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public AccIndReservationResoan delete(Long id) {
+		AccIndReservationResoan accIndReservationResoan = accIndReservationResoanRepository.findById(id).get();
+		if (accIndReservationResoan == null) {
+			throw new NoDataFoundException("indAddressType With ID : " + id + " Not Found");
+		}
+		accIndReservationResoan.setIsDeleted(1);
+		;
+		return accIndReservationResoanRepository.save(accIndReservationResoan);
+	}
+
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+}

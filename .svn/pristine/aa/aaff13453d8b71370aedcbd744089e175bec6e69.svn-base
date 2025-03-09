@@ -1,0 +1,35 @@
+package com.template.Repository.Table.AllIndexes;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Table.AllIndexes.IndFiscalYearStatus;
+import com.template.Model.Table.AllIndexes.IndGender;
+import com.template.Model.Table.AllIndexes.IndJournalType;
+
+
+@Repository
+public interface IndFiscalYearStatusRepository extends JpaRepository<IndFiscalYearStatus, Long> {
+
+	@Query("Select a from IndFiscalYearStatus a where a.isDeleted = 0 order by a.placeOrder desc")
+	public List<IndFiscalYearStatus> getAll();
+
+	@Query("Select a From IndFiscalYearStatus a WHERE a.isDeleted = 1 order by a.placeOrder desc")
+	public List<IndFiscalYearStatus> getAllDeleted();
+
+	@Query("Select a from  IndFiscalYearStatus a where a.nameA=:nameA and a.isDeleted=0 ")
+	public IndFiscalYearStatus findByNameA(@Param("nameA") String nameA);
+
+	@Query("Select a from  IndFiscalYearStatus a where a.nameB=:nameB and a.isDeleted=0 ")
+	public IndFiscalYearStatus findByNameB(@Param("nameB") String nameB);
+	
+	
+	@Query("Select a from  IndFiscalYearStatus a where (a.nameA=:nameA or a.nameB=:nameB) and a.isDeleted=0 ")
+	public IndFiscalYearStatus findByNames(@Param("nameA") String nameA, @Param("nameB") String nameB);
+}

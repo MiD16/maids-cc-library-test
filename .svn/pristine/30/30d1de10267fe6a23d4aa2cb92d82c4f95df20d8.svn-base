@@ -1,0 +1,59 @@
+package com.template.BusinessRule.IndIDType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndIdType;
+import com.template.Model.Table.Holiday.IndHolidays;
+import com.template.Model.Table.SubpoenaRequest.SubpoenaRequestDetails;
+import com.template.Service.Table.AllIndexes.IndIdTypeServices;
+import com.template.Service.Table.Holiday.IndHolidaysService;
+import com.template.Service.Table.SubpoenaRequest.SubpoenaRequestDetailsService;
+
+@Component(CBusinessRuleConstant.Ind_ID_Type_IS_NOT_EXIST)
+@Lazy
+public class CBRIndIDTypeIsNotExist implements IBusinessRule {
+	@Autowired
+	IndIdTypeServices indIdTypeServices;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		IndIdType indIdType = null;
+		IndIdType indIdTypeName = null;
+		long indIdTypeDetails;
+		long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				
+				indIdType = (IndIdType) parameters.getParameter(EKeyCode.Ind_ID_Type.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				indIdTypeName = indIdTypeServices.findByNames(indIdType.getNameA(), indIdType.getNameB());
+				
+				if (indIdTypeName != null) {
+			
+					if (indIdType.getId() == null || (indIdType.getId() != null && indIdType.getId()!=indIdTypeName.getId())) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indIdTypeName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ indIdTypeName.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						actionValidationResult.setValid(false);
+						actionValidationResult.setErrorMessage(messageString);
+						actionValidationResult.setErrorCode(EErrorCode.Ind_ID_Type_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+}

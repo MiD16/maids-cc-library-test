@@ -1,0 +1,27 @@
+package com.template.Service.Table.AllIndexes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.template.Model.Table.AllIndexes.IndMonth;
+import com.template.Repository.Table.AllIndexes.IndMonthRep;
+
+@Service
+public class IndMonthService {
+	
+	@Autowired
+	IndMonthRep indMonthRep;
+	
+	
+	public Page<IndMonth> findAllIndMonth(PageRequest pageRequest)
+	{
+		return indMonthRep.findAllIndMonth(pageRequest);
+	}
+	
+	
+	public IndMonth findById(Long id)
+	{
+		return indMonthRep.findById(id).get();
+	}
+}

@@ -1,0 +1,56 @@
+package com.template.BusinessRule.DateUnit;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndDateUnit;
+import com.template.Model.Table.AllIndexes.IndSubpoenaRequest;
+import com.template.Model.Table.AllIndexes.SubpoenaRequest;
+import com.template.Model.Table.Products.AccCurrency;
+import com.template.Service.Table.AllIndexes.AccIndDateUnitService;
+import com.template.Service.Table.AllIndexes.IndSubpoenaRequestServices;
+import com.template.Service.Table.AllIndexes.SubpoenaRequestServices;
+import com.template.Service.Table.Product.AccCurrencyService;
+
+@Component(CBusinessRuleConstant.IND_DATE_UNIT_IS_NOT_EXIST)
+@Lazy
+public class CBRDateUnitIsNotExist implements IBusinessRule {
+
+	@Autowired
+	AccIndDateUnitService accInddateUnitService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccIndDateUnit dateUnit = null;
+		Long id=null;
+		String path=null;
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				dateUnit = (AccIndDateUnit) parameters.getParameter(EKeyCode.Acc_Ind_Date_Unit.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				id=accInddateUnitService.checkDateUnitIsExist(dateUnit);
+				if (id!=null) {
+					String messageString = "<div style='margin-bottom: 12px'> وحدة التاريخ " +  dateUnit.getNameA() + " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً "+ "</div> <a class='alert-url' href='" +path + "/dateUnits/update?id="
+							+ id + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";	
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage(messageString);
+					actionValidationResult.setErrorCode(EErrorCode.Acc_Ind_Date_Unit_IS_EXIST.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

@@ -1,0 +1,63 @@
+package com.template.BusinessRule.AccIndInterestType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.AccIndInterestType;
+import com.template.Model.Table.AllIndexes.AccIndPassBookStatus;
+import com.template.Model.Table.AllIndexes.AccIndReservationResoan;
+import com.template.Service.Table.AllIndexes.AccIndInterestTypeService;
+import com.template.Service.Table.AllIndexes.AccIndPassBookStatusServices;
+
+@Component(CBusinessRuleConstant.Acc_Ind_Interest_Type_IS_NOT_EXIST)
+@Lazy
+public class CBRAccIndInterestTypeIsNotDeleted implements IBusinessRule{
+	@Autowired
+	AccIndInterestTypeService accIndInterestTypeService;
+	
+
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult accIndInterestTypeValidationResult = null;
+		AccIndInterestType accIndInterestType = null;
+		AccIndInterestType accIndInterestTypeName = null;
+		long accIndReservationResoanDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				accIndInterestTypeValidationResult = new CActionValidationResult();
+
+				accIndInterestType = (AccIndInterestType) parameters.getParameter(EKeyCode.Acc_Ind_Interest_Type.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				accIndInterestTypeName = accIndInterestTypeService.findByNames(accIndInterestType.getNameA(), accIndInterestType.getNameB());
+				
+				if (accIndInterestType != null) {
+			
+					if (accIndInterestType.getId() == null || accIndInterestType.getId()!=accIndInterestType.getId()) {
+						String messageString = "<div style='margin-bottom: 12px'>" + accIndInterestType.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ accIndInterestType.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						accIndInterestTypeValidationResult.setValid(false);
+						accIndInterestTypeValidationResult.setErrorMessage(messageString);
+						accIndInterestTypeValidationResult.setErrorCode(EErrorCode.Acc_Ind_Reservation_Resoan_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return accIndInterestTypeValidationResult;
+	}}
+

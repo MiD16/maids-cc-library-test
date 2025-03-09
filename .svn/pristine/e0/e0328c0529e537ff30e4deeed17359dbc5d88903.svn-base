@@ -1,0 +1,91 @@
+package com.template.Service.Table.Configuration;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.template.Exception.NoDataFoundException;
+
+import com.template.Repository.Table.Configuration.HomeConfigurationRepository;
+import com.template.Model.Table.Configuration.AllConfiguration;
+
+@Service
+public class HomeConfigurationServices {
+
+	
+	@Autowired
+	HomeConfigurationRepository  homeConfigurationRepository;
+
+	//allConfigurationIndex
+	
+	public AllConfiguration save(AllConfiguration allConfiguration) {
+		
+	  if(allConfiguration.getId() != null){
+		AllConfiguration temSocialStatus = homeConfigurationRepository.findById(allConfiguration.getId()).get();
+			allConfiguration.setInsertDate(temSocialStatus.getInsertDate());
+			allConfiguration.setInsertBy(0);
+		}
+		homeConfigurationRepository.save(allConfiguration);
+		return allConfiguration;
+	}
+	
+	
+	public List<AllConfiguration> getAll(){
+		List<AllConfiguration> all = homeConfigurationRepository.getAll();
+		return all;
+	}
+	
+	
+	
+
+	
+	public AllConfiguration findById(Long id) {
+		return homeConfigurationRepository.getById(id);
+	}
+
+	
+	public AllConfiguration findByName(String name_b) {
+		
+		return homeConfigurationRepository.getByName(name_b);
+		}
+	
+	
+	public List<AllConfiguration> getAllDeleted() {
+		List<AllConfiguration> allDeleted = homeConfigurationRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	
+
+
+	public AllConfiguration delete(Long id) {
+		AllConfiguration allConfiguration = homeConfigurationRepository.findById(id).get();
+		if (allConfiguration == null) {
+			throw new NoDataFoundException("indSocialStatus With ID : " + id + " Not Found");
+		}
+		allConfiguration.setIsDeleted(1);
+		return homeConfigurationRepository.save(allConfiguration);
+	}
+	
+
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+	
+	
+	
+//////////////////////////////////////////////////////////
+
+	public void update(AllConfiguration allConfiguration) {
+		homeConfigurationRepository.save(allConfiguration);
+	}
+	
+
+	
+	  public List< AllConfiguration> AllConfigurationindex() { 
+			return   homeConfigurationRepository.getAll(); }
+			 
+	
+}

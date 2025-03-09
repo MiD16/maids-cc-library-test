@@ -1,0 +1,24 @@
+package com.template.Model.Table.AllIndexes;
+import java.util.List;
+
+import com.template.Model.Basic.Action;
+import com.template.Model.Table.Commission.ActionCommission;
+import com.template.Model.Table.Commission.Commission;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+
+
+
+
+	public class ActionCustomerNatureInfo {
+	private List<Action> action;
+	private IndCustomerNature indCustomerNature;
+	}
+

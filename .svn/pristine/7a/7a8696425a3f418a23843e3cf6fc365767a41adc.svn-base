@@ -1,0 +1,5 @@
+package com.template.BusinessRule.CreditCard;
+
+public class CBRCreditCardIsNotExist {
+
+}

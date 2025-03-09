@@ -1,0 +1,1098 @@
+!SESSION 2023-09-05 02:08:45.882 -----------------------------------------------
+eclipse.buildId=4.13.0.I20190916-1045
+java.version=1.8.0_181
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.jst.server.tomcat.core 4 0 2023-09-05 02:08:49.554
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.eclipse.jst.server.tomcat.core [994]
+  Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.eclipse.jst.server.tomcat.ui 4 0 2023-09-05 02:08:49.561
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.eclipse.jst.server.tomcat.ui [995]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core; bundle-version="[1.1.0,2.0.0)"
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+       org.eclipse.jst.server.tomcat.core [994]
+         Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY com.vmware.vfabric.ide.eclipse.tcserver.core 4 0 2023-09-05 02:08:49.582
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: com.vmware.vfabric.ide.eclipse.tcserver.core [1019]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+       org.eclipse.jst.server.tomcat.core [994]
+         Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator; bundle-version="2.8.0"; resolution:="optional"
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY com.vmware.vfabric.ide.eclipse.tcserver.livegraph 4 0 2023-09-05 02:08:49.587
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: com.vmware.vfabric.ide.eclipse.tcserver.livegraph [1020]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+       org.eclipse.jst.server.tomcat.core [994]
+         Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+  Unresolved requirement: Require-Bundle: com.vmware.vfabric.ide.eclipse.tcserver.core
+    -> Bundle-SymbolicName: com.vmware.vfabric.ide.eclipse.tcserver.core; bundle-version="3.9.12.202003180823-RELEASE"; singleton:="true"
+       com.vmware.vfabric.ide.eclipse.tcserver.core [1019]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator; bundle-version="2.8.0"; resolution:="optional"
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+              org.springsource.ide.eclipse.commons.configurator [1144]
+                Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                  -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY com.vmware.vfabric.ide.eclipse.tcserver.ui 4 0 2023-09-05 02:08:49.592
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: com.vmware.vfabric.ide.eclipse.tcserver.ui [1022]
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+              org.eclipse.jst.server.tomcat.core [994]
+                Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.ui
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.ui; bundle-version="1.1.1000.v202211081522"; singleton:="true"
+       org.eclipse.jst.server.tomcat.ui [995]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core; bundle-version="[1.1.0,2.0.0)"
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+  Unresolved requirement: Require-Bundle: com.vmware.vfabric.ide.eclipse.tcserver.core
+    -> Bundle-SymbolicName: com.vmware.vfabric.ide.eclipse.tcserver.core; bundle-version="3.9.12.202003180823-RELEASE"; singleton:="true"
+       com.vmware.vfabric.ide.eclipse.tcserver.core [1019]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.batch 4 0 2023-09-05 02:08:49.618
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.batch [1080]
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.widgets
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.widgets; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.config.ui [1110]
+         Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+           -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+              org.springframework.ide.eclipse.wizard [1129]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.commons.configurator [1144]
+                              Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                   org.eclipse.jst.server.tomcat.core [994]
+                                     Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.dashboard.ui [1153]
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+                  -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                     org.springframework.ide.eclipse.maven [1117]
+                       Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.hyperlinks
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.hyperlinks; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors.batch.graph
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors.batch.graph; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.config.ui 4 0 2023-09-05 02:08:49.626
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.config.ui [1110]
+  Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+    -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+       org.springframework.ide.eclipse.wizard [1129]
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+              org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.commons.configurator [1144]
+                       Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                         -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                            org.eclipse.jst.server.tomcat.core [994]
+                              Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.dashboard.ui [1153]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+         Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+           -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+              org.springframework.ide.eclipse.maven [1117]
+                Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.maven 4 0 2023-09-05 02:08:49.666
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.maven [1117]
+  Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+              org.eclipse.jst.server.tomcat.core [994]
+                Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.webflow.ui 4 0 2023-09-05 02:08:49.666
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.webflow.ui [1126]
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.graph
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.graph; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.graph"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.webflow.ui.graph [1128]
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow
+           -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+              org.springframework.ide.eclipse.webflow.ui.editor [1127]
+                Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+                  -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+                     org.springframework.ide.eclipse.config.ui [1110]
+                       Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+                         -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                            org.springframework.ide.eclipse.wizard [1129]
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                   org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                                     Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                       -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                          org.springsource.ide.eclipse.commons.configurator [1144]
+                                            Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                              -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                                 org.eclipse.jst.server.tomcat.core [994]
+                                                   Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                                     Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                                       -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                          org.springsource.ide.eclipse.dashboard.ui [1153]
+                                            Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                              -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                              Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+                                -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                                   org.springframework.ide.eclipse.maven [1117]
+                                     Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                                     Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                       -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph
+                  -> Export-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+                Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.hyperlinks
+                  -> Export-Package: org.springframework.ide.eclipse.config.ui.hyperlinks; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+                Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.widgets
+                  -> Export-Package: org.springframework.ide.eclipse.config.ui.widgets; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor
+           -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.webflow.ui.editor 4 0 2023-09-05 02:08:49.667
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.webflow.ui.editor [1127]
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.config.ui [1110]
+         Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+           -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+              org.springframework.ide.eclipse.wizard [1129]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.commons.configurator [1144]
+                              Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                   org.eclipse.jst.server.tomcat.core [994]
+                                     Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.dashboard.ui [1153]
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+                  -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                     org.springframework.ide.eclipse.maven [1117]
+                       Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.hyperlinks
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.hyperlinks; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.widgets
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.widgets; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.webflow.ui.graph 4 0 2023-09-05 02:08:49.668
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.webflow.ui.graph [1128]
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.webflow.ui.editor [1127]
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+              org.springframework.ide.eclipse.config.ui [1110]
+                Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+                  -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                     org.springframework.ide.eclipse.wizard [1129]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                   org.springsource.ide.eclipse.commons.configurator [1144]
+                                     Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                       -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                          org.eclipse.jst.server.tomcat.core [994]
+                                            Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                   org.springsource.ide.eclipse.dashboard.ui [1153]
+                                     Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                       -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                       Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+                         -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                            org.springframework.ide.eclipse.maven [1117]
+                              Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.hyperlinks
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.hyperlinks; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.widgets
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.widgets; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.wizard 4 0 2023-09-05 02:08:49.669
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.wizard [1129]
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.gettingstarted [1149]
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+              org.springsource.ide.eclipse.commons.configurator [1144]
+                Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                  -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                     org.eclipse.jst.server.tomcat.core [994]
+                       Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+              org.springsource.ide.eclipse.dashboard.ui [1153]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+  Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+    -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+       org.springframework.ide.eclipse.maven [1117]
+         Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springsource.ide.eclipse.commons.configurator 4 0 2023-09-05 02:08:49.669
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springsource.ide.eclipse.commons.configurator [1144]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+       org.eclipse.jst.server.tomcat.core [994]
+         Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springsource.ide.eclipse.commons.gettingstarted 4 0 2023-09-05 02:08:49.683
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springsource.ide.eclipse.commons.gettingstarted [1149]
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+              org.eclipse.jst.server.tomcat.core [994]
+                Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.dashboard.ui [1153]
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springsource.ide.eclipse.dashboard.ui 4 0 2023-09-05 02:08:49.684
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springsource.ide.eclipse.dashboard.ui [1153]
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+              org.eclipse.jst.server.tomcat.core [994]
+                Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.eclipse.jface 2 0 2023-09-05 02:09:06.916
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2023-09-05 02:09:06.916
+!MESSAGE A conflict occurred for CTRL+SHIFT+T:
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@4b98c80c,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@a486851,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.egit.ui 2 0 2023-09-05 02:09:15.472
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\n.shaheen'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2023-09-05 02:10:19.058 -----------------------------------------------
+eclipse.buildId=4.13.0.I20190916-1045
+java.version=1.8.0_181
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.jst.server.tomcat.core 4 0 2023-09-05 02:10:20.919
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.eclipse.jst.server.tomcat.core [994]
+  Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.eclipse.jst.server.tomcat.ui 4 0 2023-09-05 02:10:20.925
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.eclipse.jst.server.tomcat.ui [995]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core; bundle-version="[1.1.0,2.0.0)"
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+       org.eclipse.jst.server.tomcat.core [994]
+         Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY com.vmware.vfabric.ide.eclipse.tcserver.core 4 0 2023-09-05 02:10:20.931
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: com.vmware.vfabric.ide.eclipse.tcserver.core [1019]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+       org.eclipse.jst.server.tomcat.core [994]
+         Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator; bundle-version="2.8.0"; resolution:="optional"
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY com.vmware.vfabric.ide.eclipse.tcserver.livegraph 4 0 2023-09-05 02:10:20.936
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: com.vmware.vfabric.ide.eclipse.tcserver.livegraph [1020]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+       org.eclipse.jst.server.tomcat.core [994]
+         Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+  Unresolved requirement: Require-Bundle: com.vmware.vfabric.ide.eclipse.tcserver.core
+    -> Bundle-SymbolicName: com.vmware.vfabric.ide.eclipse.tcserver.core; bundle-version="3.9.12.202003180823-RELEASE"; singleton:="true"
+       com.vmware.vfabric.ide.eclipse.tcserver.core [1019]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator; bundle-version="2.8.0"; resolution:="optional"
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+              org.springsource.ide.eclipse.commons.configurator [1144]
+                Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                  -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY com.vmware.vfabric.ide.eclipse.tcserver.ui 4 0 2023-09-05 02:10:20.944
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: com.vmware.vfabric.ide.eclipse.tcserver.ui [1022]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.ui
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.ui; bundle-version="1.1.1000.v202211081522"; singleton:="true"
+       org.eclipse.jst.server.tomcat.ui [995]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core; bundle-version="[1.1.0,2.0.0)"
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+              org.eclipse.jst.server.tomcat.core [994]
+                Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+  Unresolved requirement: Require-Bundle: com.vmware.vfabric.ide.eclipse.tcserver.core
+    -> Bundle-SymbolicName: com.vmware.vfabric.ide.eclipse.tcserver.core; bundle-version="3.9.12.202003180823-RELEASE"; singleton:="true"
+       com.vmware.vfabric.ide.eclipse.tcserver.core [1019]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.batch 4 0 2023-09-05 02:10:20.952
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.batch [1080]
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.config.ui [1110]
+         Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+           -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+              org.springframework.ide.eclipse.wizard [1129]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.dashboard.ui [1153]
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                   org.springsource.ide.eclipse.commons.configurator [1144]
+                                     Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                       -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                          org.eclipse.jst.server.tomcat.core [994]
+                                            Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+                  -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                     org.springframework.ide.eclipse.maven [1117]
+                       Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.widgets
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.widgets; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors.batch.graph
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors.batch.graph; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.hyperlinks
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.hyperlinks; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.config.ui 4 0 2023-09-05 02:10:20.958
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.config.ui [1110]
+  Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+    -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+       org.springframework.ide.eclipse.wizard [1129]
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+              org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.dashboard.ui [1153]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.commons.configurator [1144]
+                              Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                   org.eclipse.jst.server.tomcat.core [994]
+                                     Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+         Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+           -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+              org.springframework.ide.eclipse.maven [1117]
+                Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.maven 4 0 2023-09-05 02:10:20.988
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.maven [1117]
+  Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+              org.eclipse.jst.server.tomcat.core [994]
+                Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.webflow.ui 4 0 2023-09-05 02:10:20.989
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.webflow.ui [1126]
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.config.ui [1110]
+         Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+           -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+              org.springframework.ide.eclipse.wizard [1129]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.dashboard.ui [1153]
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                   org.springsource.ide.eclipse.commons.configurator [1144]
+                                     Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                       -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                          org.eclipse.jst.server.tomcat.core [994]
+                                            Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+                  -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                     org.springframework.ide.eclipse.maven [1117]
+                       Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.webflow.ui.editor [1127]
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.hyperlinks
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.hyperlinks; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.widgets
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.widgets; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.graph
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.graph; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.graph"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.webflow.ui.graph [1128]
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow
+           -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor
+           -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.webflow.ui.editor 4 0 2023-09-05 02:10:20.992
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.webflow.ui.editor [1127]
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.hyperlinks
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.hyperlinks; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.config.ui [1110]
+         Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+           -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+              org.springframework.ide.eclipse.wizard [1129]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.dashboard.ui [1153]
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                   org.springsource.ide.eclipse.commons.configurator [1144]
+                                     Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                       -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                          org.eclipse.jst.server.tomcat.core [994]
+                                            Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+                  -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                     org.springframework.ide.eclipse.maven [1117]
+                       Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.widgets
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.widgets; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+    -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.webflow.ui.graph 4 0 2023-09-05 02:10:20.992
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.webflow.ui.graph [1128]
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor.outline.webflow; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+       org.springframework.ide.eclipse.webflow.ui.editor [1127]
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.hyperlinks
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.hyperlinks; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+              org.springframework.ide.eclipse.config.ui [1110]
+                Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.wizard
+                  -> Bundle-SymbolicName: org.springframework.ide.eclipse.wizard; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                     org.springframework.ide.eclipse.wizard [1129]
+                       Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+                         -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                            org.springsource.ide.eclipse.commons.gettingstarted [1149]
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                   org.springsource.ide.eclipse.dashboard.ui [1153]
+                                     Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                       -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                                          org.springsource.ide.eclipse.commons.configurator [1144]
+                                            Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                                              -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                                                 org.eclipse.jst.server.tomcat.core [994]
+                                                   Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                       Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+                         -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+                            org.springframework.ide.eclipse.maven [1117]
+                              Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+                              Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                                -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.editors.webflow.graph; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.widgets
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.widgets; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+         Unresolved requirement: Import-Package: org.springframework.ide.eclipse.config.ui.editors
+           -> Export-Package: org.springframework.ide.eclipse.config.ui.editors; bundle-symbolic-name="org.springframework.ide.eclipse.config.ui"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+  Unresolved requirement: Import-Package: org.springframework.ide.eclipse.webflow.ui.editor
+    -> Export-Package: org.springframework.ide.eclipse.webflow.ui.editor; bundle-symbolic-name="org.springframework.ide.eclipse.webflow.ui.editor"; bundle-version="3.9.12.202003180620-RELEASE"; version="0.0.0"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springframework.ide.eclipse.wizard 4 0 2023-09-05 02:10:21.005
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springframework.ide.eclipse.wizard [1129]
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.5.0"; resolution:="optional"
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.gettingstarted; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.gettingstarted [1149]
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+              org.springsource.ide.eclipse.dashboard.ui [1153]
+                Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+                  -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+                     org.springsource.ide.eclipse.commons.configurator [1144]
+                       Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                         -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                            org.eclipse.jst.server.tomcat.core [994]
+                              Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+  Unresolved requirement: Require-Bundle: org.springframework.ide.eclipse.maven
+    -> Bundle-SymbolicName: org.springframework.ide.eclipse.maven; bundle-version="3.9.12.202003180620-RELEASE"; singleton:="true"
+       org.springframework.ide.eclipse.maven [1117]
+         Unresolved requirement: Require-Bundle: org.datanucleus.ide.eclipse; resolution:="optional"
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springsource.ide.eclipse.commons.configurator 4 0 2023-09-05 02:10:21.021
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springsource.ide.eclipse.commons.configurator [1144]
+  Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+    -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+       org.eclipse.jst.server.tomcat.core [994]
+         Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springsource.ide.eclipse.commons.gettingstarted 4 0 2023-09-05 02:10:21.044
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springsource.ide.eclipse.commons.gettingstarted [1149]
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.dashboard.ui
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.dashboard.ui; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.dashboard.ui [1153]
+         Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+           -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+              org.springsource.ide.eclipse.commons.configurator [1144]
+                Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+                  -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+                     org.eclipse.jst.server.tomcat.core [994]
+                       Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.springsource.ide.eclipse.dashboard.ui 4 0 2023-09-05 02:10:21.066
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Could not resolve module: org.springsource.ide.eclipse.dashboard.ui [1153]
+  Unresolved requirement: Require-Bundle: org.springsource.ide.eclipse.commons.configurator
+    -> Bundle-SymbolicName: org.springsource.ide.eclipse.commons.configurator; bundle-version="3.9.12.202003180611-RELEASE"; singleton:="true"
+       org.springsource.ide.eclipse.commons.configurator [1144]
+         Unresolved requirement: Require-Bundle: org.eclipse.jst.server.tomcat.core
+           -> Bundle-SymbolicName: org.eclipse.jst.server.tomcat.core; bundle-version="1.2.100.v202211100535"; singleton:="true"
+              org.eclipse.jst.server.tomcat.core [994]
+                Unresolved requirement: Require-Capability: osgi.ee; filter:="(&(osgi.ee=JavaSE)(version=11))"
+
+	at org.eclipse.osgi.container.Module.start(Module.java:462)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel$2.run(ModuleContainer.java:1844)
+	at org.eclipse.osgi.internal.framework.EquinoxContainerAdaptor$2$1.execute(EquinoxContainerAdaptor.java:150)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1837)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1778)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1742)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1664)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:234)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:345)
+
+!ENTRY org.eclipse.jface 2 0 2023-09-05 02:10:32.631
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2023-09-05 02:10:32.631
+!MESSAGE A conflict occurred for CTRL+SHIFT+T:
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@49dacc93,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@dd025d9,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.egit.ui 2 0 2023-09-05 02:10:36.435
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\n.shaheen'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.

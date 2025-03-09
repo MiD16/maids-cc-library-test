@@ -1,0 +1,28 @@
+package com.template.Action.AccIndInterestType;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CAction;
+import com.template.Action.CActionConstant;
+import com.template.BusinessRule.CBusinessRuleConstant;
+
+
+@Component(CActionConstant.CREATE_Acc_Ind_Interest_Type)
+@Lazy
+public class CAAccIndInterestTypeCreate extends CAction 
+{
+	public CAAccIndInterestTypeCreate(ApplicationContext applicationContext)
+	{
+		setApplicationContext(applicationContext);
+	}
+	
+	@PostConstruct
+	public void init()
+	{
+		//addBusinessnRule(CBusinessRuleConstant.IND_SOCIAL_STATUS_IS_VALID);
+		addBusinessnRule(CBusinessRuleConstant.Acc_Ind_Interest_Type_IS_NOT_EXIST);
+	}}

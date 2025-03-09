@@ -1,0 +1,46 @@
+package com.template.BusinessRule.UserAction;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.UserAction;
+import com.template.Service.Basic.UserActionService;
+
+@Component(CBusinessRuleConstant.USER_ACTION_IS_NOT_DELETED)
+@Lazy
+public class CBRUserActionIsNotDeleted implements IBusinessRule {
+
+	@Autowired UserActionService userActionService;
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters)
+	{
+		CActionValidationResult actionValidationResult = null;
+		UserAction useraction = null;
+	
+		try
+		{
+			do
+			{
+				actionValidationResult = new CActionValidationResult();
+				useraction = (UserAction)parameters.getParameter(EKeyCode.USERACTION.toString());
+				if(userActionService.check_user_action_is_deleted(useraction))
+				{
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("صلاحية المستخدم  محذوفة مسبقا");
+					break;
+				}
+			}
+			while(false);
+		}
+		catch(Exception e) {throw new RuntimeException(e.getMessage());}
+		
+		return actionValidationResult;
+	}
+	
+}

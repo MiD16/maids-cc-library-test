@@ -1,0 +1,152 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+
+import com.template.Repository.Table.AllIndexes.IndEconmicActivityRepository;
+import com.template.Repository.Table.AllIndexes.IndNonCustDocumentRepository;
+@Service
+public class IndNonCustDocumentServices {
+	@Autowired
+	IndNonCustDocumentRepository  indNonCustDocumentRepository;
+	
+	//////////////////////////////////////////////////
+	
+	
+	@Autowired CActionHandler actionHandler;
+
+	public CResponse createSocialStatus(IndNonCustDocument indNonCustDocument) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.Ind_Position.toString(), indNonCustDocument);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IND_NON_CUST_DOCUMENT, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indNonCustDocument.setInsertBy(0);
+			indNonCustDocument.setInsertDate(new Date());
+			indNonCustDocumentRepository.save(indNonCustDocument);
+			
+			response.setReturnedObject(indNonCustDocument);
+		}
+		while(false);
+		
+		return response;
+	}
+
+	public IndNonCustDocument updateSocialStatus(IndNonCustDocument indNonCustDocument) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(indNonCustDocument.getId() == null) 
+		{
+			
+			indNonCustDocument.setInsertBy(0);
+		}
+		
+		
+		
+		else if(indNonCustDocument.getId() != null)
+		{
+			IndNonCustDocument temSocialStatus = indNonCustDocumentRepository.findById(indNonCustDocument.getId()).get();
+			indNonCustDocument.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indNonCustDocumentRepository.save(indNonCustDocument);
+		return indNonCustDocument;
+	}
+
+
+
+
+
+	public IndNonCustDocument findByNames(String nameA, String nameB) {
+		return indNonCustDocumentRepository.findByNames(nameA, nameB);
+	}
+
+
+	
+	
+	
+	
+	
+	public IndNonCustDocument save(IndNonCustDocument indNonCustDocument) {
+		if(indNonCustDocument.getId() == null)
+		{
+			indNonCustDocument.setInsertBy(0);
+			indNonCustDocument.setInsertDate(getCurrentDate());
+			indNonCustDocument.setIsDeleted(0);
+		}else if(indNonCustDocument.getId() != null){
+			System.err.println(2121);
+			indNonCustDocument.setInsertDate(getCurrentDate());
+			indNonCustDocument.setLastUpdateDate(getCurrentDate());
+			indNonCustDocument.setLastUpdateBy(1);
+		}
+		indNonCustDocumentRepository.save(indNonCustDocument);
+		return indNonCustDocument;
+	}
+	
+	public void update(IndNonCustDocument indNonCustDocument) {
+		indNonCustDocumentRepository.save(indNonCustDocument);
+	}
+	
+	public IndNonCustDocument findById(Long id) {
+		return indNonCustDocumentRepository.getById(id);
+	}
+	
+	public List<IndNonCustDocument> getAll(){
+		List<IndNonCustDocument> all = indNonCustDocumentRepository.getAll();
+		return all;
+	}
+	
+	public List<IndNonCustDocument> getAllDeleted(){
+		List<IndNonCustDocument> allDeleted = indNonCustDocumentRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	public IndNonCustDocument delete(Long id) {
+		IndNonCustDocument indNonCustDocument = indNonCustDocumentRepository.findById(id).get();
+		if (indNonCustDocument == null) {
+			throw new NoDataFoundException("indSocialStatus With ID : " + id + " Not Found");
+		}
+		indNonCustDocument.setIsDeleted(1);
+		return indNonCustDocumentRepository.save(indNonCustDocument);
+	}
+	
+	private static java.sql.Date getCurrentDate() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Date(today.getTime());
+	}
+
+}

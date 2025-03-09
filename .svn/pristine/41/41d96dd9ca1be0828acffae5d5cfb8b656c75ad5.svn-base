@@ -1,0 +1,39 @@
+package com.template.Repository.Basic;
+
+
+
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.Action;
+import com.template.Model.Basic.Role;
+
+@Repository
+public interface ActionsRep  extends JpaRepository<Action,Integer>{
+	
+	@Query("Select a from Action a ")
+	public Page<Action> findAllpage(PageRequest pageRequest);
+	
+	@Query("Select a from Action a where a.action_name_en=:name  ")
+	public Action getActionByname(@Param("name") String name);
+	
+	@Query("Select a from Action a where a.action_name_ar=:nameA  ")
+	public Action findActionByNameA(@Param("nameA") String nameA);
+	
+	@Query("Select a from Action a where a.action_name_en=:nameB  ")
+	public Action findActionByNameB(@Param("nameB") String nameB);
+	
+	@Query("Select a from Action a where a.ID=:id ")
+	public Action findActionById(@Param("id") int id);
+
+	
+;
+
+}
+

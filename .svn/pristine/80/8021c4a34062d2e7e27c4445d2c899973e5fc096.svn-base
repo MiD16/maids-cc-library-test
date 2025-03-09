@@ -1,0 +1,229 @@
+package com.template.Class;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CResponse;
+import com.template.Model.Basic.RoleAction;
+import com.template.Model.Basic.User;
+import com.template.Model.Basic.UserAction;
+import com.template.Model.Basic.UserRole;
+import com.template.Service.Basic.ActionService;
+import com.template.Service.Basic.UserActionService;
+import com.template.Service.Basic.UserRoleService;
+@Component
+public class UserInformation implements UserDetails {
+	@Autowired
+	ActionService actionService;
+
+	
+	private UserActionService userActionService;
+
+	private  UserRoleService userRoleServices;
+	
+	private static final long serialVersionUID = 1L;
+	private List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+	private int user_id;
+	private String user_name;
+	private String password;
+	private boolean active;
+	private int role_id;
+	private String role_name;
+	private Long employee_id;
+	private Integer contractor_id;
+	private String fullName;
+	private String firstName;
+	private String lastName;
+	private String roleNameArabic;
+
+	
+
+
+	public UserInformation(User user,@Autowired UserRoleService userRoleServices2,@Autowired UserActionService userActionService2 ) throws Exception {
+		 ;
+		this.user_id = user.getID();
+		this.firstName=user.getFirst_name_b();
+		this.lastName=user.getLast_name_b();
+		this.setUser_name(user.getUsername());
+		this.password = user.getPassword();
+		this.setFullName(user.getfullname());
+		//this.authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getUser_role().getRole_name_a()));
+	this.userRoleServices=userRoleServices2;
+	this.userActionService=userActionService2;
+	
+	CResponse response=null;
+	response = new CResponse();
+	response= this.userRoleServices.getUserRoleByUserId(user.getID());
+	List<UserRole> userRole=(List<UserRole>) response.getReturnedObject();
+
+		for (int i=0;i<userRole.size();i++) {
+			
+
+			this.authorities.add(new SimpleGrantedAuthority("ROLE_"+userRole.get(i).getRole().getRole_name_b()));
+		}
+		
+		response= this.userActionService.getUserActionByUserId(user.getID());
+		List<UserAction> userAction=(List<UserAction>) response.getReturnedObject();
+
+		for (int i=0;i<userAction.size();i++) {
+			this.authorities.add(new SimpleGrantedAuthority(userAction.get(i).getAction().getAction_name_en()));
+		}
+		
+	
+		//this.role_name = user.getUser_role().getRole_name_a();
+		
+		//this.setRoleNameArabic(user.getUser_role().getRole_name_a());	
+		if (user.getLockUser() == 0)
+			this.setActive(true);
+		else if (user.getLockUser() == 1)
+			this.setActive(false);
+	}
+
+	public UserInformation() {
+		super();
+	}
+
+	public UserInformation(String user_name, String password, boolean active) {
+		super();
+		this.setUser_name(user_name);
+		this.password = password;
+		this.setActive(active);
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+
+		return this.authorities;
+	}
+
+	@Override
+	public String getPassword() {
+		return this.password;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.user_name;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+	
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+
+	public long getEmployee_id() {
+		return employee_id;
+	}
+
+	public void setEmployee_id(long employee_id) {
+		this.employee_id = employee_id;
+	}
+	
+	public long getContractor_id() {
+		return contractor_id;
+	}
+
+	public void setContractor_id(int contractor_id) {
+		this.contractor_id = contractor_id;
+	}
+
+	public int getRole_id() {
+		return role_id;
+	}
+
+	public void setRole_id(int role_id) {
+		this.role_id = role_id;
+	}
+
+	public String getRole_name() {
+		return role_name;
+	}
+
+	public void setRole_name(String role_name) {
+		this.role_name = role_name;
+	}
+	public int getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+	
+	
+	public String getFullName() {
+		return this.fullName;
+	}
+	
+	public void setFullName(String fullName) {
+		 this.fullName = fullName ;
+	}
+	
+	public String getfirstName() {
+		 return this.firstName;
+	}
+	
+	public String getLastName() {
+		 return this.lastName;
+	}
+	
+	public String getRoleNameArabic() {
+		return this.roleNameArabic;
+	}
+	
+	public void setRoleNameArabic(String roleNameArabic) {
+		 this.roleNameArabic = roleNameArabic ;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o) return true;
+	    if (o == null || getClass() != o.getClass()) return false;
+	    UserInformation that = (UserInformation) o;
+	    return user_id == that.user_id;
+	}
+
+	@Override
+	public int hashCode() {
+	    return Objects.hash(user_id);
+	}
+}

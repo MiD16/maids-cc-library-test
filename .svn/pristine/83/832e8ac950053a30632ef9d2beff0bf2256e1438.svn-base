@@ -1,0 +1,43 @@
+package com.Base.Class;
+
+import com.Base.Constant.CDefaultConstant;
+import com.Base.Enum.ELanguage;
+import com.Shared.Enum.EError;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class CError {
+	private int errorCode;
+
+	private String errorDescription;
+
+	private String errorMessage;
+
+	public CError setError(EError error) {
+		this.errorCode = error.getErrorCode();
+		this.errorDescription = error.toString();
+		this.errorMessage = CDefaultConstant.LANGUAGE.equals(ELanguage.AR.toString()) ? error.getArError()
+				: error.getEnError();
+
+		return this;
+	}
+
+	public CError setError(EError error, ELanguage language) {
+		this.errorCode = error.getErrorCode();
+		this.errorDescription = error.toString();
+		this.errorMessage = language.equals(ELanguage.AR) ? error.getArError() : error.getEnError();
+
+		return this;
+	}
+
+	public CError setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+
+		return this;
+	}
+}

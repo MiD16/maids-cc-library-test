@@ -1,0 +1,40 @@
+
+package com.template.Repository.Basic;
+
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.template.Model.Basic.Role;
+import com.template.Model.Basic.RoleAction;
+import com.template.Model.Basic.UserAction;
+import com.template.Model.Basic.UserRole;
+
+
+@Repository	 
+public interface UserRoleRep extends JpaRepository<UserRole,Integer>{
+
+	@Query("Select a from UserRole a where a.user.ID=:id and a.is_deleted!=1  ")
+	public Page<UserRole> getUserRoleByUserId(@Param("id") int id,PageRequest pageRequest);
+	
+	@Query("Select a from UserRole a where a.user.ID=:id and a.is_deleted!=1  ")
+	public List<UserRole> getUserRoleByUserId(@Param("id") int id);
+	
+	@Query("Select a from UserRole a where a.user.ID=:id and a.is_deleted!=1  ")
+	public List<UserRole> getListUserRoleById(@Param("id") int id);
+	
+ 
+	@Query("Select a from UserRole a where a.role.ID=:id  and a.is_deleted!=1 ")
+	public List<UserRole> getListUserRoleByRoleId(@Param("id") int id);
+
+	@Query("Select a from UserRole a where  a.user.ID=:id and a.role.ID=:roleid   ")
+	public UserRole getUserRoleByUserIdandRoleId(@Param("id") int id,@Param("roleid") int roleid);
+	
+	
+}

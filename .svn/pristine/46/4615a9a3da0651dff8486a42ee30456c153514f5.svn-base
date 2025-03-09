@@ -1,0 +1,152 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.IndJournalStatus;
+import com.template.Model.Table.AllIndexes.IndJournalType;
+import com.template.Repository.Table.AllIndexes.IndJournalStatusRepository;
+import com.template.Repository.Table.AllIndexes.IndJournalTypeRepository;
+
+@Service
+
+public class IndJournalTypeServices {
+	
+	
+
+@Autowired
+IndJournalTypeRepository indJournalTypeRepository;
+@Autowired CActionHandler actionHandler;
+
+
+public CResponse createIndJournalType(IndJournalType indJournalType) 
+{
+	CResponse response = null;
+	CActionValidationParameters actionValidationParameters = null;
+	CActionValidationResult actionValidationResult = null;
+	
+	do
+	{
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		
+		actionValidationParameters.addParameter(EKeyCode.IND_JOURNAL_TYPE.toString(), indJournalType);
+		
+		actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IND_JOURNAL_TYPE, actionValidationParameters);
+		
+		if(!actionValidationResult.isValid())
+		{
+			response.setSuccess(false);
+			response.setErrorMessage(actionValidationResult.getErrorMessage());
+			break;
+		}
+		
+		indJournalType.setInsertBy(0);
+		indJournalType.setInsertDate(new Date());
+		indJournalTypeRepository.save(indJournalType);
+		
+		response.setReturnedObject(indJournalType);
+	}
+	while(false);
+	
+	return response;
+}
+
+public IndJournalType updateIndJournalType(IndJournalType indJournalType) 
+{
+	CResponse response = null;
+	CActionValidationParameters actionValidationParameters = null;
+	CActionValidationResult actionValidationResult = null;
+	
+	response = new CResponse();
+	actionValidationParameters = new CActionValidationParameters();
+	actionValidationResult = new CActionValidationResult();
+	
+	if(indJournalType.getId() == null) 
+	{
+		
+		indJournalType.setInsertBy(0);
+	}
+	
+	
+	
+	else if(indJournalType.getId() != null)
+	{
+		IndJournalType temSocialStatus = indJournalTypeRepository.findById(indJournalType.getId()).get();
+		indJournalType.setInsertDate(temSocialStatus.getInsertDate());
+	}
+	indJournalTypeRepository.save(indJournalType);
+	return indJournalType;
+}
+
+ 
+
+
+
+public IndJournalType findByNames(String nameA, String nameB) {
+	return indJournalTypeRepository.findByNames(nameA, nameB);
+}
+
+public IndJournalType save(IndJournalType indJournalType) {
+	if(indJournalType.getId() == null)
+	{
+		indJournalType.setInsertBy(0);
+	}else if(indJournalType.getId() != null){
+		IndJournalType temSignatureType=indJournalTypeRepository.findById(indJournalType.getId()).get();
+		indJournalType.setInsertDate(temSignatureType.getInsertDate());
+	}
+	indJournalTypeRepository.save(indJournalType);
+	return indJournalType;
+}
+
+
+public void update(IndJournalType indJournalType) {
+	indJournalTypeRepository.save(indJournalType);
+}
+
+public IndJournalType findById(Long id) {
+	return indJournalTypeRepository.getById(id);
+}
+
+public List<IndJournalType> getAll(){
+	List<IndJournalType> all = indJournalTypeRepository.getAll();
+	return all;
+}
+
+public List<IndJournalType> getAllDeleted(){
+	List<IndJournalType> allDeleted = indJournalTypeRepository.getAllDeleted();
+	return allDeleted;
+}
+
+public IndJournalType delete(Long id) {
+	IndJournalType indJournalType = indJournalTypeRepository.findById(id).get();
+	if (indJournalType == null) {
+		throw new NoDataFoundException("indSignatureType With ID : " + id + " Not Found");
+	}
+	indJournalType.setIsDeleted(1);
+	return indJournalTypeRepository.save(indJournalType);
+
+
+}
+
+public boolean checkIndJournalTypeIsDeleted(long id) {
+	IndJournalType indJournalType= indJournalTypeRepository.findById(id).get();
+	if (indJournalType.getIsDeleted() == 1)
+		return true;
+	return false;
+}
+
+
+
+
+}

@@ -1,0 +1,168 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Class.CResponse;
+import com.template.Action.CActionConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Exception.NoDataFoundException;
+import com.template.Model.Table.AllIndexes.*;
+
+import com.template.Repository.Table.AllIndexes.IndGenderRepository;
+import com.template.Repository.Table.AllIndexes.IndLegalStatusRepository;
+
+@Service
+public class IndLegalStatusServices {
+/////////////////////////////////////////////////////////////////////////////
+	@Autowired
+	IndLegalStatusRepository indLegalStatusRepository;
+
+	@Autowired CActionHandler actionHandler;
+
+	public CResponse createSocialStatus(IndLegalStatus indLegalStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		do
+		{
+			response = new CResponse();
+			actionValidationParameters = new CActionValidationParameters();
+			
+			actionValidationParameters.addParameter(EKeyCode.IND_LEGAL_STATUS.toString(), indLegalStatus);
+			
+			actionValidationResult = actionHandler.validate(CActionConstant.CREATE_IndLegal_Status, actionValidationParameters);
+			
+			if(!actionValidationResult.isValid())
+			{
+				response.setSuccess(false);
+				response.setErrorMessage(actionValidationResult.getErrorMessage());
+				break;
+			}
+			
+			indLegalStatus.setInsertBy(0);
+			indLegalStatus.setInsertDate(new Date());
+			indLegalStatusRepository.save(indLegalStatus);
+			
+			response.setReturnedObject(indLegalStatus);
+		}
+		while(false);
+		
+		return response;
+	}
+
+	public IndLegalStatus updateSocialStatus(IndLegalStatus indLegalStatus) 
+	{
+		CResponse response = null;
+		CActionValidationParameters actionValidationParameters = null;
+		CActionValidationResult actionValidationResult = null;
+		
+		response = new CResponse();
+		actionValidationParameters = new CActionValidationParameters();
+		actionValidationResult = new CActionValidationResult();
+		
+		if(indLegalStatus.getId() == null) 
+		{
+			
+			indLegalStatus.setInsertBy(0);
+		}
+		
+		
+		
+		else if(indLegalStatus.getId() != null)
+		{
+			IndLegalStatus temSocialStatus = indLegalStatusRepository.findById(indLegalStatus.getId()).get();
+			indLegalStatus.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indLegalStatusRepository.save(indLegalStatus);
+		return indLegalStatus;
+	}
+
+
+	public IndLegalStatus save(IndLegalStatus indLegalStatus) {
+		if(indLegalStatus.getId() == null)
+		{
+			indLegalStatus.setInsertBy(0);
+		}else if(indLegalStatus.getId() != null){
+			IndLegalStatus temSignatureType=indLegalStatusRepository.findById(indLegalStatus.getId()).get();
+			indLegalStatus.setInsertDate(temSignatureType.getInsertDate());
+		}
+		indLegalStatusRepository.save(indLegalStatus);
+		return indLegalStatus;
+	}
+	
+
+
+	public IndLegalStatus findByNames(String nameA, String nameB) {
+		return indLegalStatusRepository.findByNames(nameA, nameB);
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	///////////////////////////////////////////////////////////////////
+	
+
+public void update(IndLegalStatus indLegalStatus) {
+	indLegalStatusRepository.save(indLegalStatus);
+}
+
+public IndLegalStatus findById(Long id) {
+	return indLegalStatusRepository.getById(id);
+}
+
+public List<IndLegalStatus> getAll(){
+	List<IndLegalStatus> all = indLegalStatusRepository.getAll();
+	return all;
+}
+
+public List<IndLegalStatus> getAllDeleted(){
+	List<IndLegalStatus> allDeleted = indLegalStatusRepository.getAllDeleted();
+	return allDeleted;
+}
+
+public IndLegalStatus delete(Long id) {
+	IndLegalStatus indLegalStatus = indLegalStatusRepository.findById(id).get();
+	if (indLegalStatus == null) {
+		throw new NoDataFoundException("indLegalStatus With ID : " + id + " Not Found");
+	}
+	indLegalStatus.setIsDeleted(1);
+	return indLegalStatusRepository.save(indLegalStatus);
+}
+
+private static java.sql.Date getCurrentDate() {
+	java.util.Date today = new java.util.Date();
+	return new java.sql.Date(today.getTime());
+}
+
+}

@@ -1,0 +1,122 @@
+package com.template.Model.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.google.gson.annotations.Expose;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "BRANCH")
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+public class Branch {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "CODE")
+	private String CODE ;
+	
+	@Column(name = "NAME_A")
+	private String nameA ;
+	
+	@Column(name = "NAME_B")
+	private String nameB;
+
+	
+
+	@ManyToOne
+    @JoinColumn(name = "branch_type_id")
+	private IndBranchType indBranchType;
+	
+	/*
+	 * @ManyToOne
+	 * 
+	 * @JoinColumn(name="IND_CUSTOMER_NATURE_ID") private IndCustomerNature
+	 * indCustomerNature;
+	 */
+	
+	
+	@Column(name = "PHONE")
+	private String phone;
+	
+	@Column(name = "ADDRESS")
+	private String address;
+	
+	@Column(name = "CENTRAL_BANK_CODE")
+	private String central_bank_code;
+	
+	@ManyToOne
+    @JoinColumn(name = "city_id")
+	private IndCity city_id ; 
+	
+	@ManyToOne
+    @JoinColumn(name = "country_id")
+	private  IndCountry country_id ; 
+	
+	
+	@ManyToOne
+	@JoinColumn(name="PARENT_ID")
+	private Branch parent_id;
+	
+	
+	@Column(name = "IS_ENABLED")
+	private Integer isEnabledFlag;
+	
+	@Column(name = "INSERT_BY")
+	private Integer insertBy;
+	
+	@Column(name = "INSERT_DATE")
+	private Date insertDate;
+	
+	@Column(name = "LAST_UPDATE_BY")
+	private Integer lastUpdateBy;
+	
+	
+	@Column(name = "LAST_UPDATE_DATE")
+	private Date lastUpdateDate;
+	
+	
+	@Column(name = "IS_DELETED")
+	private Integer isDeleted;
+	
+	
+	@Column(name = "DELETED_BY")
+	private Integer deletedBy;
+	
+	
+	@Column(name = "DELETED_DATE")
+	private Date deleted_date;
+	
+	
+	@Column(name = "NOTE")
+	private String note;
+	
+	@PrePersist
+	void createdAt() {
+		this.insertDate = new Date();
+		this.isDeleted = 0;
+	}
+}

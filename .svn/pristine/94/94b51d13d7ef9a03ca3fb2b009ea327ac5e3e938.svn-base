@@ -1,0 +1,95 @@
+package com.template.Service.Table.AllIndexes;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.Base.Class.CActionHandler;
+import com.Base.Class.CResponse;
+import com.template.Model.Table.AllIndexes.IndCertificateType;
+import com.template.Model.Table.AllIndexes.IndKey;
+import com.template.Model.Table.Interests.AccInterest;
+import com.template.Repository.Table.AllIndexes.IndKeyRepository;
+import com.template.Service.Basic.UserService;
+
+@Service
+public class IndKeyService {
+
+	@Autowired
+	IndKeyRepository indKeyRepository;
+
+	@Autowired
+	CActionHandler actionHandler;
+
+	@Autowired
+	UserService userService;
+
+	// find all not deleted
+	public CResponse getAll() {
+		CResponse response = new CResponse();
+		response.setReturnedObject(indKeyRepository.getAll());
+		return response;
+	}
+	
+	public IndKey save(IndKey indKey) throws Exception {
+		if(indKey.getId() == null) {
+			indKey.setInsertBy(userService.getAuthenticatedUser().getID());
+		}
+	else if(indKey.getId() != null){
+		IndKey temSocialStatus = indKeyRepository.findById(indKey.getId()).get();
+		indKey.setInsertDate(temSocialStatus.getInsertDate());
+		}
+		indKeyRepository.save(indKey);
+		return indKey;
+	}
+
+	// create Interest
+	public CResponse save1(IndKey indKey) throws Exception {
+		CResponse response = new CResponse();
+		// call validate for create object
+		// response = validateInterestCreate(indKey);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		indKey.setInsertBy(userService.getAuthenticatedUser().getID());
+		indKeyRepository.save(indKey);
+		response.setSuccessMessage("تم الإضافة بنجاح");
+		return response;
+	}
+
+	// get object by id
+	public CResponse findById(Long id) {
+		CResponse response = new CResponse();
+		response.setReturnedObject(indKeyRepository.findById(id).get());
+		return response;
+	}
+
+	// get all deleted
+	public List<IndKey> getAllDeleted() {
+		List<IndKey> allDeleted = indKeyRepository.getAllDeleted();
+		return allDeleted;
+	}
+
+	// delete interest
+	public CResponse delete(Long id) throws Exception {
+		IndKey indKey = indKeyRepository.findById(id).get();
+		CResponse response = null;
+		// call validate for delete object
+		//response = validateInterestDelete(indKey);
+		if (response.isSuccess() == false) {
+			return response;
+		}
+		// soft delete
+		indKey.setIsDeleted(1);
+		// set deleted date
+		indKey.setDeletedDate(new Date());
+		// set user that deleted
+		indKey.setDeletedBy(userService.getAuthenticatedUser().getID());
+		response.setSuccessMessage("تم الحذف بنجاح");
+		response.setReturnedObject(indKeyRepository.save(indKey));
+		return response;
+	}
+}

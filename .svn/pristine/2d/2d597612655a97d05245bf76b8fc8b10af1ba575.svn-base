@@ -1,0 +1,48 @@
+package com.template.BusinessRule.UserRole;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Basic.UserRole;
+import com.template.Service.Basic.UserRoleService;
+
+@Component(CBusinessRuleConstant.USER_ROLE_IS_NOT_DELETED)
+@Lazy
+public class CBRUserRoleIsNotDeleted implements IBusinessRule {
+
+	@Autowired UserRoleService userRoleService;
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters)
+	{
+		CActionValidationResult actionValidationResult = null;
+		UserRole userrole = null;
+
+		try
+		{
+			do
+			{
+				actionValidationResult = new CActionValidationResult();
+				
+				userrole = (UserRole)parameters.getParameter(EKeyCode.USERROLE.toString());
+			
+				if(userRoleService.check_user_role_is_deleted(userrole))
+				{
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("دور المستخدم محذوف");
+					break;
+				}
+			}
+			while(false);
+		}
+		catch(Exception e) {throw new RuntimeException(e.getMessage());}
+		
+		return actionValidationResult;
+	}
+	
+}

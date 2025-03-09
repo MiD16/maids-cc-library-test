@@ -1,0 +1,27 @@
+package com.template.Enum;
+
+public enum UserStatus {
+	
+	WITH_USERNAME_AND_PASSWORD(3," user enter his username and password "),
+	WITH_VALID_OTP(2,"user enter his otp and it is valid"),
+	WITH_FULL_INFORMATION(2,"user enter his all data needed in his profile");
+	
+
+    private final Integer value;
+    private final String description;
+
+    UserStatus(Integer value,String description) {
+        this.value = value;
+        this.description = description;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+
+}

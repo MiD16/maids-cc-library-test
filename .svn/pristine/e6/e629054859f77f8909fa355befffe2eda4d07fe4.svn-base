@@ -1,0 +1,52 @@
+//package com.template.BusinessRule.AccountType;
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.context.annotation.Lazy;
+//import org.springframework.stereotype.Component;
+//
+//import com.Base.Class.CActionValidationParameters;
+//import com.Base.Class.CActionValidationResult;
+//import com.Base.Interface.IBusinessRule;
+//import com.template.BusinessRule.CBusinessRuleConstant;
+//import com.template.Class.AccountTypeForm;
+//import com.template.Enum.EErrorCode;
+//import com.template.Enum.EKeyCode;
+//import com.template.Model.Table.Products.AccountType;
+//import com.template.Service.Table.Product.AccountTypeService;
+//
+//@Component(CBusinessRuleConstant.ACCOUNT_TYPE_CURRENCY_IS_EMPTY)
+//@Lazy
+//public class CBRAccountTypeCurrencyIsEmpty implements IBusinessRule {
+//	
+//	@Autowired
+//	AccountTypeService accountTypeService;
+//
+//	@Override
+//	public CActionValidationResult validate(CActionValidationParameters parameters) {
+//		CActionValidationResult actionValidationResult = null;
+//		String path = null;
+//		AccountTypeForm accountTypeForm = null;
+//		
+//		try {
+//			do {
+//				actionValidationResult = new CActionValidationResult();
+//				accountTypeForm = (AccountTypeForm) parameters.getParameter(EKeyCode.ACCOUNT_TYPE_FORM.toString());
+//				//path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+//				
+//				if (accountTypeForm.getAccountTypeCurrencies().size() == 0) {	
+//					
+//					String messageString = "<div style='margin-bottom: 12px'>" + "لا يمكن إضافة منتج بدون عملة!!   "  + "</div> <a> يرجى تعديل المنتج لإضافة عملة المنتج </a>";
+//					actionValidationResult.setValid(false);
+//					actionValidationResult.setErrorMessage(messageString);
+//					actionValidationResult.setErrorCode(EErrorCode.ACCOUNT_TYPE_CURRENCY_IS_EMPTY.toString());
+//				}
+//
+//			} while (false);
+//		} catch (Exception e) {
+//			throw new RuntimeException(e.getMessage());
+//		}
+//
+//		return actionValidationResult;
+//	}
+//
+//}

@@ -1,0 +1,203 @@
+package com.Base.Class;
+
+import java.util.Date;
+import java.util.Hashtable;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@NoArgsConstructor
+public class CActionParameters 
+{
+	Hashtable<String, Object> requestParameters;
+	
+	public void addParameter(String key, Object value) throws Exception 
+    {
+        do
+        {
+        	try
+        	{
+	            if (key == null) break;
+	
+	            if (value == null) break;
+	
+	            if (requestParameters == null) 
+	            	requestParameters = new Hashtable<String, Object>();
+	
+	            requestParameters.put(key, value);
+        	}
+        	catch(Exception e) 
+        	{
+        		throw new Exception("Parameter is already added.");
+    		}
+        } while (false);
+    }
+	
+	public Object getParameter(String key) throws Exception 
+    {
+		Object returnValue = null;
+		
+        do
+        {
+        	try
+        	{
+	            if (key == null) break;
+	            
+	            if (requestParameters == null) break;
+
+                if (!requestParameters.containsKey(key)) break;
+	
+                returnValue = requestParameters.get(key);
+        	}
+        	catch(Exception e) 
+        	{
+        		throw new Exception("Parameter is already added.");
+    		}
+        } while (false);
+        
+        return returnValue;
+    }
+	
+	public Boolean getBooleanParameter(String key) throws Exception
+    {
+		Boolean returnValue = false;
+        Object object = null;
+        
+        do
+        {
+            try
+            {   
+                object = getParameter(key);
+
+                if (object == null) break;
+
+                returnValue = Boolean.parseBoolean(object.toString());
+            }
+            catch(Exception e) 
+        	{
+        		throw new Exception("Something went wrong.");
+    		}
+        } while (false);
+        return returnValue;
+    }
+	
+	public Date getDateParameter(String key) throws Exception
+    {
+		Date returnValue = null;
+        Object object = null;
+        
+        do
+        {
+            try
+            {   
+                object = getParameter(key);
+
+                if (object == null) break;
+
+                returnValue = (Date)object;
+            }
+            catch(Exception e) 
+        	{
+        		throw new Exception("Something went wrong.");
+    		}
+        } while (false);
+        return returnValue;
+    }
+	
+	public int getIntegerParameter(String key) throws Exception
+    {
+		int returnValue = Integer.MAX_VALUE;
+        Object object = null;
+        
+        do
+        {
+            try
+            {   
+                object = getParameter(key);
+
+                if (object == null) break;
+
+                returnValue = Integer.parseInt(object.toString());
+            }
+            catch(Exception e) 
+        	{
+        		throw new Exception("Something went wrong.");
+    		}
+        } while (false);
+        return returnValue;
+    }
+	
+	public float getFloatParameter(String key) throws Exception
+    {
+		float returnValue = Float.MAX_VALUE;
+        Object object = null;
+        
+        do
+        {
+            try
+            {   
+                object = getParameter(key);
+
+                if (object == null) break;
+
+                returnValue = Float.parseFloat(object.toString());
+            }
+            catch(Exception e) 
+        	{
+        		throw new Exception("Something went wrong.");
+    		}
+        } while (false);
+        return returnValue;
+    }
+	
+	public long getLongParameter(String key) throws Exception
+    {
+		long returnValue = Long.MAX_VALUE;
+        Object object = null;
+        
+        do
+        {
+            try
+            {   
+                object = getParameter(key);
+
+                if (object == null) break;
+
+                returnValue = Long.parseLong(object.toString());
+            }
+            catch(Exception e) 
+        	{
+        		throw new Exception("Something went wrong.");
+    		}
+        } while (false);
+        return returnValue;
+    }
+	
+	public String getStringParameter(String key) throws Exception
+    {
+		String returnValue = null;
+        Object object = null;
+        
+        do
+        {
+            try
+            {   
+                object = getParameter(key);
+
+                if (object == null) break;
+
+                returnValue = (String)object;
+            }
+            catch(Exception e) 
+        	{
+        		throw new Exception("Something went wrong.");
+    		}
+        } while (false);
+        return returnValue;
+    }
+
+}

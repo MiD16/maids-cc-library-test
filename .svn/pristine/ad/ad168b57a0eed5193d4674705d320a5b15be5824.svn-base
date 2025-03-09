@@ -1,0 +1,23 @@
+package com.Base.Class;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+public class CActionValidationResult {
+
+	//Region Private Variables
+	
+	boolean isValid;
+	String errorMessage;
+	String errorCode;
+	
+	//End Region Private Variables
+	
+	public CActionValidationResult()
+	{
+		isValid = true;
+	}
+}

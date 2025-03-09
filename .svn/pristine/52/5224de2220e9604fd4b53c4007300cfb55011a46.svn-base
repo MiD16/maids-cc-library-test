@@ -1,0 +1,66 @@
+package com.Base.Class;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.Base.Constant.CDefaultConstant;
+import com.Base.Enum.ELanguage;
+import com.Shared.Enum.ESuccessMessage;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PUBLIC)
+@ToString
+public class CResponse 
+{
+	private boolean isSuccess;
+	private String errorCode;
+	private String errorMessage;
+	private String successMessage;
+	private List<CError> errors;
+	private Object returnedObject;
+	
+	public CResponse() 
+	{
+		isSuccess = true;	
+	}
+	
+	public CResponse setSuccessMessage(ESuccessMessage message)
+	{
+		this.successMessage = CDefaultConstant.LANGUAGE.equals(ELanguage.AR.toString()) ? message.getArMessage() : message.getEnMessage();
+		
+		return this;
+	}
+	
+	public CResponse setSuccessMessage(ESuccessMessage message, ELanguage language)
+	{
+		this.successMessage = language.equals(ELanguage.AR) ? message.getArMessage() : message.getEnMessage();
+		
+		return this;
+	}
+	
+	public CResponse setSuccessMessage(String message)
+	{
+		this.successMessage = message;
+		
+		return this;
+	}
+	
+	public void addError(CError error)
+	{
+		do
+		{
+			if(error == null) break;
+			
+			if(errors == null) 
+				errors = new ArrayList<CError>();
+			
+			errors.add(error);
+		}
+		while(false);
+	}
+}

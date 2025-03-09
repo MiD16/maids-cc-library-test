@@ -1,0 +1,60 @@
+package com.template.BusinessRule.IndEconomicSector;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.AllIndexes.IndFamilyMemberType;
+import com.template.Service.Table.AllIndexes.IndFamilyMemberTypeServices;
+
+
+@Component(CBusinessRuleConstant.Ind_Economic_Sector_IS_NOT_EXIST)
+@Lazy
+public class CBRIndEconomicSectorIsNotExist implements IBusinessRule{
+	@Autowired
+	IndFamilyMemberTypeServices indFamilyMemberTypeServices;
+	
+	
+	
+	
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult indFamilyMemberValidationResult = null;
+		IndFamilyMemberType indFamilyMemberType = null;
+		IndFamilyMemberType indFamilyMemberTypeName = null;
+		long indFamilyMemberTypeDetails;
+		//long idSubpoenaRequestDetailsBySubpoenaRequest;
+		String path = null;
+		try {
+			do {
+				indFamilyMemberValidationResult = new CActionValidationResult();
+				
+				indFamilyMemberType = (IndFamilyMemberType) parameters.getParameter(EKeyCode.Ind_Family_Memeber_Type.toString());
+				path = (String) parameters.getParameter(EKeyCode.PATH.toString());
+				indFamilyMemberTypeName = indFamilyMemberTypeServices.findByNames(indFamilyMemberType.getNameA(), indFamilyMemberType.getNameB());
+				
+				if (indFamilyMemberType != null) {
+			
+					if (indFamilyMemberType.getId() == null || (indFamilyMemberType.getId() != null && indFamilyMemberType.getId()!=indFamilyMemberType.getId())) {
+						String messageString = "<div style='margin-bottom: 12px'>" + indFamilyMemberTypeName.getNameA()
+						+ " تم إضافتها مسبقاً ! الرجاء التعديل على الموجود مسبقاً"
+						+ "</div> <a class='alert-url' href='" +path + "/indHolidays/create?id="
+						+ indFamilyMemberType.getId() + "' >إذا كنت ترغب بالتعديل يمكنك الذهاب </a>";			
+						indFamilyMemberValidationResult.setValid(false);
+						indFamilyMemberValidationResult.setErrorMessage(messageString);
+						indFamilyMemberValidationResult.setErrorCode(EErrorCode.Ind_Family_Member_Type_IS_EXISTS.toString());
+					}
+				}
+
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return indFamilyMemberValidationResult;
+	}}

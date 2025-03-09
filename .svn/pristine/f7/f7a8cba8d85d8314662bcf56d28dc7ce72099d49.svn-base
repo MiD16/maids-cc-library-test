@@ -1,0 +1,45 @@
+package com.template.BusinessRule.AccountType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import com.Base.Class.CActionValidationParameters;
+import com.Base.Class.CActionValidationResult;
+import com.Base.Interface.IBusinessRule;
+import com.template.BusinessRule.CBusinessRuleConstant;
+import com.template.Enum.EErrorCode;
+import com.template.Enum.EKeyCode;
+import com.template.Model.Table.Products.AccountType;
+import com.template.Service.Table.Product.AccountTypeService;
+
+@Component(CBusinessRuleConstant.ACCOUNT_TYPE_IS_NOT_DELETE)
+@Lazy
+public class CBRAccountTypeIsNotDeleted implements IBusinessRule {
+
+	@Autowired
+	AccountTypeService accountTypeService;
+
+	public CActionValidationResult validate(CActionValidationParameters parameters) {
+		CActionValidationResult actionValidationResult = null;
+		AccountType accountType = null;
+
+		try {
+			do {
+				actionValidationResult = new CActionValidationResult();
+				accountType = (AccountType) parameters.getParameter(EKeyCode.ACCOUNT_TYPE.toString());
+				if (accountTypeService.checkAccountTypeIsDeleted(accountType.getId())) {
+					actionValidationResult.setValid(false);
+					actionValidationResult.setErrorMessage("المنتج "+accountType.getAccTypeNameA() + " محذوف ");
+					actionValidationResult.setErrorCode(EErrorCode.ACCOUNT_TYPE_IS_DELETED.toString());
+					break;
+				}
+			} while (false);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		return actionValidationResult;
+	}
+
+}

@@ -1,0 +1,29 @@
+package com.template.Repository.Table.Product;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import com.template.Model.Table.Products.AccPeriod;
+
+@Repository
+public interface AccPeriodRepository extends JpaRepository <AccPeriod, Long> {
+	
+	@Query("Select a from AccPeriod a where a.isDeleted = 0")
+	
+	public Page<AccPeriod> getAll(PageRequest pageRequest);
+	@Query("Select a from AccPeriod a where a.isDeleted = 0")
+	public List<AccPeriod> getAll();
+	@Query("Select a From AccPeriod a WHERE a.isDeleted = 1 order by a.id desc")
+	public List<AccPeriod> getAllDeleted();
+
+	@Query("Select a from AccPeriod a where a.isDeleted = 0 and a.dateUnitId.id = :dateUnitId and a.accPeriodValue=:periodValue  ")
+	public AccPeriod getPeriodByDateUnitAndValue(
+			@Param("dateUnitId") long dateUnitId,
+			@Param("periodValue") int periodValue);
+	
+
+		
+}
